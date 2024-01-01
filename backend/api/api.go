@@ -36,6 +36,7 @@ type APIServer struct {
 }
 
 func NewAPIServer(listenAddr string) *APIServer {
+	fmt.Println("Starting API server on", listenAddr)
 	return &APIServer{
 		listenAddr: listenAddr,
 	}
