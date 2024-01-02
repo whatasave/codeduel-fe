@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/xedom/codeduel/db"
 	"github.com/xedom/codeduel/types"
 )
 
@@ -16,29 +17,22 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	return json.NewEncoder(w).Encode(v)
 }
 
-type apiFunc func(w http.ResponseWriter, r *http.Request) error
+type APIServer struct {
+	listenAddr 	string
+	db 			 		db.DB
+}
 
 type ApiError struct {
 	Err string
 }
 
-func makeHTTPHandleFunc(fn apiFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if err := fn(w, r); err != nil {
-			// http.Error(w, err.Error(), http.StatusInternalServerError)
-			WriteJSON(w, http.StatusInternalServerError, ApiError{Err: err.Error()})
-		}
-	}
-}
+type apiFunc func(w http.ResponseWriter, r *http.Request) error
 
-type APIServer struct {
-	listenAddr string
-}
-
-func NewAPIServer(listenAddr string) *APIServer {
+func NewAPIServer(listenAddr string, db db.DB) *APIServer {
 	fmt.Println("Starting API server on", listenAddr)
 	return &APIServer{
 		listenAddr: listenAddr,
+		db: db,
 	}
 }
 
@@ -70,7 +64,7 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
 	params := mux.Vars(r)
 	fmt.Println("Fetching account", params["id"])
-	account := types.NewAccount(params["id"], "test", "test", "test@test.com")
+	account := types.NewUser("test", "test@test.com")
 	return WriteJSON(w, http.StatusOK, account)
 }
 
@@ -100,3 +94,12 @@ func (s *APIServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) 
 // func (h *RecipesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // 	w.Write([]byte("This is my recipe page"))
 // }
+
+func makeHTTPHandleFunc(fn apiFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := fn(w, r); err != nil {
+			// http.Error(w, err.Error(), http.StatusInternalServerError)
+			WriteJSON(w, http.StatusInternalServerError, ApiError{Err: err.Error()})
+		}
+	}
+}
