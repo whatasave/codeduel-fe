@@ -154,8 +154,6 @@ func (m *MariaDB) Init() error {
 	if err := m.createUserTable(); err != nil { return err }
 	if err := m.createAuthTable(); err != nil { return err }
 
-	if err := m.insertDummyUser(); err != nil { return err }
-
 	return nil
 }
 
