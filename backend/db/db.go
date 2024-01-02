@@ -17,6 +17,7 @@ type DB interface {
 	CreateUser(*types.User) error
 	DeleteUser(int) error
 	UpdateUser(*types.User) error
+	GetUsers() ([]*types.User, error)
 	GetUserByID(int) (*types.User, error)
 }
 
@@ -24,21 +25,20 @@ type MariaDB struct {
 	db *sql.DB
 }
 
-func NewDB(user, pass, name string) (*MariaDB, error) {
-	dbConnectionUri := user+":"+pass+"@/"+name
-	fmt.Println("dbConnectionUri:", dbConnectionUri)
-	pool, err := sql.Open("mysql", dbConnectionUri)
+func NewDB(host, port, user, pass, name string) (*MariaDB, error) {
+	dsn := user+":"+pass+"@tcp("+host+":"+port+")/"+name
+	pool, err := sql.Open("mysql", dsn)
 	if err != nil { return nil, err }
 
 	pool.SetConnMaxLifetime(0)
-	pool.SetMaxIdleConns(3)
-	pool.SetMaxOpenConns(3)
+	pool.SetMaxIdleConns(5)
+	pool.SetMaxOpenConns(5)
 
 	if err:= pool.Ping(); err != nil { return nil, err }
 
 	var version string
 	pool.QueryRow("SELECT VERSION()").Scan(&version)
-	fmt.Println("[DB] Connected to:", version)
+	log.Print("[DB] Connected to: ", version)
 
 	return &MariaDB{
 		db: pool,
@@ -82,10 +82,9 @@ func Ping(ctx context.Context) {
 	defer cancel()
 
 	if err := pool.PingContext(ctx); err != nil {
-		log.Fatalf("[DB] unable to connect to database: %v", err)
+		log.Fatalf("[DB] Unable to connect to the database: %v", err)
 	}
 }
-
 
 // func Query(ctx context.Context, id int64) {
 // 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -100,41 +99,80 @@ func Ping(ctx context.Context) {
 // }
 
 func (m *MariaDB) CreateUser(user *types.User) error {
-	return nil
+	query := `INSERT INTO users (username, email)
+		VALUES (?, ?)
+	;`
+	_, err := m.db.Exec(query, user.Username, user.Email)
+	return err
 }
 
 func (m *MariaDB) DeleteUser(id int) error {
-	return nil
+	query := `DELETE FROM users WHERE id = ?;`
+	res, err := m.db.Exec(query, id)
+
+	if err != nil { return err }
+	if rows, _ := res.RowsAffected(); rows == 0 {
+		return fmt.Errorf("user with id %d not found", id)
+	}
+
+	return err
 }
 
 func (m *MariaDB) UpdateUser(user *types.User) error {
 	return nil
 }
 
+func (m *MariaDB) GetUsers() ([]*types.User, error) {
+	query := `SELECT * FROM users;`
+	rows, err := m.db.Query(query)
+	if err != nil { return nil, err }
+	defer rows.Close()
+
+	var users []*types.User
+	for rows.Next() {
+		user, err := m.parseUser(rows)
+		if err != nil { return nil, err }
+		users = append(users, user)
+	}
+	if err := rows.Err(); err != nil { return nil, err }
+
+	return users, nil
+}
+
 func (m *MariaDB) GetUserByID(id int) (*types.User, error) {
-	return nil, nil
+	query := `SELECT * FROM users WHERE id = ?;`
+	rows, err := m.db.Query(query, id)
+	if err != nil { return nil, err }
+	defer rows.Close()
+
+	for rows.Next() { return m.parseUser(rows) }
+
+	return nil, fmt.Errorf("user with id %d not found", id)
 }
 
 func (m *MariaDB) Init() error {
 	if err := m.createUserTable(); err != nil { return err }
 	if err := m.createAuthTable(); err != nil { return err }
 
+	if err := m.insertDummyUser(); err != nil { return err }
+
 	return nil
 }
 
 func (m *MariaDB) Close() error {
-	return nil
+	return m.db.Close()
 }
 
 func (m *MariaDB) createUserTable() error {
 	query := `CREATE TABLE IF NOT EXISTS users (
-		id INT AUTO_INCREMENT,
+		id INT unique AUTO_INCREMENT,
 		username VARCHAR(50) NOT NULL,
 		email VARCHAR(50) NOT NULL,
-		image VARCHAR(255),
+		image_url VARCHAR(255),
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		PRIMARY KEY (id)
+		PRIMARY KEY (id),
+		UNIQUE INDEX (username)
 	);`
 	_, err := m.db.Exec(query)
 	return err
@@ -153,4 +191,20 @@ func (m *MariaDB) createAuthTable() error {
 	);`
 	_, err := m.db.Exec(query)
 	return err
+}
+
+func (m *MariaDB) parseUser(row *sql.Rows) (*types.User, error) {
+	user := &types.User{}
+	user_image_url := sql.NullString{}
+	if err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.Email,
+		&user_image_url,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	); err != nil { return nil, err }
+	if user_image_url.Valid { user.ImageURL = user_image_url.String }
+
+	return user, nil
 }

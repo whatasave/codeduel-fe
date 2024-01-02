@@ -1,12 +1,17 @@
 package types
 
-type User struct {
-	ID 					string `json:"id"`
+type CreateUserRequest struct {
 	Username 		string `json:"username"`
 	Email 			string `json:"email"`
-	ImageURL 		string `json:"image"`
-	CreatedAt 	string `json:"createdAt"`
-	UpdatedAt 	string `json:"updatedAt"`
+}
+
+type User struct {
+	ID 					int `json:"id"`
+	Username 		string `json:"username"`
+	Email 			string `json:"email"`
+	ImageURL 		string `json:"image_url"`
+	CreatedAt 	string `json:"created_at"`
+	UpdatedAt 	string `json:"updated_at"`
 }
 
 func NewUser(username, email string) *User {

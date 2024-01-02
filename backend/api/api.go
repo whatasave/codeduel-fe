@@ -2,18 +2,16 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/xedom/codeduel/db"
-	"github.com/xedom/codeduel/types"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
+	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(w).Encode(v)
 }
 
@@ -23,13 +21,13 @@ type APIServer struct {
 }
 
 type ApiError struct {
-	Err string
+	Err string `json:"error"`
 }
 
 type apiFunc func(w http.ResponseWriter, r *http.Request) error
 
 func NewAPIServer(listenAddr string, db db.DB) *APIServer {
-	fmt.Println("Starting API server on", listenAddr)
+	log.Print("[API] Starting API server on ", listenAddr)
 	return &APIServer{
 		listenAddr: listenAddr,
 		db: db,
@@ -39,43 +37,17 @@ func NewAPIServer(listenAddr string, db db.DB) *APIServer {
 func (s *APIServer) Run() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/account", makeHTTPHandleFunc(s.handleAccount)) //.Methods("GET")
-	router.HandleFunc("/account/{id}", makeHTTPHandleFunc(s.handleGetAccount)) //.Methods("GET")
+	router.HandleFunc("/api/v1/user", makeHTTPHandleFunc(s.handleUser))
+	router.HandleFunc("/api/v1/user/{id}", makeHTTPHandleFunc(s.handleUserByID))
+
+	// router.HandleFunc("/api/v1/match", makeHTTPHandleFunc(s.handleMatch))
+	// router.HandleFunc("/api/v1/match/{id}", makeHTTPHandleFunc(s.handleMatchByID))
+
+	router.HandleFunc("/api/v1/auth/github", makeHTTPHandleFunc(s.handleGithubAuth))
+	router.HandleFunc("/api/v1/auth/github/callback", makeHTTPHandleFunc(s.handleGithubAuthCallback))
 
 	http.ListenAndServe(s.listenAddr, router)
-
-	log.Println("API server listening on", s.listenAddr)
 }
-
-func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error {
-	if r.Method == "GET" {
-		return s.handleGetAccount(w, r)
-	}
-	if r.Method == "POST" {
-		return s.handleCreateAccount(w, r)
-	}
-	if r.Method == "DELETE" {
-		return s.handleDeleteAccount(w, r)
-	}
-	
-	return fmt.Errorf("method not allowed %s", r.Method)
-}
-
-func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
-	params := mux.Vars(r)
-	fmt.Println("Fetching account", params["id"])
-	account := types.NewUser("test", "test@test.com")
-	return WriteJSON(w, http.StatusOK, account)
-}
-
-func (s *APIServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
-
-func (s *APIServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
-
 
 // func api() {
 // 	fmt.Println("Super api runner")
