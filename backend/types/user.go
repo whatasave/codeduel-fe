@@ -5,6 +5,12 @@ type CreateUserRequest struct {
 	Email 			string `json:"email"`
 }
 
+type UserRequestHeader struct {
+	ID 					int `json:"id"`
+	Username 		string `json:"username"`
+	Email 			string `json:"email"`
+}
+
 type User struct {
 	ID 					int `json:"id"`
 	Username 		string `json:"username"`

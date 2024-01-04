@@ -21,8 +21,8 @@ func main() {
     os.Getenv("MARIADB_PASSWORD"),
     os.Getenv("MARIADB_DATABASE"),
   )
-  if err != nil { panic(err) }
-  // if err := db.Init(); err != nil { panic(err) }
+  if err != nil { log.Fatalf("[MAIN] Error creating DB instance: %v", err) }
+  if err := db.Init(); err != nil { log.Fatalf("[MAIN] Error initializing DB: %v", err) }
 
   getGithubClientID()
   getGithubClientSecret()

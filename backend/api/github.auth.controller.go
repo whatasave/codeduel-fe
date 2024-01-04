@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/xedom/codeduel/types"
+	"github.com/xedom/codeduel/utils"
 )
 
 func (s *APIServer) handleGithubAuth(w http.ResponseWriter, r *http.Request) error {
@@ -45,103 +46,70 @@ func (s *APIServer) handleGithubAuthCallback(w http.ResponseWriter, r *http.Requ
 	if r.Method == "GET" {
 		// read params
 		urlParams := r.URL.Query()
+		if urlParams.Has("code") || urlParams.Has("state") { return fmt.Errorf("code or state is empty") }
 		code := urlParams.Get("code")
 		state := urlParams.Get("state")
-		fmt.Println("code: ", code)
-		fmt.Println("state: ", state)
-		// redirect to github auth
-		// urlParams := r.URL.Query()
+		// fmt.Println("code:", code)
+		// fmt.Println("state:", state)
 
-		// posturl := "https://github.com/login/oauth/access_token"
-
-		cliend_id := os.Getenv("AUTH_GITHUB_CLIENT_ID")
-		client_secret := os.Getenv("AUTH_GITHUB_CLIENT_SECRET")
+		cliend_id, err := utils.GetEnv("AUTH_GITHUB_CLIENT_ID")
+		if err != nil { return err }
+		client_secret, err := utils.GetEnv("AUTH_GITHUB_CLIENT_SECRET")
+		if err != nil { return err }
 		// client_callback_url := os.Getenv("AUTH_GITHUB_CLIENT_CALLBACK_URL")
 
-		githubAccessToken := getGithubAccessToken(cliend_id, client_secret, code)
-		fmt.Printf("Github Access Token: %s\n", githubAccessToken)
-		
-    githubData := getGithubData(githubAccessToken)
-		fmt.Printf("Github Data: %s\n", githubData)
+		githubAccessToken, err := getGithubAccessToken(cliend_id, client_secret, code, state)
+		if err != nil { return err }
 
+		// fmt.Printf("Github Access Token: %s\n", githubAccessToken)
+		
+    githubData := getGithubData(githubAccessToken.AccessToken)
 		githubParsedData := &types.GithubUser{}
 		json.Unmarshal([]byte(githubData), &githubParsedData)
-		fmt.Printf("Github Parsed Data: %+v\n", *githubParsedData)
+		// fmt.Printf("Github Parsed Data: %+v\n", *githubParsedData)
 
-    // // JSON body
-		// body := []byte(`{
-		// 	"client_id": "` + cliend_id + `",
-		// 	"client_secret": "` + client_secret + `",
-		// 	"code": "` + code + `",
-		// 	"redirect_uri": "` + client_callback_url + `",
-		// 	"state": "` + state + `"
-		// }`)
+		user := types.NewUser(githubParsedData.Login, githubParsedData.Email)
+		user.ImageURL = githubParsedData.AvatarUrl;
+		errdb := s.db.CreateUser(user)
+		if errdb != nil { return errdb }
 
-		// // Create a HTTP post request
-		// rr, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
-		// if err != nil { panic(err) }
-		
-		// client := &http.Client{}
-		// res, err := client.Do(rr)
-		// if err != nil { panic(err) }
-
-		// defer res.Body.Close()
-
-    // responseData, err := ioutil.ReadAll(res.Body)
-    // if err != nil { log.Fatal(err) }
-    // responseString := string(responseData)
-    // fmt.Println(responseString)
+		auth := types.NewAuthEntry(user.ID, "github", fmt.Sprintf("%d", githubParsedData.Id))
+		s.db.CreateAuth(auth)
 
 	}
 	
 	return fmt.Errorf("method not allowed %s", r.Method)
 }
 
-func getGithubAccessToken(clientID, clientSecret, code string) string {
+func getGithubAccessToken(clientID, clientSecret, code, state string) (*types.GithubAccessTokenResponse, error) {
+	requestURL := "https://github.com/login/oauth/access_token"
 
 	// Set us the request body as JSON
 	requestBodyMap := map[string]string{
-			"client_id": clientID,
-			"client_secret": clientSecret,
-			"code": code,
+		"client_id": clientID,
+		"client_secret": clientSecret,
+		"code": code,
+		// "redirect_uri": client_callback_url,
+		"state": state,
 	}
 	requestJSON, _ := json.Marshal(requestBodyMap)
 
 	// POST request to set URL
-	req, reqerr := http.NewRequest(
-			"POST",
-			"https://github.com/login/oauth/access_token",
-			bytes.NewBuffer(requestJSON),
-	)
-	if reqerr != nil {
-			log.Panic("Request creation failed")
-	}
+	req, reqerr := http.NewRequest("POST",requestURL,bytes.NewBuffer(requestJSON))
+	if reqerr != nil { return nil, fmt.Errorf("Request creation failed") }
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
-	// Get the response
+	// Make the request
 	resp, resperr := http.DefaultClient.Do(req)
-	if resperr != nil {
-			log.Panic("Request failed")
-	}
-
-	// Response body converted to stringified JSON
-	respbody, _ := ioutil.ReadAll(resp.Body)
-
-	// Represents the response received from Github
-	type githubAccessTokenResponse struct {
-			AccessToken string `json:"access_token"`
-			TokenType   string `json:"token_type"`
-			Scope       string `json:"scope"`
-	}
+	if resperr != nil { return nil, fmt.Errorf("Request failed") }
 
 	// Convert stringified JSON to a struct object of type githubAccessTokenResponse
-	var ghresp githubAccessTokenResponse
+	respbody, _ := io.ReadAll(resp.Body)
+	ghresp := &types.GithubAccessTokenResponse{}
 	json.Unmarshal(respbody, &ghresp)
 
-	// Return the access token (as the rest of the
-	// details are relatively unnecessary for us)
-	return ghresp.AccessToken
+	return ghresp, nil
 }
 
 func getGithubData(accessToken string) string {
@@ -167,7 +135,7 @@ func getGithubData(accessToken string) string {
 	}
 
 	// Read the response as a byte slice
-	respbody, _ := ioutil.ReadAll(resp.Body)
+	respbody, _ := io.ReadAll(resp.Body)
 
 	// Convert byte slice to string and return
 	return string(respbody)
@@ -187,9 +155,7 @@ func loggedinHandler(w http.ResponseWriter, r *http.Request, githubData string) 
 	var prettyJSON bytes.Buffer
 	// json.indent is a library utility function to prettify JSON indentation
 	parserr := json.Indent(&prettyJSON, []byte(githubData), "", "\t")
-	if parserr != nil {
-			log.Panic("JSON parse error")
-	}
+	if parserr != nil { log.Panic("JSON parse error") }
 
 	// Return the prettified JSON as a string
 	fmt.Fprintf(w, string(prettyJSON.Bytes()))

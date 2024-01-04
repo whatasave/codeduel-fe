@@ -19,6 +19,8 @@ type DB interface {
 	UpdateUser(*types.User) error
 	GetUsers() ([]*types.User, error)
 	GetUserByID(int) (*types.User, error)
+
+	CreateAuth(*types.AuthEntry) error
 }
 
 type MariaDB struct {
@@ -47,7 +49,7 @@ func NewDB(host, port, user, pass, name string) (*MariaDB, error) {
 
 var pool *sql.DB
 
-func Init() {
+func InitOLD() {
 	dbUser := os.Getenv("MARIADB_USER")
 	dbPass := os.Getenv("MARIADB_PASSWORD")
 	dbName := os.Getenv("MARIADB_DATABASE")
@@ -98,11 +100,45 @@ func Ping(ctx context.Context) {
 // 	log.Println("name=", name)
 // }
 
-func (m *MariaDB) CreateUser(user *types.User) error {
-	query := `INSERT INTO users (username, email)
-		VALUES (?, ?)
+func (m *MariaDB) CreateUser(user *types.User) (error) {
+	query := `INSERT INTO users (username, email, image_url)
+		VALUES (?, ?, ?);
 	;`
-	_, err := m.db.Exec(query, user.Username, user.Email)
+	_, err := m.db.Exec(query, user.Username, user.Email, user.ImageURL)
+	if err != nil { return err }
+
+	id, err := m.getLastInsertID()
+	if err != nil { return err }
+
+	user.ID = id
+	return err
+}
+
+func (m *MariaDB) getLastInsertID() (int, error) {
+	row, err := m.db.Query(`SELECT LAST_INSERT_ID();`)
+	if err != nil { return 0, err }
+	defer row.Close()
+
+	var id int
+	for row.Next() {
+		if err := row.Scan(&id); err != nil { return 0, err }
+	}
+	if err := row.Err(); err != nil { return 0, err }
+
+	return id, nil
+}
+
+func (m *MariaDB) CreateAuth(auth *types.AuthEntry) (error) {
+	query := `INSERT INTO auth (user_id, provider, provider_id)
+		VALUES (?, ?, ?);
+	;`
+	_, err := m.db.Exec(query, auth.UserID, auth.Provider, auth.ProviderID)
+	if err != nil { return err }
+	
+	id, err := m.getLastInsertID()
+	if err != nil { return err }
+
+	auth.ID = id
 	return err
 }
 
@@ -119,7 +155,14 @@ func (m *MariaDB) DeleteUser(id int) error {
 }
 
 func (m *MariaDB) UpdateUser(user *types.User) error {
-	return nil
+	query := `UPDATE users SET username = ?, email = ?, image_url = ? WHERE id = ?;`
+	res, err := m.db.Exec(query, user.Username, user.Email, user.ImageURL, user.ID)
+	if err != nil { return err }
+	if rows, _ := res.RowsAffected(); rows == 0 {
+		return fmt.Errorf("user with id %d not found", user.ID)
+	}
+
+	return err
 }
 
 func (m *MariaDB) GetUsers() ([]*types.User, error) {
