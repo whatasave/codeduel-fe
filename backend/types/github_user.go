@@ -44,16 +44,16 @@ type GithubUser struct {
 	UpdatedAt 					string `json:"updated_at"`
 }
 
+type GithubEmails struct {
+	Email 				string `json:"email"`
+	Verified 			bool `json:"verified"`
+	Primary 			bool `json:"primary"`
+	Visibility 		string `json:"visibility"`
+}
+
+
 type GithubAccessTokenResponse struct {
 	AccessToken 	string `json:"access_token"`
 	TokenType   	string `json:"token_type"`
 	Scope       	string `json:"scope"`
-}
-
-func NewAuthEntry(userID int, provider, providerID string) *AuthEntry {
-	return &AuthEntry{
-		UserID: userID,
-		Provider: provider,
-		ProviderID: providerID,
-	}
 }

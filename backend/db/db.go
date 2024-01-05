@@ -21,6 +21,7 @@ type DB interface {
 	GetUserByID(int) (*types.User, error)
 
 	CreateAuth(*types.AuthEntry) error
+	GetAuthByProviderAndID(string, string) (*types.AuthEntry, error)
 }
 
 type MariaDB struct {
@@ -142,6 +143,18 @@ func (m *MariaDB) CreateAuth(auth *types.AuthEntry) (error) {
 	return err
 }
 
+func (m *MariaDB) GetAuthByProviderAndID(provider, providerID string) (*types.AuthEntry, error) {
+	query := `SELECT * FROM auth WHERE provider = ? AND provider_id = ?;`
+	rows, err := m.db.Query(query, provider, providerID)
+	if err != nil { return nil, err }
+	defer rows.Close()
+
+	for rows.Next() { return m.parseAuth(rows) }
+	if err := rows.Err(); err != nil { return nil, err }
+
+	return nil, fmt.Errorf("auth with provider_id %s not found", providerID)
+}
+
 func (m *MariaDB) DeleteUser(id int) error {
 	query := `DELETE FROM users WHERE id = ?;`
 	res, err := m.db.Exec(query, id)
@@ -189,6 +202,7 @@ func (m *MariaDB) GetUserByID(id int) (*types.User, error) {
 	defer rows.Close()
 
 	for rows.Next() { return m.parseUser(rows) }
+	if err := rows.Err(); err != nil { return nil, err }
 
 	return nil, fmt.Errorf("user with id %d not found", id)
 }
@@ -228,7 +242,8 @@ func (m *MariaDB) createAuthTable() error {
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		PRIMARY KEY (id),
-		FOREIGN KEY (user_id) REFERENCES users(id)
+		FOREIGN KEY (user_id) REFERENCES users(id),
+		UNIQUE INDEX (provider_id)
 	);`
 	_, err := m.db.Exec(query)
 	return err
@@ -248,4 +263,18 @@ func (m *MariaDB) parseUser(row *sql.Rows) (*types.User, error) {
 	if user_image_url.Valid { user.ImageURL = user_image_url.String }
 
 	return user, nil
+}
+
+func (m *MariaDB) parseAuth(row *sql.Rows) (*types.AuthEntry, error) {
+	auth := &types.AuthEntry{}
+	if err := row.Scan(
+		&auth.ID,
+		&auth.UserID,
+		&auth.Provider,
+		&auth.ProviderID,
+		&auth.CreatedAt,
+		&auth.UpdatedAt,
+	); err != nil { return nil, err }
+
+	return auth, nil
 }
