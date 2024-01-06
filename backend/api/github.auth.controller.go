@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
+	"io"
 	"net/http"
 	"os"
 
+	"github.com/xedom/codeduel/db"
 	"github.com/xedom/codeduel/types"
+	"github.com/xedom/codeduel/utils"
 )
 
 func (s *APIServer) handleGithubAuth(w http.ResponseWriter, r *http.Request) error {
@@ -24,7 +25,7 @@ func (s *APIServer) handleGithubAuth(w http.ResponseWriter, r *http.Request) err
 
 		urlParams.Add("client_id", cliend_id)
 		urlParams.Add("redirect_uri", client_callback_url)
-		// urlParams.Add("return_to", "/login/oauth/authorize?client_id=23e780f12c2e313d2872")
+		urlParams.Add("return_to", "/frontend")
 		urlParams.Add("response_type", "code")
 		urlParams.Add("scope", "user:email")
 		urlParams.Add("state", "an_unguessable_random_string") // It is used to protect against cross-site request forgery attacks.
@@ -33,8 +34,6 @@ func (s *APIServer) handleGithubAuth(w http.ResponseWriter, r *http.Request) err
 
 		url := fmt.Sprintf("%s?%s", redirect, encodedParams)
 		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-
-		// http.Redirect(w, r, "http://localhost:5000/api/v1/auth/github/callback", http.StatusTemporaryRedirect)
 		return nil
 	}
 	
@@ -43,154 +42,180 @@ func (s *APIServer) handleGithubAuth(w http.ResponseWriter, r *http.Request) err
 
 func (s *APIServer) handleGithubAuthCallback(w http.ResponseWriter, r *http.Request) error {
 	if r.Method == "GET" {
-		// read params
 		urlParams := r.URL.Query()
+		if !urlParams.Has("code") || !urlParams.Has("state") { return fmt.Errorf("code or state is empty") }
 		code := urlParams.Get("code")
-		state := urlParams.Get("state")
-		fmt.Println("code: ", code)
-		fmt.Println("state: ", state)
-		// redirect to github auth
-		// urlParams := r.URL.Query()
+		state := urlParams.Get("state") // It is used to protect against cross-site request forgery attacks.
 
-		// posturl := "https://github.com/login/oauth/access_token"
-
-		cliend_id := os.Getenv("AUTH_GITHUB_CLIENT_ID")
-		client_secret := os.Getenv("AUTH_GITHUB_CLIENT_SECRET")
+		cliend_id, err := utils.GetEnv("AUTH_GITHUB_CLIENT_ID")
+		if err != nil { return err }
+		client_secret, err := utils.GetEnv("AUTH_GITHUB_CLIENT_SECRET")
+		if err != nil { return err }
 		// client_callback_url := os.Getenv("AUTH_GITHUB_CLIENT_CALLBACK_URL")
 
-		githubAccessToken := getGithubAccessToken(cliend_id, client_secret, code)
-		fmt.Printf("Github Access Token: %s\n", githubAccessToken)
+		githubAccessToken, err := getGithubAccessToken(cliend_id, client_secret, code, state)
+		if err != nil { return err }
+		// fmt.Printf("Github Access Token: %s\n", githubAccessToken)
 		
-    githubData := getGithubData(githubAccessToken)
-		fmt.Printf("Github Data: %s\n", githubData)
+		githubUser, err := getGithubData(githubAccessToken.AccessToken)
+		if err != nil { return err }
+		// fmt.Printf("Github User: %+v\n", *githubUser)
 
-		githubParsedData := &types.GithubUser{}
-		json.Unmarshal([]byte(githubData), &githubParsedData)
-		fmt.Printf("Github Parsed Data: %+v\n", *githubParsedData)
+		if githubUser.Email == "" {
+			githubEmails, err := getGithubEmails(githubAccessToken.AccessToken)
+			if err != nil { return err }
+			// filter out email with primary = true
 
-    // // JSON body
-		// body := []byte(`{
-		// 	"client_id": "` + cliend_id + `",
-		// 	"client_secret": "` + client_secret + `",
-		// 	"code": "` + code + `",
-		// 	"redirect_uri": "` + client_callback_url + `",
-		// 	"state": "` + state + `"
-		// }`)
+			// fmt.Printf("Github Emails: %+v\n", *githubEmails)
+			for _, email := range *githubEmails {
+				if email.Primary { githubUser.Email = email.Email; break }
+			}
+		}
 
-		// // Create a HTTP post request
-		// rr, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
-		// if err != nil { panic(err) }
+		// check if user exists
+		auth, err := s.db.GetAuthByProviderAndID("github", fmt.Sprintf("%d", githubUser.Id))
+		if err != nil { return err }
+
+		user := &types.User{}
+		var registerOrLoginError error;
+		if auth == nil {
+			user, registerOrLoginError = registerUser(s.db, githubUser)
+		} else {
+			user, registerOrLoginError = loginUser(s.db, auth)
+		}
+		if registerOrLoginError != nil { return registerOrLoginError }
 		
-		// client := &http.Client{}
-		// res, err := client.Do(rr)
-		// if err != nil { panic(err) }
+		// jwt
+		token, err := utils.CreateJWT(user)
+		if err != nil { return err }
 
-		// defer res.Body.Close()
+		// set cookie
+		cookie := &http.Cookie{
+			Name: "jwt",
+			Value: token.Jwt,
+			Domain: s.host, // TODO may cause problems
+			Path: "/",
+			Expires: utils.UnixTimeToTime(token.ExpairAt),
+			// MaxAge: 86400,
+			HttpOnly: true,
+			Secure: false,
+			// SameSite: http.SameSiteStrictMode,
+			SameSite: http.SameSiteNoneMode,
+		}
 
-    // responseData, err := ioutil.ReadAll(res.Body)
-    // if err != nil { log.Fatal(err) }
-    // responseString := string(responseData)
-    // fmt.Println(responseString)
+		http.SetCookie(w, cookie)
+		// TODO: redirect to frontend
+		// WriteJSON(w, http.StatusOK, token)
+		// frontend := os.Getenv("FRONTEND_URL")
+		frontendCallback := os.Getenv("FRONTEND_URL_AUTH_CALLBACK")
+		redirectUrl := fmt.Sprintf("%s?jwt=%s", frontendCallback, token.Jwt)
+		http.Redirect(w, r, redirectUrl, http.StatusPermanentRedirect)
 
+		return nil
 	}
 	
 	return fmt.Errorf("method not allowed %s", r.Method)
 }
 
-func getGithubAccessToken(clientID, clientSecret, code string) string {
+func getGithubAccessToken(clientID, clientSecret, code, state string) (*types.GithubAccessTokenResponse, error) {
+	requestURL := "https://github.com/login/oauth/access_token"
 
 	// Set us the request body as JSON
 	requestBodyMap := map[string]string{
-			"client_id": clientID,
-			"client_secret": clientSecret,
-			"code": code,
+		"client_id": clientID,
+		"client_secret": clientSecret,
+		"code": code,
+		// "redirect_uri": client_callback_url,
+		"state": state,
 	}
 	requestJSON, _ := json.Marshal(requestBodyMap)
 
 	// POST request to set URL
-	req, reqerr := http.NewRequest(
-			"POST",
-			"https://github.com/login/oauth/access_token",
-			bytes.NewBuffer(requestJSON),
-	)
-	if reqerr != nil {
-			log.Panic("Request creation failed")
-	}
+	req, err := http.NewRequest("POST",requestURL,bytes.NewBuffer(requestJSON))
+	if err != nil { return nil, fmt.Errorf("Request creation failed") }
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
-	// Get the response
-	resp, resperr := http.DefaultClient.Do(req)
-	if resperr != nil {
-			log.Panic("Request failed")
-	}
-
-	// Response body converted to stringified JSON
-	respbody, _ := ioutil.ReadAll(resp.Body)
-
-	// Represents the response received from Github
-	type githubAccessTokenResponse struct {
-			AccessToken string `json:"access_token"`
-			TokenType   string `json:"token_type"`
-			Scope       string `json:"scope"`
-	}
+	// Make the request
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil { return nil, fmt.Errorf("Request failed") }
 
 	// Convert stringified JSON to a struct object of type githubAccessTokenResponse
-	var ghresp githubAccessTokenResponse
-	json.Unmarshal(respbody, &ghresp)
+	respBody, _ := io.ReadAll(resp.Body)
+	githubResponse := &types.GithubAccessTokenResponse{}
+	json.Unmarshal(respBody, &githubResponse)
 
-	// Return the access token (as the rest of the
-	// details are relatively unnecessary for us)
-	return ghresp.AccessToken
+	return githubResponse, nil
 }
 
-func getGithubData(accessToken string) string {
-	// Get request to a set URL
-	req, reqerr := http.NewRequest(
-			"GET",
-			"https://api.github.com/user",
-			nil,
-	)
-	if reqerr != nil {
-			log.Panic("API Request creation failed")
-	}
+func getGithubData(accessToken string) (*types.GithubUser, error) {
+	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
+	if err != nil { return nil, fmt.Errorf("Get Github Data API Request creation failed") }
 
-	// Set the Authorization header before sending the request
-	// Authorization: token XXXXXXXXXXXXXXXXXXXXXXXXXXX
+	// Add authorization header
 	authorizationHeaderValue := fmt.Sprintf("token %s", accessToken)
 	req.Header.Set("Authorization", authorizationHeaderValue)
 
 	// Make the request
-	resp, resperr := http.DefaultClient.Do(req)
-	if resperr != nil {
-			log.Panic("Request failed")
-	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil { return nil, fmt.Errorf("Get Github Data Request failed") }
 
 	// Read the response as a byte slice
-	respbody, _ := ioutil.ReadAll(resp.Body)
+	respBody, _ := io.ReadAll(resp.Body)
 
 	// Convert byte slice to string and return
-	return string(respbody)
+	githubParsedData := &types.GithubUser{}
+	jsonString := string(respBody)
+	json.Unmarshal([]byte(jsonString), &githubParsedData)
+
+	return githubParsedData, nil
 }
 
-func loggedinHandler(w http.ResponseWriter, r *http.Request, githubData string) {
-	if githubData == "" {
-			// Unauthorized users get an unauthorized message
-			fmt.Fprintf(w, "UNAUTHORIZED!")
-			return
+func getGithubEmails(accessToken string) (*[]types.GithubEmails, error) {
+	req, err := http.NewRequest("GET", "https://api.github.com/user/emails", nil)
+	if err != nil { return nil, fmt.Errorf("Get Github Emails API Request creation failed") }
+
+	// Add authorization header
+	authorizationHeaderValue := fmt.Sprintf("Bearer %s", accessToken)
+	req.Header.Set("Authorization", authorizationHeaderValue)
+
+	// Make the request
+	res, err := http.DefaultClient.Do(req)
+	if err != nil { return nil, fmt.Errorf("Get Github Emails Request failed") }
+
+	// Read the response as a byte slice
+	resBody, _ := io.ReadAll(res.Body)
+
+	// Convert byte slice to string and return
+	githubParsedData := &[]types.GithubEmails{}
+	jsonString := string(resBody)
+	json.Unmarshal([]byte(jsonString), &githubParsedData)
+
+	return githubParsedData, nil
+}
+
+func registerUser(db db.DB, githubUser *types.GithubUser) (*types.User, error) {
+	// create user
+	user := &types.User{
+		Username: githubUser.Login,
+		Email: githubUser.Email,
+		ImageURL: githubUser.AvatarUrl,
 	}
+	err := db.CreateUser(user)
+	if err != nil { return nil, err }
 
-	// Set return type JSON
-	w.Header().Set("Content-type", "application/json")
-
-	// Prettifying the json
-	var prettyJSON bytes.Buffer
-	// json.indent is a library utility function to prettify JSON indentation
-	parserr := json.Indent(&prettyJSON, []byte(githubData), "", "\t")
-	if parserr != nil {
-			log.Panic("JSON parse error")
+	// create auth
+	auth := &types.AuthEntry{
+		UserID: user.ID,
+		Provider: "github",
+		ProviderID: fmt.Sprintf("%d", githubUser.Id),
 	}
+	errAuth := db.CreateAuth(auth)
+	if errAuth != nil { return nil, errAuth }
 
-	// Return the prettified JSON as a string
-	fmt.Fprintf(w, string(prettyJSON.Bytes()))
+	return user, nil
+}
+
+func loginUser(db db.DB, auth *types.AuthEntry) (*types.User, error) {
+	return db.GetUserByID(auth.UserID)
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -13,6 +12,7 @@ import (
 func main() {
   err := godotenv.Load(".env")
   if err != nil { log.Fatalf("[MAIN] Error loading .env file") }
+  warnUndefinedEnvVars()
   
   db, err := db.NewDB(
     os.Getenv("MARIADB_HOST"),
@@ -21,30 +21,32 @@ func main() {
     os.Getenv("MARIADB_PASSWORD"),
     os.Getenv("MARIADB_DATABASE"),
   )
-  if err != nil { panic(err) }
-  // if err := db.Init(); err != nil { panic(err) }
+  if err != nil { log.Fatalf("[MAIN] Error creating DB instance: %v", err) }
+  if err := db.Init(); err != nil { log.Fatalf("[MAIN] Error initializing DB: %v", err) }
 
-  getGithubClientID()
-  getGithubClientSecret()
 
-  address := fmt.Sprintf("%s:%s", 
-    os.Getenv("HOST"),
-    os.Getenv("PORT"),
-  )
-  server := api.NewAPIServer(address, db)
+  server := api.NewAPIServer(os.Getenv("HOST"), os.Getenv("PORT"), db)
   server.Run()
 }
 
-func getGithubClientID() string {
-  githubClientID, exists := os.LookupEnv("AUTH_GITHUB_CLIENT_ID")
-  if !exists { log.Fatal("Github Client ID not defined in .env file") }
-
-  return githubClientID
-}
-
-func getGithubClientSecret() string {
-  githubClientSecret, exists := os.LookupEnv("AUTH_GITHUB_CLIENT_SECRET")
-  if !exists { log.Fatal("Github Client ID not defined in .env file") }
-
-  return githubClientSecret
+func warnUndefinedEnvVars() {
+  envVars := []string{
+    "HOST",
+    "PORT",
+    "FRONTEND_URL",
+    "FRONTEND_URL_AUTH_CALLBACK",
+    "MARIADB_HOST",
+    "MARIADB_PORT",
+    "MARIADB_USER",
+    "MARIADB_PASSWORD",
+    "MARIADB_DATABASE",
+    "AUTH_GITHUB_CLIENT_ID",
+    "AUTH_GITHUB_CLIENT_SECRET",
+    "AUTH_GITHUB_CLIENT_CALLBACK_URL",
+  }
+  
+  for _, envVar := range envVars {
+    _, exists := os.LookupEnv(envVar)
+    if !exists { log.Printf("[MAIN] Warning: %s not defined in .env file", envVar) }
+  }
 }

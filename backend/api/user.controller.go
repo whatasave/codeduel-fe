@@ -50,7 +50,10 @@ func (s *APIServer) handleCreateUser(w http.ResponseWriter, r *http.Request) err
 	if err := json.NewDecoder(r.Body).Decode(createUserReq); err != nil { return err }
 
 	log.Print("[API] Creating user ", createUserReq)
-	user := types.NewUser(createUserReq.Username, createUserReq.Email)
+	user := &types.User{
+		Username: createUserReq.Username,
+		Email: createUserReq.Email,
+	}
 	if err := s.db.CreateUser(user); err != nil { return err }
 
 	return WriteJSON(w, http.StatusOK, user)
