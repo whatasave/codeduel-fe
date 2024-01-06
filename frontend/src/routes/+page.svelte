@@ -1,10 +1,10 @@
 <script>
+	import PrimaryButton from '$components/button/PrimaryButton.svelte';
 	import Button from '../components/button/Button.svelte';
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<Button onclick={() => console.log('ciao')}>
-	{#snippet children()}{/snippet}
-</Button>
-<Button onclick={() => console.log('ciao')}>ciao</Button>
+<div class="flex h-full">
+	<h1 class="text-4xl font-bold">Code Duel</h1>
+	<PrimaryButton href="s" text="NEW LOBBY" />
+	<PrimaryButton text="JOIN LOBBY" />
+</div>

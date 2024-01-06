@@ -1,14 +1,20 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
-	interface $$Props extends HTMLButtonAttributes {
+	type $$Props = (HTMLButtonAttributes | HTMLAnchorAttributes) & {
 		children: Snippet;
-	}
+	};
 
 	let { children, ...props } = $props<$$Props>();
 </script>
 
-<button type={'button'} {...props}>
-	{@render children()}
-</button>
+{#if 'href' in props}
+	<a {...props}>
+		{@render children()}
+	</a>
+{:else}
+	<button type="button" {...props as HTMLButtonAttributes}>
+		{@render children()}
+	</button>
+{/if}
