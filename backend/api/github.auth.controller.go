@@ -100,10 +100,12 @@ func (s *APIServer) handleGithubAuthCallback(w http.ResponseWriter, r *http.Requ
 			HttpOnly: true,
 			Secure: false,
 			// SameSite: http.SameSiteStrictMode,
-			SameSite: http.SameSiteNoneMode,
+			// SameSite: http.SameSiteNoneMode,
+			SameSite: http.SameSiteLaxMode,
 		}
 
 		http.SetCookie(w, cookie)
+		fmt.Printf("Cookie: %+v\n", cookie)
 		// TODO: redirect to frontend
 		// WriteJSON(w, http.StatusOK, token)
 		// frontend := os.Getenv("FRONTEND_URL")
