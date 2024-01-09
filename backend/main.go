@@ -22,6 +22,7 @@ func main() {
     os.Getenv("MARIADB_DATABASE"),
   )
   if err != nil { log.Fatalf("[MAIN] Error creating DB instance: %v", err) }
+  defer db.Close()
   if err := db.InitUserTables(); err != nil { log.Fatalf("[MAIN] Error initializing DB user tables: %v", err) }
   if err := db.InitMatchTables(); err != nil { log.Fatalf("[MAIN] Error initializing DB match tables: %v", err) }
 

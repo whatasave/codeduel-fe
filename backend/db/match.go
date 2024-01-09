@@ -38,7 +38,7 @@ func (m *MariaDB) createMatchUserLinkTable() error {
 		match_id INT NOT NULL,
 		user_id INT NOT NULL,
 		status_id INT NOT NULL,
-		rank INT NOT NULL,
+		`+"`rank`"+` INT NOT NULL,
 		duration INT NOT NULL,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -89,6 +89,13 @@ func Ping(ctx context.Context) {
 	}
 }
 
+func (m *MariaDB) InitDatabase() error {
+	query := `CREATE DATABASE IF NOT EXISTS codeduel;`
+	_, err := m.db.Exec(query)
+
+	return err
+}
+
 // func Query(ctx context.Context, id int64) {
 // 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 // 	defer cancel()
