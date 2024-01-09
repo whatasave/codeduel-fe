@@ -74,7 +74,7 @@ func (s *APIServer) handleGithubAuthCallback(w http.ResponseWriter, r *http.Requ
 
 		// check if user exists
 		auth, err := s.db.GetAuthByProviderAndID("github", fmt.Sprintf("%d", githubUser.Id))
-		if err != nil { return err }
+		if err != nil { auth = nil }
 
 		user := &types.User{}
 		var registerOrLoginError error;
