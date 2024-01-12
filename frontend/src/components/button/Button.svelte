@@ -1,20 +1,29 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import clsx from 'clsx';
+	import { cva, type VariantProps } from 'class-variance-authority';
+	import type { ComponentProps } from 'svelte';
+	import ButtonLike from './ButtonLike.svelte';
 
-	type $$Props = (HTMLButtonAttributes | HTMLAnchorAttributes) & {
-		children: Snippet;
-	};
+	const classes = cva('', {
+		variants: {
+			variant: {
+				primary: 'primary',
+				secondary: 'secondary'
+			},
+			size: {
+				small: 'small',
+				medium: 'medium'
+			}
+		}
+	});
 
-	let { children, ...props } = $props<$$Props>();
+	interface $$Props extends Omit<ComponentProps<ButtonLike>, 'children'>, VariantProps<typeof classes> {
+		text: string;
+	}
+
+	let { text, class: className, variant, ...props } = $props<$$Props>();
 </script>
 
-{#if 'href' in props}
-	<a {...props}>
-		{@render children()}
-	</a>
-{:else}
-	<button type="button" {...props as HTMLButtonAttributes}>
-		{@render children()}
-	</button>
-{/if}
+<ButtonLike {...props} class={clsx(classes, className)}>
+	{text}
+</ButtonLike>
