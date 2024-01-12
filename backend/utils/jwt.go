@@ -9,7 +9,7 @@ import (
 )
 
 const jwtSecret = "yoooSuperSecret" // TODO: move to env
-const expiresIn_minutes = 1
+const expiresIn_minutes = 5
 
 func ValidateUserJWT(tokenString string) (*types.UserRequestHeader, error) {
 	token, err := ParseJWT(tokenString)

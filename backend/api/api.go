@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/xedom/codeduel/db"
 	"github.com/xedom/codeduel/utils"
@@ -57,7 +59,14 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/api/v1/auth/github", makeHTTPHandleFunc(s.handleGithubAuth))
 	router.HandleFunc("/api/v1/auth/github/callback", makeHTTPHandleFunc(s.handleGithubAuthCallback))
 
-	http.ListenAndServe(s.listenAddr, router)
+	frontendUrl := os.Getenv("FRONTEND_URL")
+
+	http.ListenAndServe(s.listenAddr, handlers.CORS(
+		handlers.AllowedOrigins([]string{frontendUrl}),
+		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS", "PUT", "DELETE"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With", "x-jwt-token"}),
+		handlers.AllowCredentials(),
+	)(router))
 }
 
 func (s *APIServer) handleRoot(w http.ResponseWriter, r *http.Request) error {
