@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 
 	const JWT = localStorage.getItem('jwt') ?? undefined;
-	let loggetUserData = $state({});
+	let loggedUserData = $state({});
 
 	$effect(async () => {
 		const res = await fetch('http://localhost:5000/api/v1/profile', {
@@ -15,7 +15,7 @@
 			}
 		});
 		const data = await res.json();
-		loggetUserData = data;
+		loggedUserData = data;
 		console.log('data', data);
 	});
 </script>
@@ -26,5 +26,5 @@
 username: {$page.params.username}
 --------------------------------------------
 data:
-{JSON.stringify(loggetUserData, null, 2)}
+{JSON.stringify(loggedUserData, null, 2)}
 </pre>

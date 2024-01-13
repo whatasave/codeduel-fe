@@ -11,7 +11,7 @@ type UserRequestHeader struct {
 	Email 			string `json:"email"`
 	ImageURL 		string `json:"image_url"`
 	// Role 				string `json:"role"`
-	ExpairAt 		int64 `json:"expair_at"`
+	ExpiresAt 		int64 `json:"expires_at"`
 }
 
 type User struct {

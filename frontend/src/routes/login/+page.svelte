@@ -14,6 +14,8 @@
 		$JWT = $page.url.searchParams.get('jwt') ?? undefined;
 		console.log('JWT:', $JWT);
 
+		console.log('cookies', document.cookie);
+
 		localStorage.setItem('jwt', $JWT?.toString() ?? '');
 	}
 </script>

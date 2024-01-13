@@ -118,3 +118,29 @@ func (m *MariaDB) createStatusTable() error {
 	_, err = m.db.Exec(queryDefaultValues)
 	return err
 }
+
+func (m *MariaDB) createMatchStatusTable() error {
+	query := `CREATE TABLE IF NOT EXISTS status (
+		id INT unique AUTO_INCREMENT,
+		name VARCHAR(50) NOT NULL,
+
+		PRIMARY KEY (id),
+		UNIQUE INDEX (id)
+	);`
+	_, err := m.db.Exec(query)
+	if err != nil { return err }
+
+	queryDefaultValues := `INSERT IGNORE INTO status
+	(id, name) VALUES
+	(0, 'starting'),
+	(1, 'ongoing'),
+	(2, 'finished');
+	`
+	_, err = m.db.Exec(queryDefaultValues)
+	return err
+}
+
+func (m *MariaDB) createLanguageTable() error {
+	return nil
+}
+

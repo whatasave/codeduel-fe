@@ -23,7 +23,7 @@ func ValidateUserJWT(tokenString string) (*types.UserRequestHeader, error) {
 		Email: claims["email"].(string),
 		ImageURL: claims["imageURL"].(string),
 		// Role: claims["role"].(string),
-		ExpairAt: int64(claims["exp"].(float64)),
+		ExpiresAt: int64(claims["exp"].(float64)),
 	}
 
 	if err := claims.Valid(); err != nil { return nil, err }
@@ -43,17 +43,17 @@ func ParseJWT(tokenString string) (*jwt.Token, error) {
 
 type JWT struct {
 	Jwt 			string `json:"jwt"`
-	ExpairAt 	int64 `json:"expair_at"`
+	ExpiresAt 	int64 `json:"expires_at"`
 }
 
 func CreateJWT(user *types.User) (*JWT, error) {
 	// https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims#registered-claims
-	expair_at := time.Now().Add(time.Minute * expiresIn_minutes).Unix()
+	expires_at := time.Now().Add(time.Minute * expiresIn_minutes).Unix()
 
 	claims := &jwt.MapClaims {
 		"iss": "codeduel",
 		"sub": user.ID,
-		"exp": expair_at,
+		"exp": expires_at,
 
 		// custom claims
 		"username": user.Username,
@@ -67,5 +67,5 @@ func CreateJWT(user *types.User) (*JWT, error) {
 	tokenString, err := token.SignedString([]byte(jwtSecret))
 	if err != nil { return nil, err }
 	
-	return &JWT{ Jwt: tokenString, ExpairAt: expair_at, }, nil
+	return &JWT{ Jwt: tokenString, ExpiresAt: expires_at, }, nil
 }

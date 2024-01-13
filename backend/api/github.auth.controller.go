@@ -18,17 +18,17 @@ func (s *APIServer) handleGithubAuth(w http.ResponseWriter, r *http.Request) err
 		// redirect to github auth
 		urlParams := r.URL.Query()
 		
-		cliend_id := os.Getenv("AUTH_GITHUB_CLIENT_ID")
+		client_id := os.Getenv("AUTH_GITHUB_CLIENT_ID")
 		// client_secret := os.Getenv("AUTH_GITHUB_CLIENT_SECRET")
 		client_callback_url := os.Getenv("AUTH_GITHUB_CLIENT_CALLBACK_URL")
 		redirect := "https://github.com/login/oauth/authorize"
 
-		urlParams.Add("client_id", cliend_id)
+		urlParams.Add("client_id", client_id)
 		urlParams.Add("redirect_uri", client_callback_url)
 		urlParams.Add("return_to", "/frontend")
 		urlParams.Add("response_type", "code")
 		urlParams.Add("scope", "user:email")
-		urlParams.Add("state", "an_unguessable_random_string") // It is used to protect against cross-site request forgery attacks.
+		urlParams.Add("state", "an_unguessable_random_string") // TODO: JWT It is used to protect against cross-site request forgery attacks.
 		urlParams.Add("allow_signup", "true")
 		encodedParams := urlParams.Encode()
 
@@ -47,13 +47,13 @@ func (s *APIServer) handleGithubAuthCallback(w http.ResponseWriter, r *http.Requ
 		code := urlParams.Get("code")
 		state := urlParams.Get("state") // It is used to protect against cross-site request forgery attacks.
 
-		cliend_id, err := utils.GetEnv("AUTH_GITHUB_CLIENT_ID")
+		client_id, err := utils.GetEnv("AUTH_GITHUB_CLIENT_ID")
 		if err != nil { return err }
 		client_secret, err := utils.GetEnv("AUTH_GITHUB_CLIENT_SECRET")
 		if err != nil { return err }
 		// client_callback_url := os.Getenv("AUTH_GITHUB_CLIENT_CALLBACK_URL")
 
-		githubAccessToken, err := getGithubAccessToken(cliend_id, client_secret, code, state)
+		githubAccessToken, err := getGithubAccessToken(client_id, client_secret, code, state)
 		if err != nil { return err }
 		// fmt.Printf("Github Access Token: %s\n", githubAccessToken)
 		
@@ -95,7 +95,7 @@ func (s *APIServer) handleGithubAuthCallback(w http.ResponseWriter, r *http.Requ
 			Value: token.Jwt,
 			Domain: s.host, // TODO may cause problems
 			Path: "/",
-			Expires: utils.UnixTimeToTime(token.ExpairAt),
+			Expires: utils.UnixTimeToTime(token.ExpiresAt),
 			// MaxAge: 86400,
 			HttpOnly: true,
 			Secure: false,
