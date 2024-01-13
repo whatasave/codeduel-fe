@@ -1,15 +1,29 @@
+BINARY_NAME=codeduel-be.exe
+
 build:
-	@go build -o ../bin/$(BINARY_NAME) -v
+	go build -o ./bin/$(BINARY_NAME) -v
 
-# run: build
-# 	./bin/$(BINARY_NAME).exe
+run: build
+	./bin/$(BINARY_NAME)
 
-run:
-	@go run .
+dev:
+	go run .
 
 test:
-	@go test -v ./...
+	go test -v ./...
+
+docker-build:
+	docker build -t codeduel-be .
+
+docker-up:
+	docker run -d -p 5000:5000 -v C:\Users\kajos\git\codeduel\backend\.env.docker:/.env --name codeduel-be codeduel-be
+
+docker-down:
+	docker stop codeduel-be
+	docker rm codeduel-be
+
+docker-restart: docker-down docker-up
 
 clean:
-	@go clean
-	@rm -f bin/$(BINARY_NAME)
+	go clean
+	rm -f bin/$(BINARY_NAME)
