@@ -15,7 +15,7 @@ services:
       # MARIADB_DATABASE: $MARIADB_DATABASE
 
   backend:
-    image: backend
+    # image: xedom/codeduel-be
     container_name: backend
     build:
       context: ./backend
@@ -35,7 +35,7 @@ services:
       - database
   
   frontend:
-    image: frontend
+    # image: xedom/codeduel-fe
     container_name: frontend
     build:
       context: ./frontend
