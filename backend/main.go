@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 	"github.com/xedom/codeduel/api"
@@ -10,8 +11,7 @@ import (
 )
 
 func main() {
-  err := godotenv.Load(".env")
-  if err != nil { log.Fatalf("[MAIN] Error loading .env file") }
+  loadingEnvVars()
   warnUndefinedEnvVars()
   
   db, err := db.NewDB(
@@ -28,6 +28,19 @@ func main() {
 
   server := api.NewAPIServer(os.Getenv("HOST"), os.Getenv("PORT"), db)
   server.Run()
+}
+
+func loadingEnvVars() {
+  path_dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+  if err != nil { log.Fatalf("[MAIN] Error getting absolute path: %v", err) }
+  // log.Default().SetPrefix("[MAIN] ")
+  log.Printf("Loading .env file from %s", path_dir)
+  env_path := filepath.Join(path_dir, ".env")
+  if _, err := os.Stat(env_path); os.IsNotExist(err) {
+    log.Fatalf("[MAIN] Error: .env file not found in %s", path_dir)
+  }
+  err = godotenv.Load(env_path)
+  if err != nil { log.Fatalf("[MAIN] Error loading .env file") }
 }
 
 func warnUndefinedEnvVars() {

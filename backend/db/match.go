@@ -2,8 +2,11 @@ package db
 
 func (m *MariaDB) InitMatchTables() error {
 	if err := m.createStatusTable(); err != nil { return err }
+	if err := m.createMatchStatusTable(); err != nil { return err }
 	if err := m.createModeTable(); err != nil { return err }
+	if err := m.createLanguageTable(); err != nil { return err }
 	if err := m.createChallengeTable(); err != nil { return err }
+	
 
 	if err := m.createMatchTable(); err != nil { return err }
 	if err := m.createMatchUserLinkTable(); err != nil { return err }
@@ -19,6 +22,7 @@ func (m *MariaDB) createMatchTable() error {
 		mode_id INT NOT NULL,
 		max_users INT NOT NULL,
 		max_duration INT NOT NULL,
+		allowed_lang TEXT NOT NULL,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		
@@ -38,6 +42,9 @@ func (m *MariaDB) createMatchUserLinkTable() error {
 		match_id INT NOT NULL,
 		user_id INT NOT NULL,
 		status_id INT NOT NULL,
+		match_status_id INT NOT NULL,
+		code TEXT NOT NULL,
+		language_id INT NOT NULL,
 		`+"`rank`"+` INT NOT NULL,
 		duration INT NOT NULL,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -113,8 +120,7 @@ func (m *MariaDB) createStatusTable() error {
 	(1, 'ready'),
 	(2, 'in match'),
 	(3, 'abandoned'),
-	(4, 'finished');
-	`
+	(4, 'finished');`
 	_, err = m.db.Exec(queryDefaultValues)
 	return err
 }
@@ -134,13 +140,33 @@ func (m *MariaDB) createMatchStatusTable() error {
 	(id, name) VALUES
 	(0, 'starting'),
 	(1, 'ongoing'),
-	(2, 'finished');
-	`
+	(2, 'finished');`
 	_, err = m.db.Exec(queryDefaultValues)
 	return err
 }
 
 func (m *MariaDB) createLanguageTable() error {
-	return nil
+	query := `CREATE TABLE IF NOT EXISTS language (
+		id INT unique AUTO_INCREMENT,
+		name VARCHAR(50) NOT NULL,
+
+		PRIMARY KEY (id),
+		UNIQUE INDEX (id)
+	);`
+	_, err := m.db.Exec(query)
+	if err != nil { return err }
+
+	queryDefaultValues := `INSERT IGNORE INTO language
+	(id, name) VALUES
+	(0, 'c'),
+	(1, 'cpp'),
+	(2, 'java'),
+	(3, 'js'),
+	(4, 'golang'),
+	(5, 'rust'),
+	(6, 'ruby'),
+	(7, 'python');`
+	_, err = m.db.Exec(queryDefaultValues)
+	return err
 }
 
