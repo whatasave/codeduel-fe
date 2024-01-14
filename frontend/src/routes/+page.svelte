@@ -5,4 +5,5 @@
 <div class="flex">
 	<h1 class="text-4xl font-bold">Code Duel</h1>
 	<Button variant="primary" text="JOIN LOBBY" />
+	<a href="/match/test">game</a>
 </div>
