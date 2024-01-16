@@ -31,6 +31,9 @@ func main() {
 }
 
 func loadingEnvVars() {
+  isProduction := os.Getenv("GO_ENV") == "production"
+  if isProduction { return }
+  
   path_dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
   if err != nil { log.Printf("[MAIN] Error getting absolute path: %v", err) }
   // log.Default().SetPrefix("[MAIN] ")
@@ -61,7 +64,9 @@ func warnUndefinedEnvVars() {
   }
   
   for _, envVar := range envVars {
-    _, exists := os.LookupEnv(envVar)
+    test, exists := os.LookupEnv(envVar)
     if !exists { log.Printf("[MAIN] Warning: %s not defined in .env file", envVar) }
+    if test == "" { log.Printf("[MAIN] Warning: %s is empty", envVar) }
+    log.Printf("[MAIN] %s: %s", envVar, test)
   }
 }

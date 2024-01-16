@@ -1,6 +1,7 @@
 FROM golang:1.21 as build-stage
 
 ENV BINARY_NAME=codeduel-be
+ENV GO_ENV=production
 
 RUN useradd -u 1001 -m codeduel-user
 
