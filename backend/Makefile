@@ -15,8 +15,9 @@ test:
 docker-build:
 	docker build -t codeduel-be .
 
+# docker run -d -p 5000:5000 -v C:\Users\kajos\git\codeduel\backend\.env.docker:/.env --name codeduel-be codeduel-be
 docker-up:
-	docker run -d -p 5000:5000 -v C:\Users\kajos\git\codeduel\backend\.env.docker:/.env --name codeduel-be codeduel-be
+	docker run -d -p 5000:5000 --name codeduel-be --env-file .env.docker codeduel-be
 
 docker-down:
 	docker stop codeduel-be

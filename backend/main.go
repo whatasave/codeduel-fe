@@ -21,10 +21,10 @@ func main() {
     os.Getenv("MARIADB_PASSWORD"),
     os.Getenv("MARIADB_DATABASE"),
   )
-  if err != nil { log.Fatalf("[MAIN] Error creating DB instance: %v", err) }
+  if err != nil { log.Printf("[MAIN] Error creating DB instance: %v", err) }
   defer db.Close()
-  if err := db.InitUserTables(); err != nil { log.Fatalf("[MAIN] Error initializing DB user tables: %v", err) }
-  if err := db.InitMatchTables(); err != nil { log.Fatalf("[MAIN] Error initializing DB match tables: %v", err) }
+  if err := db.InitUserTables(); err != nil { log.Printf("[MAIN] Error initializing DB user tables: %v", err) }
+  if err := db.InitMatchTables(); err != nil { log.Printf("[MAIN] Error initializing DB match tables: %v", err) }
 
   server := api.NewAPIServer(os.Getenv("HOST"), os.Getenv("PORT"), db)
   server.Run()
@@ -32,15 +32,16 @@ func main() {
 
 func loadingEnvVars() {
   path_dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-  if err != nil { log.Fatalf("[MAIN] Error getting absolute path: %v", err) }
+  if err != nil { log.Printf("[MAIN] Error getting absolute path: %v", err) }
   // log.Default().SetPrefix("[MAIN] ")
   log.Printf("Loading .env file from %s", path_dir)
   env_path := filepath.Join(path_dir, ".env")
   if _, err := os.Stat(env_path); os.IsNotExist(err) {
-    log.Fatalf("[MAIN] Error: .env file not found in %s", path_dir)
+    log.Printf("[MAIN] Error: .env file not found in %s", path_dir)
+    return
   }
   err = godotenv.Load(env_path)
-  if err != nil { log.Fatalf("[MAIN] Error loading .env file") }
+  if err != nil { log.Printf("[MAIN] Error loading .env file") }
 }
 
 func warnUndefinedEnvVars() {
