@@ -9,9 +9,6 @@ const config = {
 		alias: {
 			$components: './src/components',
 		}
-	},
-	compilerOptions: {
-		runes: true
 	}
 };
 

@@ -5,8 +5,8 @@
 	let { class: className, children } = $props<HTMLAttributes<HTMLDivElement>>();
 </script>
 
-<div class={clsx('bg-[#151515] rounded', className)}>
+<section class={clsx('bg-[#090909] rounded overflow-hidden', className)}>
 	{#if children}
 		{@render children()}
 	{/if}
-</div>
+</section>
