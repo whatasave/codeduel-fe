@@ -3,12 +3,30 @@
 
 	export let value: string = '';
 
+	editor.defineTheme('codeduel', {
+		base: 'vs-dark',
+		inherit: true,
+		rules: [],
+		colors: {
+			'editor.foreground': '#9cdcfe',
+			'editor.background': '#090909',
+			'editor.selectionBackground': '#191919',
+			'editor.lineHighlightBackground': '#191919'
+		}
+	});
+
 	function init(element: HTMLDivElement) {
 		editor.create(element, {
 			value,
-			language: 'javascript',
-			theme: 'vs-dark',
+			language: 'typescript',
+			theme: 'codeduel',
 			automaticLayout: true,
+			glyphMargin: false,
+			tabSize: 2,
+			fontSize: 18,
+			lineNumbersMinChars: 3,
+			// letterSpacing: 0.7,
+			renderWhitespace: 'selection',
 			minimap: {
 				enabled: false
 			}
