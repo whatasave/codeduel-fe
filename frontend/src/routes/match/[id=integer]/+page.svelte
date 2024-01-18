@@ -2,12 +2,17 @@
 	import InputExample from '$components/InputExample.svelte';
 	import Markdown from '$components/Markdown.svelte';
 	import Pane from '$components/Pane.svelte';
+	import Select from '$components/Select.svelte';
 	import TestCase from '$components/TestCase.svelte';
 	import Button from '$components/button/Button.svelte';
 	import Editor from '$components/editor/Editor.svelte';
+	import { languages } from '$lib/languages.js';
+	import type { TestCaseState } from '$lib/types.js';
 
 	let { data } = $props();
 	let testCaseStates: TestCaseState[] = $state(data.challenge.testCases.map(() => 'none'));
+	let selectedLanguageIndex = $state(0);
+	let selectedLanguage = $derived(languages[selectedLanguageIndex]);
 
 	function scrollHorizontally(this: HTMLDivElement, e: WheelEvent) {
 		this.scrollLeft -= e.deltaY;
@@ -47,7 +52,14 @@
 	</div>
 	<div class="flex flex-col flex-1 gap-2">
 		<Pane class="flex flex-col flex-1">
-			<Editor language="cpp" class="flex-1 p-4" />
+			<div class="flex px-4 py-4">
+				<Select
+					options={data.challenge.allowedLanguages ?? [...languages]}
+					bind:selectedIndex={selectedLanguageIndex}
+					mapToString={(s) => s}
+				/>
+			</div>
+			<Editor language={selectedLanguage} class="flex-1 p-4" />
 		</Pane>
 		<Pane class="flex flex-col h-80"></Pane>
 	</div>

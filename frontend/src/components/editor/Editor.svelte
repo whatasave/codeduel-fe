@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Language } from '$lib/types';
 	import { editor } from 'monaco-editor';
 
 	let { value = '', class: className, language } = $props<{ value?: string; class?: string; language: Language }>();
@@ -15,8 +16,11 @@
 		}
 	});
 
+	let ide: editor.IStandaloneCodeEditor | undefined;
+	$effect(() => editor.setModelLanguage(ide!.getModel()!, language));
+
 	function init(element: HTMLDivElement) {
-		const ide = editor.create(element, {
+		ide = editor.create(element, {
 			value,
 			language,
 			theme: 'codeduel',
@@ -34,10 +38,10 @@
 		});
 
 		return {
-			update() {
-				editor.setModelLanguage(ide.getModel()!, language);
-			},
-			destroy() {}
+			update() {},
+			destroy() {
+				ide?.dispose();
+			}
 		};
 	}
 </script>

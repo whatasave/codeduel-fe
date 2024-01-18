@@ -1,3 +1,5 @@
+import type { Challenge } from '$lib/types.js';
+
 export async function load({ params }) {
     const matchId = parseInt(params.id);
     const challenge: Challenge = {

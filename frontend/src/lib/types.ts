@@ -1,13 +1,15 @@
-type TestCase = {
+import type { languages } from "./languages";
+
+export type TestCase = {
     input: string;
     output: string;
 }
 
-type TestCaseState = "success" | "failure" | "none";
+export type TestCaseState = "success" | "failure" | "none";
 
-type Language = "python" | "javascript" | "java" | "csharp" | "cpp";
+export type Language = typeof languages[number];
 
-type Challenge = {
+export type Challenge = {
     title: string;
     description: string;
     testCases: TestCase[];
