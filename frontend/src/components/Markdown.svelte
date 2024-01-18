@@ -3,10 +3,10 @@
 	import DOMPurify from 'dompurify';
 	import clsx from 'clsx';
 
-	export let source: string;
+	let { source, class: className } = $props<{ source: string; class?: string }>();
 </script>
 
-<div class={clsx('markdown overflow-y-auto', $$props.class)}>
+<div class={clsx('markdown overflow-auto', className)}>
 	{#await marked.parse(source) then html}
 		{@html DOMPurify.sanitize(html)}
 	{/await}

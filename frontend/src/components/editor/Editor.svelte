@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { editor } from 'monaco-editor';
 
-	export let value: string = '';
+	let { value = '', class: className, language } = $props<{ value?: string; class?: string; language: Language }>();
 
 	editor.defineTheme('codeduel', {
 		base: 'vs-dark',
@@ -16,33 +16,37 @@
 	});
 
 	function init(element: HTMLDivElement) {
-		editor.create(element, {
+		const ide = editor.create(element, {
 			value,
-			language: 'typescript',
+			language,
 			theme: 'codeduel',
 			automaticLayout: true,
 			glyphMargin: false,
 			tabSize: 2,
 			fontSize: 18,
-			lineNumbersMinChars: 3,
-			// letterSpacing: 0.7,
+			lineNumbersMinChars: 1,
 			renderWhitespace: 'selection',
+			padding: {},
 			minimap: {
 				enabled: false
-			}
+			},
+			overviewRulerBorder: false
 		});
 
 		return {
-			update() {},
+			update() {
+				editor.setModelLanguage(ide.getModel()!, language);
+			},
 			destroy() {}
 		};
 	}
 </script>
 
-<div class={$$props.class} use:init></div>
+<div class={className} use:init></div>
 
 <style>
 	div :global(.monaco-editor) {
 		position: absolute !important;
+		overflow: hidden !important;
 	}
 </style>

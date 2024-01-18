@@ -4,7 +4,9 @@ export default {
   theme: {
     extend: {},
     borderRadius: {
-      DEFAULT: '0.5rem'
+      DEFAULT: '0.5rem',
+      sm: '0.25rem',
+      full: '50%'
     }
   },
   plugins: [],

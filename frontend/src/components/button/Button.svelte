@@ -6,8 +6,8 @@
 	const classes = cva('w-fit h-fit', {
 		variants: {
 			variant: {
-				primary: 'primary',
-				secondary: 'secondary'
+				primary: '',
+				accent: 'px-8 py-2 bg-[#ECC206] rounded-sm text-black text-[1.25rem] font-semibold'
 			}
 		}
 	});

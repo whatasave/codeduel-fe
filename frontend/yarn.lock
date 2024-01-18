@@ -1362,10 +1362,10 @@ svelte-preprocess@^5.1.0:
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
 
-svelte@^5.0.0-next.35:
-  version "5.0.0-next.35"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.35.tgz#c747211d233d09a470396aa9e38c97d982732af3"
-  integrity sha512-UjAHN7fuGZ+gSMtGCJyEMcESMVlYBd3dH2cwg2VlMkgpiYn6RQWyu3kPn5rqwOgW3zbILWicZP0eXyiJXBujPQ==
+svelte@^5.0.0-next.37:
+  version "5.0.0-next.37"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.37.tgz#52b4b476aab5d965b4b04d90bde117a2f798b989"
+  integrity sha512-gCBx4RRr4yVghb2Y5mVcsjUF7BAgy4a9vDW+K7NnRdIpm9JZLSNCejrjUImW+px9HE7xysKQf0iW7GuDtnGO5w==
   dependencies:
     "@ampproject/remapping" "^2.2.1"
     "@jridgewell/sourcemap-codec" "^1.4.15"
