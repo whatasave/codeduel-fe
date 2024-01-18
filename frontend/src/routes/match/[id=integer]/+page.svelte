@@ -6,7 +6,7 @@
 	import TestCase from '$components/TestCase.svelte';
 	import Button from '$components/button/Button.svelte';
 	import Editor from '$components/editor/Editor.svelte';
-	import { languages } from '$lib/languages.js';
+	import { languages, toHumanString } from '$lib/languages.js';
 	import type { TestCaseState } from '$lib/types.js';
 
 	let { data } = $props();
@@ -56,7 +56,7 @@
 				<Select
 					options={data.challenge.allowedLanguages ?? [...languages]}
 					bind:selectedIndex={selectedLanguageIndex}
-					mapToString={(s) => s}
+					mapToString={(language) => toHumanString(language)}
 				/>
 			</div>
 			<Editor language={selectedLanguage} class="flex-1 p-4" />
