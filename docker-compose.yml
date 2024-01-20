@@ -1,5 +1,9 @@
 version: "3.8"
 
+# env_file:
+#   - path: ./.env.backend
+#     required: true
+
 services:
   database:
     image: mariadb
@@ -8,6 +12,7 @@ services:
     ports:
       - 3306:3306
     environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: 1
       MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
       MARIADB_DATABASE: ${MARIADB_DATABASE}
