@@ -8,11 +8,9 @@ services:
     ports:
       - 3306:3306
     environment:
-      MARIADB_ROOT_PASSWORD: toor
-      # MARIADB_RANDOM_ROOT_PASSWORD: 1
-      # MARIADB_USER: $MARIADB_USER
-      # MARIADB_PASSWORD: $MARIADB_PASSWORD
-      # MARIADB_DATABASE: $MARIADB_DATABASE
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
 
   backend:
     image: xedom/codeduel-be
@@ -20,22 +18,29 @@ services:
     restart: always
     ports:
       - 5000:5000
-    env_file:
-      - ./.env.backend
     environment:
-      MARIADB_HOST: database
-      MARIADB_PORT: 3306
-      MARIADB_USER: root
-      MARIADB_PASSWORD: toor
-      MARIADB_DATABASE: codeduel
+      AUTH_GITHUB_CLIENT_CALLBACK_URL: ${AUTH_GITHUB_CLIENT_CALLBACK_URL}
+      AUTH_GITHUB_CLIENT_ID: ${AUTH_GITHUB_CLIENT_ID}
+      AUTH_GITHUB_CLIENT_SECRET: ${AUTH_GITHUB_CLIENT_SECRET}
+      BINARY_NAME: ${BINARY_NAME}
+      FRONTEND_URL: ${FRONTEND_URL}
+      FRONTEND_URL_AUTH_CALLBACK: ${FRONTEND_URL_AUTH_CALLBACK}
+      HOST: ${HOST}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_HOST: ${MARIADB_HOST}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_PORT: ${MARIADB_PORT}
+      MARIADB_USER: ${MARIADB_USER}
+      PORT: ${PORT}
     depends_on:
       - database
   
   frontend:
     # image: xedom/codeduel-fe
     container_name: frontend
+    profiles: ["prod"]
     build:
-      context: ./frontend
+      context: .
       dockerfile: Dockerfile
     restart: always
     ports:
