@@ -1,42 +1,38 @@
-# CodeDuel
+# create-svelte
 
-## Links
-Figma: [figma.com](https://www.figma.com/file/C3yHcHN9rJPfnB5iGQCQo2/CodeDuel?type=design&node-id=0-1&mode=design&t=xtZCXLAInBYx8bSD-0)
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
-## How to run
+## Creating a project
 
-### Shared dependencies
-Install: [Make](https://www.gnu.org/software/make/), [Docker](https://docs.docker.com/get-docker/), [Docker Compose](https://docs.docker.com/compose/install/).
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
-make docker-build
-make docker-up
-make docker-down
+# create a new project in the current directory
+npm create svelte@latest
+
+# create a new project in my-app
+npm create svelte@latest my-app
 ```
 
-### Backend
-Install: [GO Lang](https://golang.org/doc/install).
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
-# Run from root directory
-make be
+npm run dev
 
-# from backend directory
-make build
-make run
-make test
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
 ```
 
-### Frontend
-Install: [NodeJS](https://nodejs.org/en/download/), [Yarn](https://classic.yarnpkg.com/en/docs/install/#debian-stable).
+## Building
 
+To create a production version of your app:
 
 ```bash
-# Run from root directory
-make fe-build
-make fe
-
-# from frontend directory
-yarn install
-yarn dev
+npm run build
 ```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
