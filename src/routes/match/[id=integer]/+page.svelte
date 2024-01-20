@@ -2,6 +2,7 @@
 	import InputExample from '$components/InputExample.svelte';
 	import Markdown from '$components/Markdown.svelte';
 	import Pane from '$components/Pane.svelte';
+	import Player from '$components/Player.svelte';
 	import Select from '$components/Select.svelte';
 	import TestCase from '$components/TestCase.svelte';
 	import Button from '$components/button/Button.svelte';
@@ -20,7 +21,11 @@
 </script>
 
 <div class="flex h-full p-2 gap-2">
-	<Pane class="flex flex-col w-20"></Pane>
+	<Pane class="flex flex-col gap-2 p-2">
+		{#each data.players as player}
+			<Player {player} />
+		{/each}
+	</Pane>
 	<div class="flex flex-col flex-[0.7_0.7_0%] gap-2 overflow-hidden">
 		<Pane class="flex flex-col flex-1 min-h-0 p-4 pr-2">
 			<Markdown class="flex-1 pr-2" source={data.challenge.description} />
