@@ -1,4 +1,4 @@
-import type { Challenge } from '$lib/types.js';
+import type { Challenge, Player } from '$lib/types.js';
 
 export async function load({ params }) {
     const matchId = parseInt(params.id);
@@ -27,6 +27,13 @@ if the string is not a palindrome the program will return not a complex palindro
             { input: "19 20", output: "39" },
             { input: "21 22", output: "43" },
         ],
-    }
-    return { challenge };
+    };
+    const players: Player[] = [
+        { user: { username: 'user1' }, status: { phase: 'progress' } },
+        { user: { username: 'user2' }, status: { phase: 'progress' } },
+        { user: { username: 'user3' }, status: { phase: 'progress' } },
+        { user: { username: 'user4' }, status: { phase: 'progress' } },
+        { user: { username: 'user5' }, status: { phase: 'progress' } },
+    ];
+    return { challenge, players };
 }
