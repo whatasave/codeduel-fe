@@ -14,6 +14,7 @@
 	let testCaseStates: TestCaseState[] = $state(data.challenge.testCases.map(() => 'none'));
 	let selectedLanguageIndex = $state(0);
 	let selectedLanguage = $derived(languages[selectedLanguageIndex]);
+	let selectedTestCaseIndex = $state(0);
 
 	function scrollHorizontally(this: HTMLDivElement, e: WheelEvent) {
 		this.scrollLeft -= e.deltaY;
@@ -31,15 +32,15 @@
 			<Markdown class="flex-1 pr-2" source={data.challenge.description} />
 		</Pane>
 		<Pane class="flex p-2 flex-col h-80 gap-1">
-			<h2 class="font-semibold text-[1.25rem] px-1">Examples</h2>
-			<div class="flex gap-2 flex-1">
+			<h2 class="font-semibold text-[1.25rem] px-1">Test Case #{selectedTestCaseIndex + 1}</h2>
+			<div class="flex gap-2 flex-1 min-h-0">
 				<Pane class="h-full flex-1 bg-black flex flex-col">
 					<h3 class="text-center border-b border-white/20 py-3 mx-4">input</h3>
-					<InputExample input={'test test test test test test test test test test test test test\ntest'} />
+					<InputExample class="flex-1 min-h-0" input={data.challenge.testCases[selectedTestCaseIndex].input} />
 				</Pane>
 				<Pane class="h-full flex-1 bg-black flex flex-col">
 					<h3 class="text-center border-b border-white/20 py-3 mx-4">output</h3>
-					<InputExample input={'test test test test test test test test test test test test test\ntest'} />
+					<InputExample class="flex-1 min-h-0" input={data.challenge.testCases[selectedTestCaseIndex].output} />
 				</Pane>
 			</div>
 		</Pane>
@@ -49,7 +50,7 @@
 				on:wheel={scrollHorizontally}
 			>
 				{#each data.challenge.testCases as testCase, i}
-					<TestCase state={testCaseStates[i]} value={testCase} />
+					<TestCase state={testCaseStates[i]} value={testCase} onclick={() => (selectedTestCaseIndex = i)} />
 				{/each}
 			</div>
 			<Button class="w-32" variant="accent" text="check" />
