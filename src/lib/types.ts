@@ -13,7 +13,7 @@ export type Challenge = {
     title: string;
     description: string;
     testCases: TestCase[];
-    allowedLanguages?: Language[];
+    allowedLanguages: Language[];
 };
 
 export type Player = {
