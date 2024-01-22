@@ -2,7 +2,7 @@
 	import type { Language } from '$lib/types';
 	import { editor } from 'monaco-editor';
 
-	let { value = '', class: className, language } = $props<{ value?: string; class?: string; language: Language }>();
+	let { value, language, class: className } = $props<{ value: string; language: Language; class?: string }>();
 
 	editor.defineTheme('codeduel', {
 		base: 'vs-dark',
@@ -18,6 +18,7 @@
 
 	let ide: editor.IStandaloneCodeEditor | undefined;
 	$effect(() => editor.setModelLanguage(ide!.getModel()!, language));
+	$effect(() => ide!.setValue(value ?? ''));
 
 	function init(element: HTMLDivElement) {
 		ide = editor.create(element, {

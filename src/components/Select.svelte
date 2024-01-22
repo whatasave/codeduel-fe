@@ -1,12 +1,14 @@
 <script lang="ts" generics="T">
-	let { options, selectedIndex, mapToString } = $props<{
+	let { options, selectedIndex, mapToString, onselect } = $props<{
 		options: T[];
 		selectedIndex: number;
 		mapToString: (option: T) => string;
+		onselect?: (this: HTMLSelectElement) => void;
 	}>();
 
 	function onchange(this: HTMLSelectElement) {
 		selectedIndex = parseInt(this.value);
+		onselect?.call(this);
 	}
 </script>
 
