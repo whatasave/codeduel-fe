@@ -38,7 +38,6 @@ if the string is not a palindrome the program will return not a complex palindro
     ];
 
     const service = await LobbyService.create();
-    console.log(await service.getLobby())
 
     return { challenge, players };
 }

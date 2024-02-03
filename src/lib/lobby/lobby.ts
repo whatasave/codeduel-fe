@@ -3,7 +3,7 @@ import type { Lobby } from "$lib/types";
 export class LobbyService {
     path: string;
     connection: WebSocket | undefined;
-    lobby: Promise<Lobby> | undefined;
+    lobby: Lobby | undefined;
 
     static async create() {
         const service = new LobbyService('create');
@@ -28,32 +28,31 @@ export class LobbyService {
     }
 
     async start() {
-        this.connection = new WebSocket(`ws://localhost:8080/${this.path}`);
-        this.lobby = new Promise((resolve, reject) => {
-            this.connection!.addEventListener('message', (event) => {
-                resolve(event.data);
-            });
-            this.connection!.addEventListener('error', (event) => {
-                reject(event);
-            });
-        });
         return new Promise<void>((resolve, reject) => {
+            this.connection = new WebSocket(`ws://localhost:8080/${this.path}`);
             this.connection!.addEventListener('open', () => {
                 this.connection!.addEventListener('message', (event) => {
-                    resolve(event.data);
+                    const packet = JSON.parse(event.data);
+                    if (packet.type === 'lobby') {
+                        this.lobby = packet;
+                        resolve();
+                    }
+                    console.log(packet);
                 });
                 this.connection!.addEventListener('error', (event) => {
                     reject(event);
                 });
-                resolve();
             });
-            this.connection!.addEventListener('error', (event) => {
+            this.connection!.addEventListener('close', (event) => {
                 reject(event);
             });
         });
     }
 
-    async getLobby() {
-        return await this.lobby!;
+    getLobby() {
+        if (!this.lobby) {
+            throw new Error('Lobby not available, call start() first.');
+        }
+        return this.lobby!;
     }
 }
