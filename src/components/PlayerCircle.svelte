@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Player } from '$lib/types';
+	import type { User } from '$lib/types';
 
-	let { player } = $props<{ player: Player }>();
+	let { player } = $props<{ player: User }>();
 </script>
 
-<div class="h-[4.5rem] w-[4.5rem] rounded-full border border-[#A3A3A3]"></div>
+<div class="Userrem] w-[4.5rem] rounded-full border border-[#A3A3A3]"></div>

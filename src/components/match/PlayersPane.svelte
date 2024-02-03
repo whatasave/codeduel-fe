@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Pane from '$components/Pane.svelte';
 	import PlayerCircle from '$components/PlayerCircle.svelte';
-	import type { Player } from '$lib/types';
+	import type { User } from '$lib/types';
 
-	let { players } = $props<{ players: Player[] }>();
+	let { players } = $props<{ players: User[] }>();
 </script>
 
 <Pane class="flex flex-col gap-2 p-2">

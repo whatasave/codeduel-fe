@@ -1,7 +1,7 @@
-import type { Challenge, Player } from '$lib/types.js';
+import { LobbyService } from '$lib/lobby/lobby.js';
+import type { Challenge, User } from '$lib/types.js';
 
 export async function load({ params }) {
-    const matchId = parseInt(params.id);
     const challenge: Challenge = {
         title: 'Add Two Numbers',
         description: `
@@ -29,12 +29,16 @@ if the string is not a palindrome the program will return not a complex palindro
         ],
         allowedLanguages: ['cpp', 'java', 'python', 'javascript'],
     };
-    const players: Player[] = [
-        { user: { username: 'user1' }, status: { phase: 'progress' } },
-        { user: { username: 'user2' }, status: { phase: 'progress' } },
-        { user: { username: 'user3' }, status: { phase: 'progress' } },
-        { user: { username: 'user4' }, status: { phase: 'progress' } },
-        { user: { username: 'user5' }, status: { phase: 'progress' } },
+    const players: User[] = [
+        { id: 1, username: 'user1' },
+        { id: 2, username: 'user2' },
+        { id: 3, username: 'user3' },
+        { id: 4, username: 'user4' },
+        { id: 5, username: 'user5' },
     ];
+
+    const service = await LobbyService.create();
+    console.log(await service.getLobby())
+
     return { challenge, players };
 }
