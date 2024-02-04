@@ -1,13 +1,17 @@
 <script lang="ts">
 	import PlayerCircle from '$components/PlayerCircle.svelte';
 	import Button from '$components/button/Button.svelte';
-	import type { Player } from '$lib/types';
+	import { LobbyService } from '$lib/lobby/lobby';
+	import type { User, PlayerStatus } from '$lib/types';
 
-	const users: Player[] = $state([
-		{ user: { username: 'John' }, status: { phase: 'progress' } },
-		{ user: { username: 'Jane' }, status: { phase: 'progress' } },
-		{ user: { username: 'Jack' }, status: { phase: 'progress' } },
-		{ user: { username: 'Annie' }, status: { phase: 'progress' } }
+	
+    // const service = await LobbyService.create();
+
+	const users: User[] = $state([
+		{ id: 11, username: 'John' },
+		{ id: 11, username: 'Jane' },
+		{ id: 11, username: 'Jack' },
+		{ id: 11, username: 'Annie' }
 	]);
 </script>
 
@@ -21,8 +25,8 @@
 			<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
 				<PlayerCircle player={user} />
 				<div class="flex flex-col flex-1">
-					<p class="text-2xl font-semibold">{user.user.username}</p>
-					<p>{user.status.phase}</p>
+					<p class="text-2xl font-semibold">{user.username}</p>
+					<p>phase</p>
 				</div>
 				<div class="flex gap-2">
 					<Button text="Kick" />
