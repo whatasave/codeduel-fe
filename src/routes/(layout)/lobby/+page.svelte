@@ -47,15 +47,21 @@
 		{#each lobbies as lobby}
 			<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
 				<div>
-					{#each Object.values(lobby.users) as user}
-						<img class="w-8 h-8 rounded-full" src={user.avatar} alt={user.username} />
-					{/each}
+					<img class="w-10 h-10 rounded-full" src={lobby.owner.avatar} alt={lobby.owner.username} />
 				</div>
 				<div class="flex flex-col flex-1">
-					<p class="text-2xl font-semibold">{lobby.owner.username}'s lobby</p>
-					<p>
-						{lobby.state.type} | Locked | {lobby.playerCount}/{lobby.max_players} Brogrammers
-					</p>
+					<div class="text-2xl font-semibold">{lobby.owner.username}'s lobby</div>
+					<div class="flex gap-2 items-start">
+						<div>
+							{lobby.state.type.toUpperCase()} | Locked | {lobby.playerCount}/{lobby.max_players} Brogrammers
+						</div>
+
+						<div class="flex -space-x-2">
+							{#each Object.values(lobby.users) as user}
+								<img class="w-5 h-5 rounded-full border-2 border-[#050505]" src={user.avatar} alt={user.username} />
+							{/each}
+						</div>
+					</div>
 				</div>
 				<div class="flex gap-2">
 					{#if lobby.state.type === 'game'}

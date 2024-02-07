@@ -4,4 +4,6 @@
 	let { player } = $props<{ player: User }>();
 </script>
 
-<div class="h-[4.5rem] w-[4.5rem] rounded-full border-[0.2rem] border-[#A3A3A3]"></div>
+<div class="h-[4.5rem] w-[4.5rem] rounded-full border-[0.2rem] border-[#A3A3A3]">
+	<img class="h-full w-full rounded-full" src={player.avatar} alt={player.username} title={player.username} />
+</div>
