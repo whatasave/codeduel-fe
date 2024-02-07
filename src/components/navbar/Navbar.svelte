@@ -2,7 +2,7 @@
 	<div class="flex gap-2">
 		<a href="/">Home</a>
 		<a href="/match/1">Match</a>
-		<a href="/lobby/1">Lobby</a>
+		<a href="/lobby">Lobbies</a>
 	</div>
 
 	<div class="flex gap-2">

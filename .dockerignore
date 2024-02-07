@@ -1,5 +1,7 @@
 # .dockerignore
 
+.github
+.svelte-kit
 .vscode
 node_modules
 
@@ -8,9 +10,10 @@ node_modules
 
 .eslintignore
 .eslintrc.cjs
-
+.npmrc
 .prettierrc
 .pretieriignore
 
 README.md
 Dockerfile
+docker-compose.yml
