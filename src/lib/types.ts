@@ -26,21 +26,23 @@ export type UserId = number;
 export type PlayerStatus = { phase: 'progress' } | { phase: 'done', score: number };
 
 export type Lobby<State extends LobbyState = LobbyState> = {
+    id: string;
     settings: LobbySettings;
     challenge: Challenge;
-    users: User[];
+    users: { [id: string]: User };
     state: State;
 }
 
-export type LobbyState = PreLobbyState | GameState
+export type LobbyStateByType = {
+    preLobby: {
+        ready: UserId[];
+    };
+    game: {
+        players: User[];
+    };
+};
 
-export type PreLobbyState = {
-    ready: UserId[];
-}
-
-export type GameState = {
-    players: User[];
-}
+export type LobbyState = { [Type in keyof LobbyStateByType]: { type: Type } & LobbyStateByType[Type] }[keyof LobbyStateByType];
 
 export type LobbySettings = {
     maxPlayers: number;

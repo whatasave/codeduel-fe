@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Pane from '$components/Pane.svelte';
 	import PlayerCircle from '$components/PlayerCircle.svelte';
-	import type { User } from '$lib/types';
+	import type { User, UserId } from '$lib/types';
 
-	let { players } = $props<{ players: User[] }>();
+	let { players } = $props<{ players: { [id: UserId]: User } }>();
 </script>
 
 <Pane class="flex flex-col gap-2 p-2">
-	{#each players as player}
+	{#each Object.entries(players) as [_, player]}
 		<PlayerCircle {player} />
 	{/each}
 </Pane>

@@ -1,13 +1,21 @@
 <script lang="ts">
+	import { replaceState } from '$app/navigation';
 	import PlayerCircle from '$components/PlayerCircle.svelte';
 	import Button from '$components/button/Button.svelte';
-	import type { Player } from '$lib/types';
+	import type { User } from '$lib/types';
+	import { onMount } from 'svelte';
 
-	const users: Player[] = $state([
-		{ user: { username: 'John' }, status: { phase: 'progress' } },
-		{ user: { username: 'Jane' }, status: { phase: 'progress' } },
-		{ user: { username: 'Jack' }, status: { phase: 'progress' } },
-		{ user: { username: 'Annie' }, status: { phase: 'progress' } }
+	const { data } = $props();
+
+	onMount(() => {
+		replaceState(`/lobby/${data.lobby.getLobby().id}`, {});
+	});
+
+	const users: User[] = $state([
+		{ id: 1, username: 'John' },
+		{ id: 1, username: 'Jane' },
+		{ id: 1, username: 'Jack' },
+		{ id: 1, username: 'Annie' }
 	]);
 </script>
 
@@ -21,8 +29,8 @@
 			<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
 				<PlayerCircle player={user} />
 				<div class="flex flex-col flex-1">
-					<p class="text-2xl font-semibold">{user.user.username}</p>
-					<p>{user.status.phase}</p>
+					<p class="text-2xl font-semibold">{user.username}</p>
+					<p>{'N/A'}</p>
 				</div>
 				<div class="flex gap-2">
 					<Button text="Kick" />
@@ -39,7 +47,14 @@
 		</div>
 
 		<div class="flex gap-2">
-			<Button text="Start" variant="accent" />
+			<Button
+				text="Start"
+				variant="accent"
+				onclick={async () => {
+					await data.lobby.sendPacket({ type: 'startLobby', start: true });
+					console.log('start');
+				}}
+			/>
 			<Button text="Cancel" variant="primary" />
 			<Button text="Lock" variant="primary" />
 		</div>
