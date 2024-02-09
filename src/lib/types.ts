@@ -17,13 +17,14 @@ export type Challenge = {
 };
 
 export type User = {
-    id: UserId;
-    username: string;
+	id: UserId;
+	username: string;
+	avatar: string;
 };
 
 export type UserId = number;
 
-export type PlayerStatus = { phase: 'progress' } | { phase: 'done', score: number };
+export type PlayerStatus = { phase: 'progress' } | { phase: 'done'; score: number };
 
 export type Lobby<State extends LobbyState = LobbyState> = {
     id: string;
@@ -35,18 +36,20 @@ export type Lobby<State extends LobbyState = LobbyState> = {
 }
 
 export type LobbyStateByType = {
-    preLobby: {
-        ready: UserId[];
-    };
-    game: {
-        players: User[];
-    };
+	preLobby: {
+		ready: UserId[];
+	};
+	game: {
+		players: User[];
+	};
 };
 
-export type LobbyState = { [Type in keyof LobbyStateByType]: { type: Type } & LobbyStateByType[Type] }[keyof LobbyStateByType];
+export type LobbyState = {
+	[Type in keyof LobbyStateByType]: { type: Type } & LobbyStateByType[Type];
+}[keyof LobbyStateByType];
 
 export type LobbySettings = {
-    maxPlayers: number;
-    gameDuration: number;
-    allowedLanguages: Language[];
-}
+	maxPlayers: number;
+	gameDuration: number;
+	allowedLanguages: Language[];
+};

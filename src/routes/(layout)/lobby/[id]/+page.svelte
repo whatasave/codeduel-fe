@@ -6,17 +6,13 @@
 	import { onMount } from 'svelte';
 
 	const { data } = $props();
+	let lobby = data.lobby.getLobby();
 
 	onMount(() => {
 		replaceState(`/lobby/${data.lobby.getLobby().id}`, {});
 	});
 
-	const users: User[] = $state([
-		{ id: 1, username: 'John' },
-		{ id: 1, username: 'Jane' },
-		{ id: 1, username: 'Jack' },
-		{ id: 1, username: 'Annie' }
-	]);
+	const users: User[] = lobby.users ? Object.values(lobby.users) : [];
 </script>
 
 <div class="flex gap-2">
@@ -25,21 +21,23 @@
 			<p class="text-3xl font-bold">Players</p>
 		</div>
 
-		{#each users as user}
-			<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
-				<PlayerCircle player={user} />
-				<div class="flex flex-col flex-1">
-					<p class="text-2xl font-semibold">{user.username}</p>
-					<p>{'N/A'}</p>
+		<div class="flex flex-col gap-2 h-[26rem] overflow-y-auto">
+			{#each users as user}
+				<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
+					<PlayerCircle player={user} />
+					<div class="flex flex-col flex-1">
+						<p class="text-2xl font-semibold">{user.username}</p>
+						<p>{lobby.owner.id == user.id ? 'Owner' : 'Guest'}</p>
+					</div>
+					<div class="flex gap-2">
+						<Button text="Kick" />
+						<!-- TODO use ButtonIcon -->
+						<Button text="Ready" />
+						<!-- TODO use ButtonIcon -->
+					</div>
 				</div>
-				<div class="flex gap-2">
-					<Button text="Kick" />
-					<!-- TODO use ButtonIcon -->
-					<Button text="Ready" />
-					<!-- TODO use ButtonIcon -->
-				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
 	</div>
 	<div class="bg-[#050505] rounded p-2 gap-2 flex min-w-[35rem] flex-col">
 		<div class=" rounded p-2">
