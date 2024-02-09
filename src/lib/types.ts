@@ -29,7 +29,8 @@ export type Lobby<State extends LobbyState = LobbyState> = {
     id: string;
     settings: LobbySettings;
     challenge: Challenge;
-    users: { [id: string]: User };
+    owner: User;
+    users: { [id: UserId]: User };
     state: State;
 }
 

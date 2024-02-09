@@ -1,22 +1,22 @@
 <script lang="ts">
 	import Button from '$components/button/Button.svelte';
+	import type { User } from '$lib/types';
 	import { onMount } from 'svelte';
 
-	type LobbyType = {
+	type Lobby = {
 		id: string;
-		owner: string;
-		players: string[];
+		owner: User;
+		users: number;
 		max_players: number;
-		state: { type: string };
+		state: string;
 	};
 
-	let lobbies = $state<LobbyType[]>([]);
+	let lobbies = $state<Lobby[]>([]);
 
 	onMount(async () => {
 		const res = await fetch('http://localhost:8080/lobbies');
-		const data = await res.json();
-
-		lobbies = data as LobbyType[];
+		lobbies = (await res.json()) as Lobby[];
+		console.log(lobbies);
 	});
 </script>
 
@@ -32,8 +32,8 @@
 		{#each lobbies as lobby}
 			<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
 				<div class="flex flex-col flex-1">
-					<p class="text-2xl font-semibold">{lobby.owner}'s lobby</p>
-					<p>{lobby.state.type} - Locked - {lobby.players}/{lobby.max_players} Brogrammers</p>
+					<p class="text-2xl font-semibold">{lobby.owner.username}'s lobby</p>
+					<p>{lobby.state} - Locked - {lobby.users}/{lobby.max_players} Brogrammers</p>
 				</div>
 				<div class="flex gap-2">
 					<a href={`/lobby/${lobby.id}`}>
