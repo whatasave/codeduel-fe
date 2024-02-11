@@ -13,7 +13,6 @@ export type Challenge = {
 	title: string;
 	description: string;
 	testCases: TestCase[];
-	allowedLanguages: Language[];
 };
 
 export type User = {
@@ -29,7 +28,6 @@ export type PlayerStatus = { phase: 'progress' } | { phase: 'done'; score: numbe
 export type Lobby<State extends LobbyState = LobbyState> = {
     id: string;
     settings: LobbySettings;
-    challenge: Challenge;
     owner: User;
     users: { [id: UserId]: User };
     state: State;
@@ -40,7 +38,8 @@ export type LobbyStateByType = {
 		ready: UserId[];
 	};
 	game: {
-		players: User[];
+		startTime: number;
+		challenge: Challenge;
 	};
 };
 

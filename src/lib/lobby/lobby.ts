@@ -4,6 +4,7 @@ export class LobbyService {
 	path: string;
 	connection: WebSocket | undefined;
 	lobby: Lobby | undefined;
+	customEventListeners: Partial<PacketHandlerFromType> = {};
 
 	static async create() {
 		const service = new LobbyService('create');
@@ -33,7 +34,8 @@ export class LobbyService {
 			this.connection!.addEventListener('open', () => {
 				this.connection!.addEventListener('message', (event) => {
 					const packet = JSON.parse(event.data) as PacketIn;
-					this.packetHandlers[packet.type](packet);
+					this.packetHandlers[packet.type](packet as any);
+					this.customEventListeners[packet.type]?.(packet as any);
 					if (packet.type === 'lobby') {
 						resolve();
 					}
@@ -55,6 +57,11 @@ export class LobbyService {
 		this.connection.send(JSON.stringify(packet));
 	}
 
+	on<PacketType extends keyof PacketInFromType>(event: PacketType, listener: (packet: PacketInFromType[PacketType]) => void) {
+		(this.customEventListeners as any)[event] = listener;
+		return () => delete this.customEventListeners[event]; 
+	}
+
 	getLobby() {
 		if (!this.lobby) {
 			throw new Error('Lobby not available, call start() first.');
@@ -62,17 +69,24 @@ export class LobbyService {
 		return this.lobby!;
 	}
 
-	packetHandlers = {
-		lobby: (packet: PacketInFromType['lobby']) => {
+	packetHandlers: PacketHandlerFromType = {
+		lobby: (packet) => {
 			this.lobby = {
 				id: packet.id,
 				settings: packet.settings,
-				challenge,
 				owner: packet.owner,
 				users: packet.users,
 				state: packet.state
 			};
 			console.log('lobby', this.lobby);
+		},
+		gameStarted: (packet) => {
+			this.getLobby().state = {
+				type: 'game',
+				startTime: packet.startTime,
+				challenge: packet.challenge
+			};
+			console.log('gameStarted', packet);
 		}
 	};
 }
@@ -85,6 +99,10 @@ type PacketInFromType = {
 		users: { [id: UserId]: User };
 		state: LobbyState;
 	};
+	gameStarted: {
+		challenge: Challenge;
+		startTime: number;
+	}
 };
 
 type PacketOutFromType = {
@@ -97,30 +115,6 @@ type PacketOut = {
 	[Type in keyof PacketOutFromType]: { type: Type } & PacketOutFromType[Type];
 }[keyof PacketOutFromType];
 
-const challenge: Challenge = {
-	title: 'Add Two Numbers',
-	description: `
-## Goal
-A complex palindrome is a string that is a palindrome when only its alphanumeric characters are considered and the case of the characters is ignored. The task is to determine whether a given string is a complex palindrome.
-
-## Input
-A string text made of ASCII characters.
-## Output
-if the string is a palindrome the program will return complex palindrome and the filtered text separated by a comma and a space. The filtered text will be all lowercase and will have a space between the words.
-
-if the string is not a palindrome the program will return not a complex palindrome.`,
-	testCases: [
-		{ input: '1 2', output: '3' },
-		{ input: '3 4', output: '7' },
-		{ input: '5 6', output: '11' },
-		{ input: '7 8', output: '15' },
-		{ input: '9 10', output: '19' },
-		{ input: '11 12', output: '23' },
-		{ input: '13 14', output: '27' },
-		{ input: '15 16', output: '31' },
-		{ input: '17 18', output: '35' },
-		{ input: '19 20', output: '39' },
-		{ input: '99\n<(^.^)>', output: `<(^.^)>\n`.repeat(99) }
-	],
-	allowedLanguages: ['cpp', 'java', 'python', 'javascript']
+type PacketHandlerFromType = {
+	[Packet in keyof PacketInFromType]: (packet: PacketInFromType[Packet]) => void
 };

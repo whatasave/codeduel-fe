@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { replaceState } from '$app/navigation';
+	import { goto, replaceState } from '$app/navigation';
 	import PlayerCircle from '$components/PlayerCircle.svelte';
 	import Button from '$components/button/Button.svelte';
 	import type { User } from '$lib/types';
@@ -9,7 +9,9 @@
 	let lobby = data.lobby.getLobby();
 
 	onMount(() => {
-		replaceState(`/lobby/${data.lobby.getLobby().id}`, {});
+		replaceState(`/lobby/${lobby.id}`, {});
+		const unlisten = data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`));
+		return () => unlisten();
 	});
 
 	const users: User[] = lobby.users ? Object.values(lobby.users) : [];
@@ -50,7 +52,6 @@
 				variant="accent"
 				onclick={async () => {
 					await data.lobby.sendPacket({ type: 'startLobby', start: true });
-					console.log('start');
 				}}
 			/>
 			<Button text="Cancel" variant="primary" />

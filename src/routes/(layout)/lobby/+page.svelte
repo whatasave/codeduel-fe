@@ -16,7 +16,6 @@
 	onMount(async () => {
 		const res = await fetch('http://localhost:8080/lobbies');
 		lobbies = (await res.json()) as Lobby[];
-		7;
 	});
 </script>
 
