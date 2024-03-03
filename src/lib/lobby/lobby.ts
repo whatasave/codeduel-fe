@@ -1,4 +1,5 @@
-import type { Challenge, Lobby, LobbySettings, LobbyState, User, UserId } from '$lib/types';
+import type { Challenge, ExecutionResult, Lobby, LobbySettings, LobbyState, User, UserId } from '$lib/types';
+import { PUBLIC_LOBBY_URL } from '$env/static/public';
 
 export class LobbyService {
 	path: string;
@@ -30,11 +31,11 @@ export class LobbyService {
 
 	async start() {
 		return new Promise<void>((resolve, reject) => {
-			this.connection = new WebSocket(`ws://localhost:8080/${this.path}`);
+			this.connection = new WebSocket(`ws://${PUBLIC_LOBBY_URL}/${this.path}`);
 			this.connection!.addEventListener('open', () => {
 				this.connection!.addEventListener('message', (event) => {
 					const packet = JSON.parse(event.data) as PacketIn;
-					this.packetHandlers[packet.type](packet as any);
+					this.packetHandlers[packet.type]?.(packet as any);
 					this.customEventListeners[packet.type]?.(packet as any);
 					if (packet.type === 'lobby') {
 						resolve();
@@ -57,6 +58,11 @@ export class LobbyService {
 		this.connection.send(JSON.stringify(packet));
 	}
 
+	async check(packet: PacketOutFromType['check']): Promise<PacketInFromType['checkResult']> {
+		await this.sendPacket({ type: 'check', ...packet });
+		return await this.waitPacket('checkResult');
+	}
+
 	on<PacketType extends keyof PacketInFromType>(event: PacketType, listener: (packet: PacketInFromType[PacketType]) => void) {
 		(this.customEventListeners as any)[event] = listener;
 		return () => delete this.customEventListeners[event]; 
@@ -69,7 +75,16 @@ export class LobbyService {
 		return this.lobby!;
 	}
 
-	packetHandlers: PacketHandlerFromType = {
+	async waitPacket<PacketType extends keyof PacketInFromType>(type: PacketType): Promise<PacketInFromType[PacketType]> {
+		return new Promise<PacketInFromType[PacketType]>((resolve) => {
+			(this.packetHandlers as any)[type] = (packet: PacketInFromType[PacketType]) => {
+				delete this.packetHandlers[type]
+				resolve(packet);
+			};
+		});
+	}
+
+	packetHandlers: Partial<PacketHandlerFromType> = {
 		lobby: (packet) => {
 			this.lobby = {
 				id: packet.id,
@@ -87,7 +102,7 @@ export class LobbyService {
 				challenge: packet.challenge
 			};
 			console.log('gameStarted', packet);
-		}
+		},
 	};
 }
 
@@ -102,11 +117,18 @@ type PacketInFromType = {
 	gameStarted: {
 		challenge: Challenge;
 		startTime: number;
+	},
+	checkResult: {
+		result: ExecutionResult[]
 	}
 };
 
 type PacketOutFromType = {
 	startLobby: { start: true };
+	check: {
+		language: string;
+		code: string
+	};
 };
 
 type PacketIn = { [Type in keyof PacketInFromType]: { type: Type } & PacketInFromType[Type] }[keyof PacketInFromType];

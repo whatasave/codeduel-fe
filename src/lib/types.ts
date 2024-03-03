@@ -52,3 +52,9 @@ export type LobbySettings = {
 	gameDuration: number;
 	allowedLanguages: Language[];
 };
+
+export type ExecutionResult = {
+	output: string;
+	errors: string;
+	terminated: boolean;
+};

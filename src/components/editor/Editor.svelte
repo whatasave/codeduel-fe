@@ -1,8 +1,15 @@
 <script lang="ts">
 	import type { Language } from '$lib/types';
 	import { editor } from 'monaco-editor';
+	import * as monaco from 'monaco-editor';
+	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+	import { tick } from 'svelte';
 
-	let { value, language, class: className } = $props<{ value: string; language: Language; class?: string }>();
+	self.MonacoEnvironment = {
+		getWorker(_: string, label: string) {
+			return new editorWorker();
+		}
+	};
 
 	editor.defineTheme('codeduel', {
 		base: 'vs-dark',
@@ -16,9 +23,13 @@
 		}
 	});
 
+	let { value, language, class: className } = $props<{ value: string; language: Language; class?: string }>();
+	let externalChange = true;
 	let ide: editor.IStandaloneCodeEditor | undefined;
 	$effect(() => editor.setModelLanguage(ide!.getModel()!, language));
-	$effect(() => ide!.setValue(value ?? ''));
+	$effect(() => {
+		if (externalChange) ide?.setValue(value);
+	});
 
 	function init(element: HTMLDivElement) {
 		ide = editor.create(element, {
@@ -37,10 +48,17 @@
 			},
 			overviewRulerBorder: false
 		});
+		ide.onDidChangeModelContent(async () => {
+			externalChange = false;
+			value = ide!.getValue();
+			await tick();
+			externalChange = true;
+		});
 
 		return {
 			update() {},
 			destroy() {
+				editor.getModels().forEach((model) => model.dispose());
 				ide?.dispose();
 			}
 		};

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$components/button/Button.svelte';
+	import { PUBLIC_LOBBY_URL } from '$env/static/public';
 	import type { User } from '$lib/types';
 	import { onMount } from 'svelte';
 
@@ -14,7 +15,7 @@
 	let lobbies = $state<Lobby[]>([]);
 
 	onMount(async () => {
-		const res = await fetch('http://localhost:8080/lobbies');
+		const res = await fetch(`http://${PUBLIC_LOBBY_URL}/lobbies`);
 		lobbies = (await res.json()) as Lobby[];
 	});
 </script>

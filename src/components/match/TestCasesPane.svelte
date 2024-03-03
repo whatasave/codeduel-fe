@@ -2,6 +2,7 @@
 	import Pane from '$components/Pane.svelte';
 	import TestCase from '$components/TestCase.svelte';
 	import Button from '$components/button/Button.svelte';
+	import type { LobbyService } from '$lib/lobby/lobby';
 	import type { Challenge, TestCaseState } from '$lib/types';
 	import clsx from 'clsx';
 
@@ -9,12 +10,14 @@
 		challenge,
 		testCaseStates,
 		selectedTestCaseIndex,
-		class: className
+		class: className,
+		oncheck
 	} = $props<{
 		challenge: Challenge;
 		testCaseStates: TestCaseState[];
 		selectedTestCaseIndex: number;
 		class?: string;
+		oncheck: () => void;
 	}>();
 
 	function scrollHorizontally(this: HTMLDivElement, e: WheelEvent) {
@@ -31,5 +34,5 @@
 			<TestCase state={testCaseStates[i]} value={testCase} onclick={() => (selectedTestCaseIndex = i)} />
 		{/each}
 	</div>
-	<Button class="w-32" variant="accent" text="check" />
+	<Button class="w-32" variant="accent" text="check" onclick={oncheck} />
 </Pane>
