@@ -5,7 +5,12 @@ export type TestCase = {
 	output: string;
 };
 
-export type TestCaseState = 'success' | 'failure' | 'none';
+export type TestCaseState =
+	| { type: 'success' }
+	| { type: 'failure', cause: 'test', output: string }
+	| { type: 'failure', cause: 'errors', errors: string, output: string }
+	| { type: 'failure', cause: 'status', status: number, output: string, errors: string }
+	| { type: 'skipped' } | { type: 'none' };
 
 export type Language = (typeof languages)[number];
 
@@ -56,5 +61,5 @@ export type LobbySettings = {
 export type ExecutionResult = {
 	output: string;
 	errors: string;
-	terminated: boolean;
+	status: number;
 };

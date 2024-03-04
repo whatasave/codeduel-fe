@@ -10,12 +10,16 @@
 		lobby,
 		code,
 		selectedLanguageIndex,
+		onchangelanguage,
+		onchangecode,
 		class: className
 	} = $props<{
 		lobby: Lobby;
 		selectedLanguageIndex: number;
 		class?: string;
 		code: string;
+		onchangelanguage?: (language: string) => void;
+		onchangecode?: (code: string) => void;
 	}>();
 	let selectedLanguage = $derived(lobby.settings.allowedLanguages[selectedLanguageIndex]);
 </script>
@@ -28,8 +32,10 @@
 			mapToString={(language) => toHumanString(language)}
 			onselect={() => {
 				code = languageTemplate(selectedLanguage) ?? '';
+				onchangelanguage?.(selectedLanguage);
+				onchangecode?.(code);
 			}}
 		/>
 	</div>
-	<Editor class="flex-1 p-4" language={selectedLanguage} bind:value={code} />
+	<Editor class="flex-1 p-4" language={selectedLanguage} bind:value={code} {onchangecode} />
 </Pane>

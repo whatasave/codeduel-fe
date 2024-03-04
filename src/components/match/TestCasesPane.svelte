@@ -2,7 +2,6 @@
 	import Pane from '$components/Pane.svelte';
 	import TestCase from '$components/TestCase.svelte';
 	import Button from '$components/button/Button.svelte';
-	import type { LobbyService } from '$lib/lobby/lobby';
 	import type { Challenge, TestCaseState } from '$lib/types';
 	import clsx from 'clsx';
 
@@ -11,11 +10,13 @@
 		testCaseStates,
 		selectedTestCaseIndex,
 		class: className,
+		canSubmit,
 		oncheck
 	} = $props<{
 		challenge: Challenge;
 		testCaseStates: TestCaseState[];
 		selectedTestCaseIndex: number;
+		canSubmit: boolean;
 		class?: string;
 		oncheck: () => void;
 	}>();
@@ -34,5 +35,9 @@
 			<TestCase state={testCaseStates[i]} value={testCase} onclick={() => (selectedTestCaseIndex = i)} />
 		{/each}
 	</div>
-	<Button class="w-32" variant="accent" text="check" onclick={oncheck} />
+	{#if canSubmit}
+		<Button class="w-32" variant="accent" text="submit" onclick={oncheck} />
+	{:else}
+		<Button class="w-32" variant="accent" text="check" onclick={oncheck} />
+	{/if}
 </Pane>

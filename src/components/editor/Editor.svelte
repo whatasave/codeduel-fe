@@ -1,12 +1,27 @@
 <script lang="ts">
 	import type { Language } from '$lib/types';
 	import { editor } from 'monaco-editor';
-	import * as monaco from 'monaco-editor';
-	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 	import { tick } from 'svelte';
+	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+	import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+	import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
+	import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
+	import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 
 	self.MonacoEnvironment = {
-		getWorker(_: string, label: string) {
+		getWorker(_, label) {
+			if (label === 'json') {
+				return new jsonWorker();
+			}
+			if (label === 'css' || label === 'scss' || label === 'less') {
+				return new cssWorker();
+			}
+			if (label === 'html' || label === 'handlebars' || label === 'razor') {
+				return new htmlWorker();
+			}
+			if (label === 'typescript' || label === 'javascript') {
+				return new tsWorker();
+			}
 			return new editorWorker();
 		}
 	};
@@ -23,7 +38,17 @@
 		}
 	});
 
-	let { value, language, class: className } = $props<{ value: string; language: Language; class?: string }>();
+	let {
+		value,
+		language,
+		class: className,
+		onchangecode
+	} = $props<{
+		value: string;
+		language: Language;
+		class?: string;
+		onchangecode?: (code: string) => void;
+	}>();
 	let externalChange = true;
 	let ide: editor.IStandaloneCodeEditor | undefined;
 	$effect(() => editor.setModelLanguage(ide!.getModel()!, language));
@@ -51,6 +76,7 @@
 		ide.onDidChangeModelContent(async () => {
 			externalChange = false;
 			value = ide!.getValue();
+			onchangecode?.(value);
 			await tick();
 			externalChange = true;
 		});

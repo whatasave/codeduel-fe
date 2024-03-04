@@ -119,7 +119,8 @@ type PacketInFromType = {
 		startTime: number;
 	},
 	checkResult: {
-		result: ExecutionResult[]
+		result: ExecutionResult[] | null;
+		error: string | null;
 	}
 };
 
