@@ -1,5 +1,5 @@
 <script lang="ts">
-	import InputExample from '$components/InputExample.svelte';
+	import InputExample from '$components/match/InputExample.svelte';
 	import Pane from '$components/Pane.svelte';
 	import type { Challenge } from '$lib/types';
 	import clsx from 'clsx';
