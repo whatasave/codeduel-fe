@@ -52,6 +52,7 @@
 				variant="accent"
 				onclick={async () => {
 					await data.lobby.sendPacket({ type: 'startLobby', start: true });
+					await goto('/match/' + lobby.id);
 				}}
 			/>
 			<Button text="Cancel" variant="primary" />
