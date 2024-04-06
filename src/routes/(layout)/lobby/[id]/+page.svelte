@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto, replaceState } from '$app/navigation';
-	import PlayerCircle from '$components/PlayerCircle.svelte';
+	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import Button from '$components/button/Button.svelte';
 	import type { User } from '$lib/types';
 	import { onMount } from 'svelte';
@@ -52,6 +52,7 @@
 				variant="accent"
 				onclick={async () => {
 					await data.lobby.sendPacket({ type: 'startLobby', start: true });
+					await goto('/match/' + lobby.id);
 				}}
 			/>
 			<Button text="Cancel" variant="primary" />

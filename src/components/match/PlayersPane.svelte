@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Pane from '$components/Pane.svelte';
-	import PlayerCircle from '$components/PlayerCircle.svelte';
 	import type { User, UserId } from '$lib/types';
+	import PlayerCircle from './PlayerCircle.svelte';
 
 	let { players } = $props<{ players: { [id: UserId]: User } }>();
 </script>

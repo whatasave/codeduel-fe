@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Pane from '$components/Pane.svelte';
-	import TestCase from '$components/TestCase.svelte';
+	import TestCase from '$components/match/TestCase.svelte';
 	import Button from '$components/button/Button.svelte';
 	import type { Challenge, TestCaseState } from '$lib/types';
 	import clsx from 'clsx';
