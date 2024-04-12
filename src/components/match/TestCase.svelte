@@ -3,11 +3,15 @@
 	import clsx from 'clsx';
 	import type { MouseEventHandler } from 'svelte/elements';
 
-	let { value, state, onclick } = $props<{
+	let {
+		value,
+		state,
+		onclick
+	}: {
 		value: TestCase;
 		state: TestCaseState;
 		onclick?: MouseEventHandler<HTMLButtonElement>;
-	}>();
+	} = $props();
 </script>
 
 <button

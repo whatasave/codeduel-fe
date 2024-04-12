@@ -8,19 +8,19 @@
 
 	let {
 		lobby,
-		code,
-		selectedLanguageIndex,
+		code = $bindable(),
+		selectedLanguageIndex = $bindable(),
 		onchangelanguage,
 		onchangecode,
 		class: className
-	} = $props<{
+	}: {
 		lobby: Lobby;
 		selectedLanguageIndex: number;
 		class?: string;
 		code: string;
 		onchangelanguage?: (language: string) => void;
 		onchangecode?: (code: string) => void;
-	}>();
+	} = $props();
 	let selectedLanguage = $derived(lobby.settings.allowedLanguages[selectedLanguageIndex]);
 </script>
 

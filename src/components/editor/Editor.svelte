@@ -39,16 +39,16 @@
 	});
 
 	let {
-		value,
+		value = $bindable(),
 		language,
 		class: className,
 		onchangecode
-	} = $props<{
+	}: {
 		value: string;
 		language: Language;
 		class?: string;
 		onchangecode?: (code: string) => void;
-	}>();
+	} = $props();
 	let externalChange = true;
 	let ide: editor.IStandaloneCodeEditor | undefined;
 	$effect(() => editor.setModelLanguage(ide!.getModel()!, language));
