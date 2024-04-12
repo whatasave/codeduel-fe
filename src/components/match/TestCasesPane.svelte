@@ -8,18 +8,18 @@
 	let {
 		challenge,
 		testCaseStates,
-		selectedTestCaseIndex,
+		selectedTestCaseIndex = $bindable(),
 		class: className,
 		canSubmit,
 		oncheck
-	} = $props<{
+	}: {
 		challenge: Challenge;
 		testCaseStates: TestCaseState[];
 		selectedTestCaseIndex: number;
 		canSubmit: boolean;
 		class?: string;
 		oncheck: () => void;
-	}>();
+	} = $props();
 
 	function scrollHorizontally(this: HTMLDivElement, e: WheelEvent) {
 		this.scrollLeft -= e.deltaY;
