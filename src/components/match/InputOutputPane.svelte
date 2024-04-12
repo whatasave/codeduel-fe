@@ -8,7 +8,7 @@
 		selectedTestCaseIndex,
 		challenge,
 		class: className
-	} = $props<{ selectedTestCaseIndex: number; challenge: Challenge; class?: string }>();
+	}: { selectedTestCaseIndex: number; challenge: Challenge; class?: string } = $props();
 </script>
 
 <Pane class={clsx('flex p-2 flex-col gap-1', className)}>

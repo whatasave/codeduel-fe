@@ -17,7 +17,7 @@
 		text: string;
 	}
 
-	let { text, class: className, variant, ...props } = $props<$$Props>();
+	let { text, class: className, variant, ...props }: $$Props = $props();
 </script>
 
 <ButtonLike {...props} class={classes({ variant, className })}>

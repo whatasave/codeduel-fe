@@ -3,7 +3,7 @@
 	import Navbar from '$components/navbar/Navbar.svelte';
 	import type { Snippet } from 'svelte';
 
-	let { children } = $props<{ children: Snippet }>();
+	let { children }: { children: Snippet } = $props();
 </script>
 
 <div class="min-h-full flex flex-col p-2">

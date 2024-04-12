@@ -2,7 +2,7 @@
 	import dayjs from 'dayjs';
 	import { onMount } from 'svelte';
 
-	let { time } = $props<{ time: string }>();
+	let { time }: { time: string } = $props();
 	let delta = $state(dayjs(time).diff(dayjs(), 'milliseconds'));
 
 	onMount(() => {

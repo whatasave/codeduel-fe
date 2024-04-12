@@ -7,7 +7,7 @@
 		icon: ComponentType<SvelteComponent>;
 	};
 
-	let { text, class: className, icon, ...props } = $props<$$Props>();
+	let { text, class: className, icon, ...props }: $$Props = $props();
 </script>
 
 <ButtonLike {...props}>

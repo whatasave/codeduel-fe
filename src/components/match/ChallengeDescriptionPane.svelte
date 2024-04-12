@@ -5,7 +5,7 @@
 	import clsx from 'clsx';
 	import Timer from './Timer.svelte';
 
-	let { challenge, endTime, class: className } = $props<{ challenge: Challenge; endTime: string; class?: string }>();
+	let { challenge, endTime, class: className }: { challenge: Challenge; endTime: string; class?: string } = $props();
 </script>
 
 <Pane class={clsx('flex flex-col p-4 pr-2', className)}>

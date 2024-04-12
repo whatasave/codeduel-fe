@@ -6,7 +6,7 @@
 		children: Snippet;
 	}
 
-	let { children, ...props } = $props<$$Props>();
+	let { children, ...props }: $$Props = $props();
 </script>
 
 <button type="button" {...props}>

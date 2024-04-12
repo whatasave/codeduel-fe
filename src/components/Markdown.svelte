@@ -3,7 +3,7 @@
 	import DOMPurify from 'dompurify';
 	import clsx from 'clsx';
 
-	let { source, class: className } = $props<{ source: string; class?: string }>();
+	let { source, class: className }: { source: string; class?: string } = $props();
 </script>
 
 <div class={clsx('markdown overflow-auto', className)}>
