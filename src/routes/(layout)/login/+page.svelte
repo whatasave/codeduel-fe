@@ -3,6 +3,9 @@
 	// const isBeta = urlParams.has('beta');
 	// console.log(urlParams);
 	import { page } from '$app/stores';
+	import Button from '$components/button/Button.svelte';
+	import ButtonIcon from '$components/button/ButtonIcon.svelte';
+	import Github from '$components/icons/Github.svelte';
 	import { writable } from 'svelte/store';
 
 	const Login_URL = 'http://localhost:5000/v1/auth/github';
@@ -20,12 +23,18 @@
 	}
 </script>
 
-<div>
+<div class="m-auto flex flex-col items-center justify-center gap-4">
 	{#if $JWT}
 		<h1>Logged in</h1>
-		<p>JWT: {$JWT}</p>
+		<p class="max-w-96 overflow-x-scroll text-wrap">JWT: {$JWT}</p>
 	{:else}
 		<h1>Not logged in</h1>
-		<a href={Login_URL}>Login</a>
+		<a
+			href={Login_URL}
+			class="flex w-fit items-center gap-2 rounded-sm bg-[#ECC206] px-8 py-2 text-[1.25rem] font-semibold text-black"
+		>
+			<Github fill="#000000" />
+			<span>Login with Github</span>
+		</a>
 	{/if}
 </div>
