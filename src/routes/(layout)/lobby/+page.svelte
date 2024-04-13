@@ -20,7 +20,7 @@
 	});
 </script>
 
-<div class="flex gap-2 w-full max-w-[60rem] max-h-[70vh] overflow-y-auto">
+<div class="flex gap-2 w-full max-w-[60rem] m-auto overflow-y-auto">
 	<div class="gap-2 flex flex-col w-full min-w-[25rem]">
 		<div class="bg-[#050505] rounded p-4 flex justify-between items-center">
 			<p class="text-3xl font-bold">Lobbies</p>
@@ -28,6 +28,7 @@
 				<Button text="Create" variant="primary" />
 			</a>
 		</div>
+
 		{#each lobbies as lobby}
 			<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
 				<div>
