@@ -28,13 +28,9 @@
 	<img class="h-full w-full object-cover" src="/img/profile-bg.jpg" alt="profile background" />
 </div>
 
-<div class="w-full -mt-10 max-w-[800px] mx-auto">
-	<div class="size-20 overflow-hidden rounded-full border-4">
-		<img
-			class="h-full w-full object-cover"
-			src="https://avatars.githubusercontent.com/u/28709794?v=4"
-			alt="profile background"
-		/>
+<div class="w-full -mt-10 max-w-[800px] mx-auto flex flex-col gap-1">
+	<div class="size-20 overflow-hidden rounded-full border-4 bg-white">
+		<img class="h-full w-full object-cover" src="/icon/profile-default.svg" alt="profile background" />
 	</div>
 	<div class="flex gap-8">
 		<div class="flex flex-col gap-4 w-80">
