@@ -6,10 +6,10 @@
 	let { children }: { children: Snippet } = $props();
 </script>
 
-<div class="min-h-full flex flex-col p-2">
+<div class="min-h-0 h-full flex flex-col p-2">
 	<Navbar />
 
-	<main class="flex-1 min-h-0 flex justify-center items-center">
+	<main class="flex-1 flex flex-col py-2 overflow-y-auto">
 		{@render children()}
 	</main>
 
