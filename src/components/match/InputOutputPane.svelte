@@ -11,16 +11,16 @@
 	}: { selectedTestCaseIndex: number; challenge: Challenge; class?: string } = $props();
 </script>
 
-<Pane class={clsx('flex p-2 flex-col gap-1', className)}>
-	<h2 class="font-semibold text-[1.25rem] px-1">Test Case #{selectedTestCaseIndex + 1}</h2>
-	<div class="flex gap-2 flex-1 min-h-0">
-		<Pane class="h-full flex-1 bg-black flex flex-col">
-			<h3 class="text-center border-b border-white/20 py-3 mx-4">input</h3>
-			<InputExample class="flex-1 min-h-0" input={challenge.testCases[selectedTestCaseIndex].input} />
+<Pane class={clsx('flex flex-col gap-1 p-2', className)}>
+	<h2 class="px-1 text-[1.25rem] font-semibold">Test Case #{selectedTestCaseIndex + 1}</h2>
+	<div class="flex min-h-0 flex-1 gap-2">
+		<Pane class="flex h-full flex-1 flex-col bg-black">
+			<h3 class="mx-4 border-b border-white/20 py-3 text-center">input</h3>
+			<InputExample class="min-h-0 flex-1" input={challenge.testCases[selectedTestCaseIndex].input} />
 		</Pane>
-		<Pane class="h-full flex-1 bg-black flex flex-col">
-			<h3 class="text-center border-b border-white/20 py-3 mx-4">output</h3>
-			<InputExample class="flex-1 min-h-0" input={challenge.testCases[selectedTestCaseIndex].output} />
+		<Pane class="flex h-full flex-1 flex-col bg-black">
+			<h3 class="mx-4 border-b border-white/20 py-3 text-center">output</h3>
+			<InputExample class="min-h-0 flex-1" input={challenge.testCases[selectedTestCaseIndex].output} />
 		</Pane>
 	</div>
 </Pane>

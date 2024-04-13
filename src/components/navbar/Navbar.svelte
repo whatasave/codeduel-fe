@@ -1,4 +1,4 @@
-<nav class="bg-[#050505] py-4 px-6 flex justify-between rounded">
+<nav class="flex justify-between rounded bg-[#050505] px-6 py-4">
 	<div class="flex gap-4">
 		<a href="/">Home</a>
 		<a href="/lobby">Lobbies</a>

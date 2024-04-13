@@ -53,11 +53,11 @@
 	}
 </script>
 
-<div class="flex h-full p-2 gap-2">
+<div class="flex h-full gap-2 p-2">
 	<PlayersPane players={lobby.users} />
-	<div class="flex flex-col flex-[0.7_0.7_0%] gap-2 overflow-hidden">
+	<div class="flex flex-[0.7_0.7_0%] flex-col gap-2 overflow-hidden">
 		<ChallengeDescriptionPane
-			class="flex-1 min-h-0"
+			class="min-h-0 flex-1"
 			challenge={gameState.challenge}
 			endTime={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()}
 		/>
@@ -70,7 +70,7 @@
 			oncheck={check}
 		/>
 	</div>
-	<div class="flex flex-col flex-1 gap-2">
+	<div class="flex flex-1 flex-col gap-2">
 		<EditorPane
 			class="flex-1"
 			{lobby}

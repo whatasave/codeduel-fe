@@ -6,9 +6,9 @@
 	const classes = cva('w-fit h-fit', {
 		variants: {
 			variant: {
-				primary: 'px-8 py-2 bg-[#151515] text-white rounded-sm text-black text-[1.25rem] font-semibold',
+				primary: 'px-8 py-2 bg-[#151515] text-white rounded-sm text-[1.25rem] font-semibold',
 				accent: 'px-8 py-2 bg-[#ECC206] rounded-sm text-black text-[1.25rem] font-semibold',
-				empty: 'px-8 py-2 border-2 text-white border-white rounded-sm text-black text-[1.25rem] font-semibold'
+				empty: 'px-8 py-2 border-2 text-white border-white rounded-sm text-[1.25rem] font-semibold'
 			}
 		}
 	});

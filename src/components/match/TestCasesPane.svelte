@@ -26,9 +26,9 @@
 	}
 </script>
 
-<Pane class={clsx('flex p-2 items-center gap-4', className)}>
+<Pane class={clsx('flex items-center gap-4 p-2', className)}>
 	<div
-		class="flex-1 min-w-0 flex gap-2 pl-1 overflow-x-auto scrollbar-hide scrollbar-touch"
+		class="scrollbar-hide scrollbar-touch flex min-w-0 flex-1 gap-2 overflow-x-auto pl-1"
 		on:wheel={scrollHorizontally}
 	>
 		{#each challenge.testCases as testCase, i}

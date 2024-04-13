@@ -1,5 +1,5 @@
-<footer class="bg-[#050505] py-4 px-6 text-xs rounded">
-	<div class="flex justify-between gap-4 flex-row-reverse w-[900px] mx-auto">
+<footer class="rounded bg-[#050505] px-6 py-4 text-xs">
+	<div class="mx-auto flex w-[900px] flex-row-reverse justify-between gap-4">
 		<nav class="flex items-center justify-center gap-4">
 			<a href="https://youtu.be/AIGnRc7F86Q" target="_blank"><img src="/icon/youtube.svg" alt="youtube" /></a>
 			<a href="https://github.com/whatasave" target="_blank"><img src="/icon/github.svg" alt="github" /></a>

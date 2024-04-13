@@ -18,16 +18,16 @@
 </script>
 
 <div class="flex gap-2">
-	<div class="gap-2 flex flex-col min-w-[25rem]">
-		<div class="bg-[#050505] rounded p-4">
+	<div class="flex min-w-[25rem] flex-col gap-2">
+		<div class="rounded bg-[#050505] p-4">
 			<p class="text-3xl font-bold">Players</p>
 		</div>
 
-		<div class="flex flex-col gap-2 h-[26rem] overflow-y-auto">
+		<div class="flex h-[26rem] flex-col gap-2 overflow-y-auto">
 			{#each users as user}
-				<div class="bg-[#050505] rounded py-2 px-4 flex gap-2 items-center">
+				<div class="flex items-center gap-2 rounded bg-[#050505] px-4 py-2">
 					<PlayerCircle player={user} />
-					<div class="flex flex-col flex-1">
+					<div class="flex flex-1 flex-col">
 						<p class="text-2xl font-semibold">{user.username}</p>
 						<p>{lobby.owner.id == user.id ? 'Owner' : 'Guest'}</p>
 					</div>
@@ -41,7 +41,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="bg-[#050505] rounded p-2 gap-2 flex min-w-[35rem] flex-col">
+	<div class="flex min-w-[35rem] flex-col gap-2 rounded bg-[#050505] p-2">
 		<div class=" rounded p-2">
 			<p class="text-3xl font-bold">Players</p>
 		</div>

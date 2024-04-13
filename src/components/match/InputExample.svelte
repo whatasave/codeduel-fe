@@ -4,6 +4,6 @@
 	let { input, class: className }: { input: string; class?: string } = $props();
 </script>
 
-<div class={clsx('select-text m-4 font-mono whitespace-pre-wrap rounded overflow-y-auto', className)}>
+<div class={clsx('m-4 select-text overflow-y-auto whitespace-pre-wrap rounded font-mono', className)}>
 	{input}
 </div>
