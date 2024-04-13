@@ -5,7 +5,7 @@
 	import { page } from '$app/stores';
 	import { writable } from 'svelte/store';
 
-	const Login_URL = 'http://localhost:5000/api/v1/auth/github';
+	const Login_URL = 'http://localhost:5000/v1/auth/github';
 	const JWT = writable<string | undefined>(undefined);
 
 	console.log('page', $page);

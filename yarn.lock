@@ -393,14 +393,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/adapter-auto@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "@sveltejs/adapter-auto@npm:3.1.0"
+"@sveltejs/adapter-auto@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@sveltejs/adapter-auto@npm:3.2.0"
   dependencies:
     import-meta-resolve: "npm:^4.0.0"
   peerDependencies:
     "@sveltejs/kit": ^2.0.0
-  checksum: 10c0/9ba9d0aff2fdd1db0e673d30e9a59ede2e4a4e8624e6e50ff3cf2b4866d8f7fa181ae570daa2f09d987f5bc79fb82633db2d3b7cc1946664484fe1c22a0055d2
+  checksum: 10c0/2f7fbd947e208e604a08776cd4d32c228abd8ea912ef149bd21f395d9e40dceba5245c3fa722830d6ab1de27b86f3a29a71c5514472b902247073364b82ff6b1
   languageName: node
   linkType: hard
 
@@ -1138,7 +1138,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "frontend@workspace:."
   dependencies:
-    "@sveltejs/adapter-auto": "npm:^3.0.0"
+    "@sveltejs/adapter-auto": "npm:^3.2.0"
     "@sveltejs/kit": "npm:^2.5.5"
     "@sveltejs/vite-plugin-svelte": "npm:^3.1.0"
     "@types/dompurify": "npm:^3.0.5"
