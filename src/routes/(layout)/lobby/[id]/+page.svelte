@@ -3,7 +3,6 @@
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import Button from '$components/button/Button.svelte';
 	import type { User } from '$lib/types';
-	import { onMount } from 'svelte';
 	import { Broom, Play } from '$components/icons';
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 	import Input from '$components/input/Input.svelte';
@@ -12,6 +11,7 @@
 	const { data } = $props();
 	let lobby = data.lobby.getLobby();
 	const users: User[] = lobby.users ? Object.values(lobby.users) : [];
+	const isOwner = (user: User) => lobby.owner.id == user.id;
 
 	function onReady() {
 		// data.lobby.sendPacket({ type: 'ready', ready: true });
@@ -23,7 +23,7 @@
 		console.log('kick');
 	}
 
-	onMount(() => {
+	$effect(() => {
 		replaceState(`/lobby/${lobby.id}`, {});
 		const unlisten = data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`));
 		return () => unlisten();
@@ -42,7 +42,7 @@
 					<PlayerCircle player={user} />
 					<div class="flex flex-1 flex-col">
 						<p class="text-2xl font-semibold">{user.username}</p>
-						<p>{lobby.owner.id == user.id ? 'Owner' : 'Guest'}</p>
+						<p>{isOwner(user) ? 'Owner' : 'Guest'}</p>
 					</div>
 					<div class="flex gap-4">
 						<ButtonIcon icon={Broom} onclick={onKick} />
@@ -54,7 +54,7 @@
 	</div>
 	<div class="flex min-w-[35rem] flex-col gap-2 rounded bg-[#050505] p-2">
 		<div class=" rounded p-2">
-			<p class="text-3xl font-bold">Players</p>
+			<p class="text-3xl font-bold">Lobby settings</p>
 		</div>
 
 		<div class="flex gap-2">
