@@ -3,9 +3,7 @@
 	// const isBeta = urlParams.has('beta');
 	// console.log(urlParams);
 	import { page } from '$app/stores';
-	import Button from '$components/button/Button.svelte';
-	import ButtonIcon from '$components/button/ButtonIcon.svelte';
-	import Github from '$components/icons/Github.svelte';
+	import { Github } from '$components/icons';
 	import { writable } from 'svelte/store';
 
 	const Login_URL = 'http://localhost:5000/v1/auth/github';

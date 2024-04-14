@@ -4,20 +4,31 @@
 	import Button from '$components/button/Button.svelte';
 	import type { User } from '$lib/types';
 	import { onMount } from 'svelte';
+	import { Broom, Play } from '$components/icons';
+	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 
 	const { data } = $props();
 	let lobby = data.lobby.getLobby();
+	const users: User[] = lobby.users ? Object.values(lobby.users) : [];
+
+	function onReady() {
+		// data.lobby.sendPacket({ type: 'ready', ready: true });
+		console.log('ready');
+	}
+
+	function onKick() {
+		// data.lobby.sendPacket({ type: 'kick', kick: true });
+		console.log('kick');
+	}
 
 	onMount(() => {
 		replaceState(`/lobby/${lobby.id}`, {});
 		const unlisten = data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`));
 		return () => unlisten();
 	});
-
-	const users: User[] = lobby.users ? Object.values(lobby.users) : [];
 </script>
 
-<div class="flex gap-2">
+<div class="m-auto flex gap-2">
 	<div class="flex min-w-[25rem] flex-col gap-2">
 		<div class="rounded bg-[#050505] p-4">
 			<p class="text-3xl font-bold">Players</p>
@@ -31,11 +42,9 @@
 						<p class="text-2xl font-semibold">{user.username}</p>
 						<p>{lobby.owner.id == user.id ? 'Owner' : 'Guest'}</p>
 					</div>
-					<div class="flex gap-2">
-						<Button text="Kick" />
-						<!-- TODO use ButtonIcon -->
-						<Button text="Ready" />
-						<!-- TODO use ButtonIcon -->
+					<div class="flex gap-4">
+						<ButtonIcon icon={Broom} onclick={onKick} />
+						<ButtonIcon icon={Play} onclick={onReady} />
 					</div>
 				</div>
 			{/each}
