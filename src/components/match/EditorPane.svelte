@@ -5,6 +5,7 @@
 	import { languageTemplate, toHumanString } from '$lib/languages';
 	import type { Lobby } from '$lib/types';
 	import clsx from 'clsx';
+	import Button from '$components/button/Button.svelte';
 
 	let {
 		lobby,
@@ -25,9 +26,10 @@
 </script>
 
 <Pane class={clsx('flex flex-col', className)}>
-	<div class="flex px-4 py-4">
+	<div class="flex items-center gap-2 px-2 pt-2">
 		<Select
 			options={lobby.settings.allowedLanguages}
+			class="w-60"
 			bind:selectedIndex={selectedLanguageIndex}
 			mapToString={(language) => toHumanString(language)}
 			onselect={() => {
@@ -36,6 +38,8 @@
 				onchangecode?.(code);
 			}}
 		/>
+		<Button variant="primary" text="Restore Last Submitted" />
+		<Button variant="primary" text="Restore Default" />
 	</div>
-	<Editor class="flex-1 p-4" language={selectedLanguage} bind:value={code} {onchangecode} />
+	<Editor class="flex-1 p-2 px-4" language={selectedLanguage} bind:value={code} {onchangecode} />
 </Pane>

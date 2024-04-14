@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Pane from '$components/Pane.svelte';
-	import Button from '$components/button/Button.svelte';
+	import ButtonIcon from '$components/button/ButtonIcon.svelte';
+	import { Play, Upload } from '$components/icons';
 	import ChallengeDescriptionPane from '$components/match/ChallengeDescriptionPane.svelte';
 	import ConsolePane from '$components/match/ConsolePane.svelte';
 	import EditorPane from '$components/match/EditorPane.svelte';
@@ -53,7 +54,7 @@
 			for (let i = result.result!.length; i < gameState.challenge.testCases.length; i++) {
 				testCaseStates[i] = { type: 'skipped' };
 			}
-			if (testCaseStates.every((state) => state.type === 'success')) {
+			if (testCaseStates.some((state) => state.type === 'success')) {
 				canSubmit = true;
 			}
 		}
@@ -63,8 +64,17 @@
 <div class="flex h-full flex-col gap-2 p-2">
 	<Pane class="flex shrink-0 justify-center gap-2 p-2 ">
 		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
-		<Button variant="primary" text="Run" onclick={onRun} />
-		<Button variant="accent" text="Submit" onclick={onSubmit} disabled={!canSubmit} />
+		<ButtonIcon variant="primary" text="Run" icon={Play} iconAlign="left" iconClass="size-4" onclick={onRun} />
+		<ButtonIcon
+			variant="accent"
+			text="Submit"
+			icon={Upload}
+			iconAlign="left"
+			iconClass="size-4"
+			iconFill="#000000"
+			onclick={onSubmit}
+			disabled={!canSubmit}
+		/>
 	</Pane>
 	<div class="flex h-full gap-2">
 		<PlayersPane players={lobby.users} />

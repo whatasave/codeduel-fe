@@ -18,22 +18,32 @@
 		text?: string;
 		iconClass?: string;
 		iconAlign?: 'left' | 'right';
+		iconFill?: string;
 		icon: ComponentType<SvelteComponent>;
 	}
 
-	let { text, class: className, variant, icon, iconClass, iconAlign = 'right', ...props }: $$Props = $props();
+	let {
+		text,
+		class: className,
+		variant,
+		icon,
+		iconClass,
+		iconAlign = 'right',
+		iconFill = '#ffffff',
+		...props
+	}: $$Props = $props();
 </script>
 
 <ButtonLike {...props} class={classes({ variant, className })}>
 	<div class="flex items-center gap-2">
 		{#if iconAlign === 'left'}
-			<svelte:component this={icon} class={iconClass} />
+			<svelte:component this={icon} class={iconClass} fill={iconFill} />
 		{/if}
 		{#if text}
 			<span>{text}</span>
 		{/if}
 		{#if iconAlign === 'right'}
-			<svelte:component this={icon} class={iconClass} />
+			<svelte:component this={icon} class={iconClass} fill={iconFill} />
 		{/if}
 	</div>
 </ButtonLike>
