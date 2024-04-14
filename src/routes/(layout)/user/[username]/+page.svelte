@@ -1,5 +1,6 @@
 <script>
 	import { page } from '$app/stores';
+	import { ProfileDefault } from '$components/icons';
 
 	const JWT = localStorage.getItem('jwt') ?? undefined;
 	let loggedUserData = $state({});
@@ -30,7 +31,7 @@
 
 <div class="mx-auto -mt-10 flex w-full max-w-[800px] flex-col gap-1">
 	<div class="size-20 overflow-hidden rounded-full border-4 bg-white">
-		<img class="h-full w-full object-cover" src="/icon/profile-default.svg" alt="profile background" />
+		<ProfileDefault fill="#000000" class="size-full" />
 	</div>
 	<div class="flex gap-8">
 		<div class="flex w-80 flex-col gap-4">
