@@ -45,8 +45,8 @@
 <ProfileBackground image="/img/profile-bg.jpg" />
 
 <div class="mx-auto -mt-10 flex w-full max-w-[1000px] flex-col gap-1 px-8">
-	<div class="size-20 overflow-hidden rounded-full border-4 bg-white">
-		<ProfileDefault fill="#000000" class="size-full" />
+	<div class="size-20 overflow-hidden rounded-full border-8 border-transparent bg-[#151515]">
+		<ProfileDefault fill="#a5a5a5" class="size-full" />
 	</div>
 	<div class="flex flex-wrap gap-8">
 		<div class="flex w-full min-w-[326px] flex-1 shrink-0 grow flex-col gap-4">
