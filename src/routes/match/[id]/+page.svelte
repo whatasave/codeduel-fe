@@ -1,10 +1,13 @@
 <script lang="ts">
+	import Pane from '$components/Pane.svelte';
+	import Button from '$components/button/Button.svelte';
 	import ChallengeDescriptionPane from '$components/match/ChallengeDescriptionPane.svelte';
 	import ConsolePane from '$components/match/ConsolePane.svelte';
 	import EditorPane from '$components/match/EditorPane.svelte';
 	import InputOutputPane from '$components/match/InputOutputPane.svelte';
 	import PlayersPane from '$components/match/PlayersPane.svelte';
 	import TestCasesPane from '$components/match/TestCasesPane.svelte';
+	import Timer from '$components/match/Timer.svelte';
 	import { languageTemplate } from '$lib/languages.js';
 	import type { LobbyStateByType, TestCaseState } from '$lib/types.js';
 	import dayjs from 'dayjs';
@@ -53,32 +56,35 @@
 	}
 </script>
 
-<div class="flex h-full gap-2 p-2">
-	<PlayersPane players={lobby.users} />
-	<div class="flex flex-[0.7_0.7_0%] flex-col gap-2 overflow-hidden">
-		<ChallengeDescriptionPane
-			class="min-h-0 flex-1"
-			challenge={gameState.challenge}
-			endTime={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()}
-		/>
-		<InputOutputPane class="h-80" challenge={gameState.challenge} {selectedTestCaseIndex} />
-		<TestCasesPane
-			challenge={gameState.challenge}
-			{testCaseStates}
-			bind:selectedTestCaseIndex
-			{canSubmit}
-			oncheck={check}
-		/>
-	</div>
-	<div class="flex flex-1 flex-col gap-2">
-		<EditorPane
-			class="flex-1"
-			{lobby}
-			bind:selectedLanguageIndex
-			bind:code
-			onchangecode={() => (canSubmit = false)}
-			onchangelanguage={() => (canSubmit = false)}
-		/>
-		<ConsolePane class="h-80" />
+<div class="flex h-full flex-col gap-2 p-2">
+	<Pane class="flex justify-center gap-2 p-2">
+		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
+		<Button variant="primary" text="Run" />
+		<Button variant="accent" text="Submit" />
+	</Pane>
+	<div class="flex h-full flex-1 gap-2">
+		<PlayersPane players={lobby.users} />
+		<div class="flex flex-[0.7_0.7_0%] flex-col gap-2 overflow-hidden">
+			<ChallengeDescriptionPane class="min-h-0 flex-1" challenge={gameState.challenge} />
+			<InputOutputPane class="h-80" challenge={gameState.challenge} {selectedTestCaseIndex} />
+			<TestCasesPane
+				challenge={gameState.challenge}
+				{testCaseStates}
+				bind:selectedTestCaseIndex
+				{canSubmit}
+				oncheck={check}
+			/>
+		</div>
+		<div class="flex flex-1 flex-col gap-2">
+			<EditorPane
+				class="flex-1"
+				{lobby}
+				bind:selectedLanguageIndex
+				bind:code
+				onchangecode={() => (canSubmit = false)}
+				onchangelanguage={() => (canSubmit = false)}
+			/>
+			<ConsolePane class="h-80" />
+		</div>
 	</div>
 </div>

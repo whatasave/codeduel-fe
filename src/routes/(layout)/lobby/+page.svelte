@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Button from '$components/button/Button.svelte';
+	import { Github, Python } from '$components/icons';
+	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import { PUBLIC_LOBBY_URL } from '$env/static/public';
 	import type { User } from '$lib/types';
 	import { onMount } from 'svelte';
@@ -30,10 +32,8 @@
 		</div>
 
 		{#each lobbies as lobby}
-			<div class="flex items-center gap-2 rounded bg-[#050505] px-4 py-2">
-				<div>
-					<img class="h-10 w-10 rounded-full" src={lobby.owner.avatar} alt={lobby.owner.username} />
-				</div>
+			<div class="flex items-center gap-4 rounded bg-[#050505] px-4 py-2">
+				<PlayerCircle class="size-11" player={lobby.owner} />
 				<div class="flex flex-1 flex-col">
 					<p class="text-2xl font-semibold">{lobby.owner.username}'s lobby</p>
 					<p>{lobby.state} | Locked | {lobby.users}/{lobby.max_players} Brogrammers</p>
