@@ -1,6 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 	import { ProfileDefault } from '$components/icons';
+	import Stats from '$components/profile/Stats.svelte';
 
 	const JWT = localStorage.getItem('jwt') ?? undefined;
 	let loggedUserData = $state({});
@@ -44,18 +45,9 @@
 				similique numquam voluptas ea voluptate! Ex beatae laudantium ullam quidem ea soluta assumenda incidunt modi?
 			</div>
 			<div class="flex flex-wrap gap-2">
-				<div class="flex flex-1 flex-col items-center justify-center rounded bg-[#050505] p-4">
-					<div class="text-lg">2k</div>
-					<div class="text-sm font-bold">Played</div>
-				</div>
-				<div class="flex flex-1 flex-col items-center justify-center rounded bg-[#050505] p-4">
-					<div class="text-lg">128</div>
-					<div class="text-sm font-bold">Top 3</div>
-				</div>
-				<div class="flex flex-1 flex-col items-center justify-center rounded bg-[#050505] p-4">
-					<div class="text-lg">69</div>
-					<div class="text-sm font-bold">Won</div>
-				</div>
+				<Stats stat="2k" title="Played" />
+				<Stats stat="128" title="Top 3" />
+				<Stats stat="69" title="Won" />
 			</div>
 		</div>
 		<div class="flex flex-1 flex-col gap-2">
