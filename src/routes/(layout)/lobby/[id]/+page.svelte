@@ -70,7 +70,7 @@
 			<Button text="Lock" variant="primary" />
 		</div>
 
-		<div class="flex flex-col gap-2">
+		<div class="flex flex-col gap-4">
 			<div class="flex flex-col gap-1">
 				<label for="lang">Languages</label>
 				<Select
