@@ -15,10 +15,10 @@
 		bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet quas excepturi sequi dolorum accusantium nisi, similique numquam voluptas ea voluptate! Ex beatae laudantium ullam quidem ea soluta assumenda incidunt modi?',
 		stats: [
 			{ name: 'Games', stat: '2k' },
-			{ name: 'Followers', stat: '100' },
-			{ name: 'Following', stat: '200' },
+			{ name: 'Won', stat: '69' },
 			{ name: 'Top 3', stat: '128' },
-			{ name: 'Won', stat: '69' }
+			{ name: 'Followers', stat: '100' },
+			{ name: 'Following', stat: '200' }
 		]
 	};
 
@@ -44,12 +44,12 @@
 
 <ProfileBackground image="/img/profile-bg.jpg" />
 
-<div class="mx-auto -mt-10 flex w-full max-w-[800px] flex-col gap-1 px-8">
+<div class="mx-auto -mt-10 flex w-full max-w-[1000px] flex-col gap-1 px-8">
 	<div class="size-20 overflow-hidden rounded-full border-4 bg-white">
 		<ProfileDefault fill="#000000" class="size-full" />
 	</div>
 	<div class="flex flex-wrap gap-8">
-		<div class="flex w-80 shrink-0 grow flex-col gap-4">
+		<div class="flex w-full min-w-[326px] flex-1 shrink-0 grow flex-col gap-4">
 			<div class="px-1">
 				<div class="px-1 text-xl font-bold">{user.name}</div>
 				<ProfileTag tag={user.username} />
