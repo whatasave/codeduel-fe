@@ -1,7 +1,8 @@
 <script>
 	import { page } from '$app/stores';
 	import { ProfileDefault } from '$components/icons';
-	import Stats from '$components/profile/Stats.svelte';
+	import ProfileTag from '$components/profile/ProfileTag.svelte';
+	import ProfileStats from '$components/profile/ProfileStats.svelte';
 
 	const JWT = localStorage.getItem('jwt') ?? undefined;
 	let loggedUserData = $state({});
@@ -38,16 +39,16 @@
 		<div class="flex w-80 flex-col gap-4">
 			<div class="px-1">
 				<div class="px-1 text-xl font-bold">John Doe</div>
-				<div class="text-base opacity-70">@johndoe</div>
+				<ProfileTag tag={'@johndoe'} />
 			</div>
 			<div class="px-1 text-sm">
 				Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet quas excepturi sequi dolorum accusantium nisi,
 				similique numquam voluptas ea voluptate! Ex beatae laudantium ullam quidem ea soluta assumenda incidunt modi?
 			</div>
 			<div class="flex flex-wrap gap-2">
-				<Stats stat="2k" title="Played" />
-				<Stats stat="128" title="Top 3" />
-				<Stats stat="69" title="Won" />
+				<ProfileStats stat="2k" title="Played" />
+				<ProfileStats stat="128" title="Top 3" />
+				<ProfileStats stat="69" title="Won" />
 			</div>
 		</div>
 		<div class="flex flex-1 flex-col gap-2">
