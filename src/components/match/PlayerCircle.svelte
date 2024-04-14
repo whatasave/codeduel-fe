@@ -22,10 +22,19 @@
 		player: User;
 		class?: string;
 		badge?: ComponentType<SvelteComponent>;
+		badgeClass?: string;
 		badgeBackground?: string;
 	}
 
-	let { player, badge, badgeBackground = '#A3A3A3', variant, status = 'default', class: className }: $$Props = $props();
+	let {
+		player,
+		badge,
+		badgeClass,
+		badgeBackground = '#A3A3A3',
+		variant,
+		status = 'default',
+		class: className
+	}: $$Props = $props();
 	let showImg = $state(true);
 </script>
 
@@ -42,7 +51,12 @@
 		/>
 	{/if}
 	{#if badge}
-		<div class="bg-[{badgeBackground}] absolute bottom-0 right-0 flex items-center justify-center rounded-full p-1">
+		<div
+			class={clsx(
+				'bg-[{badgeBackground}] absolute bottom-0 right-0 flex items-center justify-center rounded-full p-1',
+				badgeClass
+			)}
+		>
 			<svelte:component this={badge} />
 		</div>
 	{/if}

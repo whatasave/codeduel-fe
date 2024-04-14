@@ -9,6 +9,14 @@
 
 <Pane class="flex flex-col gap-2 p-2">
 	{#each Object.entries(players) as [_, player]}
-		<PlayerCircle variant="status" status="success" badge={Python} badgeBackground="#1D74C5" {player} />
+		<PlayerCircle
+			variant="status"
+			status="success"
+			class="h-14 w-14"
+			badge={Python}
+			badgeClass="size-6 bg-[#1D74C5]"
+			badgeBackground="#1D74C5"
+			{player}
+		/>
 	{/each}
 </Pane>
