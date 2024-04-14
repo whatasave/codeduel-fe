@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Pane from '$components/Pane.svelte';
-	import Select from '$components/Select.svelte';
+	import Select from '$components/input/Select.svelte';
 	import Editor from '$components/editor/Editor.svelte';
 	import { languageTemplate, toHumanString } from '$lib/languages';
 	import type { Lobby } from '$lib/types';

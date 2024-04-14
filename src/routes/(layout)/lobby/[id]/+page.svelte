@@ -6,6 +6,8 @@
 	import { onMount } from 'svelte';
 	import { Broom, Play } from '$components/icons';
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
+	import Input from '$components/input/Input.svelte';
+	import Select from '$components/input/Select.svelte';
 
 	const { data } = $props();
 	let lobby = data.lobby.getLobby();
@@ -68,30 +70,39 @@
 			<Button text="Lock" variant="primary" />
 		</div>
 
-		<div>
-			<div>
+		<div class="flex flex-col gap-2">
+			<div class="flex flex-col gap-1">
 				<label for="lang">Languages</label>
-				<select name="lang" id="lang">
-					<option value="all" selected>All</option>
-					<option value="js">Javascript</option>
-					<option value="py">Python</option>
-				</select>
+				<Select
+					class="w-full"
+					selectedIndex={0}
+					mapToString={(language) => language.name}
+					options={[
+						{ name: 'Javascript', value: 'js' },
+						{ name: 'Python', value: 'py' }
+					]}
+				/>
 			</div>
-			<div>
+			<div class="flex flex-col gap-1">
 				<label for="maxPlayers">Max Players</label>
-				<input type="number" name="maxPlayers" id="maxPlayers" />
+				<Input type="number" name="maxPlayers" id="maxPlayers" class="w-full" />
 			</div>
-			<div>
+			<div class="flex flex-col gap-1">
 				<label for="maxDuration">Max Duration</label>
-				<input type="number" name="maxDuration" id="maxDuration" />
+				<Input type="number" name="maxDuration" id="maxDuration" class="w-full" />
 			</div>
-			<div>
+			<div class="flex flex-col gap-1">
 				<label for="mode">Mode</label>
-				<select name="mode" id="mode">
-					<option value="normal" selected>Random</option>
-					<option value="shortest">Shortest</option>
-					<option value="time">Time</option>
-				</select>
+				<Select
+					class="w-full"
+					selectedIndex={0}
+					mapToString={(language) => language.name}
+					options={[
+						{ name: 'Random', value: 'normal' },
+						{ name: 'Shortest', value: 'shortest' },
+						{ name: 'Time', value: 'time' }
+					]}
+				/>
 			</div>
 		</div>
 	</div>
