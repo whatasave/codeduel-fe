@@ -3,7 +3,7 @@
 	import type { ComponentProps } from 'svelte';
 	import ButtonLike from './ButtonLike.svelte';
 
-	const classes = cva('w-fit h-fit', {
+	const classes = cva('w-fit h-fit disabled:opacity-60 disabled:cursor-not-allowed', {
 		variants: {
 			variant: {
 				primary: 'px-6 py-1 bg-[#151515] text-white rounded-sm font-semibold',

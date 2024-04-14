@@ -7,7 +7,7 @@
 	let { players }: { players: { [id: UserId]: User } } = $props();
 </script>
 
-<Pane class="flex flex-col gap-2 p-2">
+<Pane class="flex shrink-0 flex-col gap-2 p-2">
 	{#each Object.entries(players) as [_, player]}
 		<PlayerCircle
 			variant="status"

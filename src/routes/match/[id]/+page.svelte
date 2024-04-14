@@ -22,7 +22,11 @@
 	let code = $state((() => languageTemplate(selectedLanguage) ?? '')());
 	let canSubmit = $state(false);
 
-	async function check() {
+	async function onSubmit() {
+		console.log('submit');
+	}
+
+	async function onRun() {
 		const result = await data.lobby.check({ language: selectedLanguage, code });
 		if (result.error) {
 			console.error(result.error);
@@ -59,22 +63,20 @@
 <div class="flex h-full flex-col gap-2 p-2">
 	<Pane class="flex shrink-0 justify-center gap-2 p-2 ">
 		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
-		<Button variant="primary" text="Run" />
-		<Button variant="accent" text="Submit" />
+		<Button variant="primary" text="Run" onclick={onRun} />
+		<Button variant="accent" text="Submit" onclick={onSubmit} disabled={!canSubmit} />
 	</Pane>
-	<div class="flex h-full flex-1 gap-2">
+	<div class="flex h-full gap-2">
 		<PlayersPane players={lobby.users} />
-		<div class="flex flex-[0.7_0.7_0%] flex-col gap-2 overflow-hidden">
+
+		<!-- Statement / Tests -->
+		<div class="flex flex-[0.7_0.7_0%] flex-col gap-2">
 			<ChallengeDescriptionPane class="min-h-0 flex-1" challenge={gameState.challenge} />
 			<InputOutputPane class="h-80" challenge={gameState.challenge} {selectedTestCaseIndex} />
-			<TestCasesPane
-				challenge={gameState.challenge}
-				{testCaseStates}
-				bind:selectedTestCaseIndex
-				{canSubmit}
-				oncheck={check}
-			/>
+			<TestCasesPane challenge={gameState.challenge} {testCaseStates} bind:selectedTestCaseIndex />
 		</div>
+
+		<!-- Editor / Console -->
 		<div class="flex flex-1 flex-col gap-2">
 			<EditorPane
 				class="flex-1"

@@ -11,7 +11,7 @@
 	}: { selectedTestCaseIndex: number; challenge: Challenge; class?: string } = $props();
 </script>
 
-<Pane class={clsx('flex flex-col gap-1 p-2', className)}>
+<Pane class={clsx('flex min-h-0 flex-1 flex-col gap-1 p-2', className)}>
 	<h2 class="px-1 text-[1.25rem] font-semibold">Test Case #{selectedTestCaseIndex + 1}</h2>
 	<div class="flex min-h-0 flex-1 gap-2">
 		<Pane class="flex h-full flex-1 flex-col bg-black">
