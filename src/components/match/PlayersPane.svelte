@@ -12,9 +12,9 @@
 		<PlayerCircle
 			variant="status"
 			status="success"
-			class="h-14 w-14"
+			class="h-[3.5rem] w-[3.5rem]"
 			badge={Python}
-			badgeClass="size-6 bg-[#1D74C5]"
+			badgeClass="size-5 !p-[0.2rem] bg-[#1D74C5]"
 			badgeBackground="#1D74C5"
 			{player}
 		/>

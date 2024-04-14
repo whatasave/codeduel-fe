@@ -33,8 +33,8 @@
 		colors: {
 			'editor.foreground': '#9cdcfe',
 			'editor.background': '#090909',
-			'editor.selectionBackground': '#191919',
-			'editor.lineHighlightBackground': '#191919'
+			'editor.selectionBackground': '#303030',
+			'editor.lineHighlightBackground': '#303030'
 		}
 	});
 

@@ -81,9 +81,9 @@
 
 		<!-- Statement / Tests -->
 		<div class="flex flex-[0.7_0.7_0%] flex-col gap-2">
-			<ChallengeDescriptionPane class="min-h-0 flex-1" challenge={gameState.challenge} />
-			<InputOutputPane class="h-80" challenge={gameState.challenge} {selectedTestCaseIndex} />
-			<TestCasesPane challenge={gameState.challenge} {testCaseStates} bind:selectedTestCaseIndex />
+			<ChallengeDescriptionPane class="flex-1" challenge={gameState.challenge} />
+			<InputOutputPane class="max-h-[15rem] flex-1" challenge={gameState.challenge} {selectedTestCaseIndex} />
+			<TestCasesPane class="" challenge={gameState.challenge} {testCaseStates} bind:selectedTestCaseIndex />
 		</div>
 
 		<!-- Editor / Console -->
