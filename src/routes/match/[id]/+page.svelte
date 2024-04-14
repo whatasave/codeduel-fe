@@ -57,7 +57,7 @@
 </script>
 
 <div class="flex h-full flex-col gap-2 p-2">
-	<Pane class="flex justify-center gap-2 p-2">
+	<Pane class="flex shrink-0 justify-center gap-2 p-2 ">
 		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
 		<Button variant="primary" text="Run" />
 		<Button variant="accent" text="Submit" />
