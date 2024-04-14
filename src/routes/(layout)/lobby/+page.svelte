@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$components/button/Button.svelte';
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
-	import { Github, Join, Play, Python } from '$components/icons';
+	import { Join, Play } from '$components/icons';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import { PUBLIC_LOBBY_URL } from '$env/static/public';
 	import type { User } from '$lib/types';
