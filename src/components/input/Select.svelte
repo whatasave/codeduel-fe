@@ -39,10 +39,15 @@
 		selectedIndex = parseInt(this.value);
 		onselect?.call(this);
 	}
+
+	$effect(() => {
+		console.log('options', options);
+		console.log('selectedIndex', selectedIndex);
+	});
 </script>
 
 <select {...props} class={classes({ variant, className: customClass })} {onchange}>
 	{#each options as option, i}
-		<option value={i} selected={i === selectedIndex}>{mapToString(option)}</option>
+		<option value={i} selected={i == selectedIndex}> {i === selectedIndex} {mapToString(option)}</option>
 	{/each}
 </select>

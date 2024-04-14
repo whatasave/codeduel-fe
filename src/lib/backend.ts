@@ -1,22 +1,32 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
-import { Ok, type Result, Error } from './result';
+import { Ok, type Result, Error, isError, isSuccess } from './result';
+import type { User } from './types';
 
 class Backend {
 	private url: string;
 	private jwt?: string;
+	private user?: User;
 
 	constructor(url: string, jwt?: string) {
 		this.url = url;
 		this.jwt = jwt;
+		this.user = undefined;
 	}
 
-	private async call<T = unknown>(method: string, path: string, body?: Record<string, unknown>, headers: Record<string, string> = {}): Promise<Result<T>> {
-		if (this.jwt) headers['Authorization'] = `Bearer ${this.jwt}`;
+	private async call<T = unknown>(
+		method: string,
+		path: string,
+		body?: Record<string, unknown>,
+		headers: Record<string, string> = {}
+	): Promise<Result<T>> {
+		// if (this.jwt) headers['Authorization'] = `Bearer ${this.jwt}`;
 		try {
 			const result = await fetch(this.url + '/' + path, {
 				method,
+				credentials: 'include',
+				mode: 'cors',
 				headers,
-				body: body ? JSON.stringify(body) : undefined,
+				body: body ? JSON.stringify(body) : undefined
 			});
 			const json = (await result.json()) as T;
 			if (!result.ok) return new Error(JSON.stringify(json), result.status);
@@ -43,6 +53,17 @@ class Backend {
 	}
 
 	// API CALLS
+
+	async getUser() {
+		if (this.user) return new Ok(this.user);
+
+		const res = await this.get<User>('v1/profile');
+		if (isSuccess(res)) {
+			this.user = res.data;
+		}
+
+		return res;
+	}
 }
 
 export default new Backend(PUBLIC_BACKEND_URL);

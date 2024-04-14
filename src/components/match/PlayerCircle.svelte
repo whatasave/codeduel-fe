@@ -26,37 +26,26 @@
 		badgeBackground?: string;
 	}
 
-	let {
-		player,
-		badge,
-		badgeClass,
-		badgeBackground = '#A3A3A3',
-		variant,
-		status = 'default',
-		class: className
-	}: $$Props = $props();
+	let { player, badge, badgeClass, variant, status = 'default', class: className }: $$Props = $props();
 	let showImg = $state(true);
 </script>
 
 <div class={classes({ variant, status, className })}>
-	{#if showImg}
-		<img
-			class="h-full w-full rounded-full"
-			src={player.avatar}
-			alt={player.username}
-			title={player.username}
-			onerror={() => {
-				showImg = false;
-			}}
-		/>
-	{/if}
+	<div class="h-full w-full overflow-hidden rounded-full bg-[#A3A3A3]">
+		{#if showImg}
+			<img
+				class="h-full w-full rounded-full"
+				src={player.avatar}
+				alt={player.username}
+				title={player.username}
+				onerror={() => {
+					showImg = false;
+				}}
+			/>
+		{/if}
+	</div>
 	{#if badge}
-		<div
-			class={clsx(
-				'bg-[{badgeBackground}] absolute bottom-0 right-0 flex items-center justify-center rounded-full p-1',
-				badgeClass
-			)}
-		>
+		<div class={clsx(`absolute bottom-0 right-0 flex items-center justify-center rounded-full p-1`, badgeClass)}>
 			<svelte:component this={badge} />
 		</div>
 	{/if}

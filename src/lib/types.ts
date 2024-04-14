@@ -7,10 +7,11 @@ export type TestCase = {
 
 export type TestCaseState =
 	| { type: 'success' }
-	| { type: 'failure', cause: 'test', output: string }
-	| { type: 'failure', cause: 'errors', errors: string, output: string }
-	| { type: 'failure', cause: 'status', status: number, output: string, errors: string }
-	| { type: 'skipped' } | { type: 'none' };
+	| { type: 'failure'; cause: 'test'; output: string }
+	| { type: 'failure'; cause: 'errors'; errors: string; output: string }
+	| { type: 'failure'; cause: 'status'; status: number; output: string; errors: string }
+	| { type: 'skipped' }
+	| { type: 'none' };
 
 export type Language = (typeof languages)[number];
 
@@ -23,7 +24,9 @@ export type Challenge = {
 export type User = {
 	id: UserId;
 	username: string;
+	email?: string;
 	avatar: string;
+	created_at?: number;
 };
 
 export type UserId = number;
@@ -31,12 +34,12 @@ export type UserId = number;
 export type PlayerStatus = { phase: 'progress' } | { phase: 'done'; score: number };
 
 export type Lobby<State extends LobbyState = LobbyState> = {
-    id: string;
-    settings: LobbySettings;
-    owner: User;
-    users: { [id: UserId]: User };
-    state: State;
-}
+	id: string;
+	settings: LobbySettings;
+	owner: User;
+	users: { [id: UserId]: User };
+	state: State;
+};
 
 export type LobbyStateByType = {
 	preLobby: {
