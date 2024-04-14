@@ -5,12 +5,10 @@
 	import clsx from 'clsx';
 	import Timer from './Timer.svelte';
 
-	let { challenge, endTime, class: className }: { challenge: Challenge; endTime: string; class?: string } = $props();
+	let { challenge, class: className }: { challenge: Challenge; class?: string } = $props();
 </script>
 
 <Pane class={clsx('flex flex-col p-4 pr-2', className)}>
-	<div class="flex justify-end pr-2">
-		<Timer time={endTime} />
-	</div>
+	<div class="flex justify-end pr-2"></div>
 	<Markdown class="flex-1 pr-2" source={challenge.description} />
 </Pane>
