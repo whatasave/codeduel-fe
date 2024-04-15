@@ -7,5 +7,7 @@ import Stopwatch from '$components/icons/Stopwatch.svelte';
 import Upload from '$components/icons/Upload.svelte';
 import Youtube from '$components/icons/Youtube.svelte';
 import Join from '$components/icons/Join.svelte';
+import Settings from '$components/icons/Settings.svelte';
+import SignOut from '$components/icons/SignOut.svelte';
 
-export { Broom, Github, Play, ProfileDefault, Python, Stopwatch, Upload, Youtube, Join };
+export { Broom, Github, Play, ProfileDefault, Python, Stopwatch, Upload, Youtube, Join, Settings, SignOut };
