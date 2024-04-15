@@ -24,8 +24,8 @@ export type Challenge = {
 export type User = {
 	id: UserId;
 	username: string;
-	email?: string;
 	avatar: string;
+	email?: string;
 	created_at?: number;
 };
 

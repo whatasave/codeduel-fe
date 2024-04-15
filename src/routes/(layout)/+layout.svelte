@@ -2,12 +2,15 @@
 	import Footer from '$components/footer/Footer.svelte';
 	import Navbar from '$components/navbar/Navbar.svelte';
 	import type { Snippet } from 'svelte';
+	import type { PageData } from './$types';
 
-	let { children }: { children: Snippet } = $props();
+	let { data, children }: { data: PageData, children: Snippet } = $props();
+	
+	console.log(data);
 </script>
 
 <div class="min-h-0 h-full flex flex-col p-2">
-	<Navbar />
+	<Navbar user={data.user} />
 
 	<main class="flex-1 flex flex-col py-2 overflow-y-auto">
 		{@render children()}
