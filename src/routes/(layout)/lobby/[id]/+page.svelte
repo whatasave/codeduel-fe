@@ -79,7 +79,8 @@
 					mapToString={(language) => language.name}
 					options={[
 						{ name: 'Javascript', value: 'js' },
-						{ name: 'Python', value: 'py' }
+						{ name: 'Python', value: 'py' },
+						{ name: 'C#', value: 'cs' }
 					]}
 				/>
 			</div>
