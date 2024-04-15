@@ -1,11 +1,11 @@
 import { PUBLIC_BACKEND_URL } from '$env/static/public';
 import { Ok, type Result, Error, isError, isSuccess } from './result';
-import type { User } from './types';
+import type { UserProfile } from './types';
 
 class Backend {
 	private url: string;
 	private jwt?: string;
-	private user?: User;
+	private user?: UserProfile;
 
 	constructor(url: string, jwt?: string) {
 		this.url = url;
@@ -54,10 +54,10 @@ class Backend {
 
 	// API CALLS
 
-	async getUser() {
+	async getProfile() {
 		if (this.user) return new Ok(this.user);
 
-		const res = await this.get<User>('v1/profile');
+		const res = await this.get<UserProfile>('v1/profile');
 		if (isSuccess(res)) {
 			this.user = res.data;
 		}

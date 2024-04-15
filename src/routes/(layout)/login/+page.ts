@@ -9,7 +9,7 @@ export async function load({ url }) {
 	if (jwt) {
 		backend.setJwt(jwt);
 
-		const userRes = await backend.getUser();
+		const userRes = await backend.getProfile();
 		if (isError(userRes)) console.error(userRes.message);
 		if (isSuccess(userRes)) user = userRes.data;
 	}

@@ -29,6 +29,27 @@ export type User = {
 	created_at?: number;
 };
 
+export type UserStats = {
+	id: number;
+	name: string;
+	stat: string;
+	created_at: string;
+	updated_at: string;
+};
+
+export type UserProfile = {
+	id: UserId;
+	name: string;
+	username: string;
+	email: string;
+	avatar: string;
+	background_img: string;
+	bio: string;
+	created_at: string;
+	updated_at: string;
+	stats: UserStats[];
+};
+
 export type UserId = number;
 
 export type PlayerStatus = { phase: 'progress' } | { phase: 'done'; score: number };
