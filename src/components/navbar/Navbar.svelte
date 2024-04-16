@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$components/button/Button.svelte';
 	import Clickable from '$components/button/Clickable.svelte';
-	import { Settings, SignOut } from '$components/icons';
+	import { Settings, SignOut, User } from '$components/icons';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import { clickOutside } from '$lib/hooks/clickOutside';
 	import type { UserProfile } from '$lib/types';
@@ -37,16 +37,28 @@
 				{#if showDropdown}
 					<div class="absolute right-0 py-2">
 						<div class="flex flex-col gap-2 rounded bg-[#242424] p-4">
-							<a class="flex gap-4 rounded bg-[#050505] p-3 px-10 text-center" href="/user/{user.username}">
-								<Settings class="h-6 w-6" />
+							<a
+								class="flex items-center gap-4 rounded bg-[#050505] p-2 px-10 text-center"
+								href="/user/{user.username}"
+								onclick={() => (showDropdown = false)}
+							>
+								<User class="size-4" />
 								<span>Profile</span>
 							</a>
-							<a class="flex gap-4 rounded bg-[#050505] p-3 px-10 text-center" href="/settings">
-								<Settings class="h-6 w-6" />
+							<a
+								class="flex items-center gap-4 rounded bg-[#050505] p-2 px-10 text-center"
+								href="/settings"
+								onclick={() => (showDropdown = false)}
+							>
+								<Settings class="size-4" />
 								<span>Settings</span>
 							</a>
-							<a class="flex gap-4 rounded bg-[#050505] p-3 px-10 text-center" href="/logout">
-								<SignOut class="h-6 w-6" />
+							<a
+								class="flex items-center gap-4 rounded bg-[#050505] p-2 px-10 text-center"
+								href="/logout"
+								onclick={() => (showDropdown = false)}
+							>
+								<SignOut class="size-4" />
 								<span>Logout</span>
 							</a>
 						</div>

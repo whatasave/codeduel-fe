@@ -10,5 +10,20 @@ import Join from '$components/icons/Join.svelte';
 import Settings from '$components/icons/Settings.svelte';
 import SignOut from '$components/icons/SignOut.svelte';
 import Loading from '$components/icons/Loading.svelte';
+import User from '$components/icons/User.svelte';
 
-export { Broom, Github, Play, ProfileDefault, Python, Stopwatch, Upload, Youtube, Join, Settings, SignOut, Loading };
+export {
+	Broom,
+	Github,
+	Play,
+	ProfileDefault,
+	Python,
+	Stopwatch,
+	Upload,
+	Youtube,
+	Join,
+	Settings,
+	SignOut,
+	Loading,
+	User
+};
