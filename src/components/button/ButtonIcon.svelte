@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ComponentProps, ComponentType, SvelteComponent } from 'svelte';
-	import ButtonLike from './ButtonLike.svelte';
+	import Clickable from './Clickable.svelte';
 	import { cva, type VariantProps } from 'class-variance-authority';
 
 	const classes = cva('w-fit h-fit disabled:opacity-60 disabled:cursor-not-allowed', {
@@ -14,7 +14,7 @@
 		}
 	});
 
-	interface $$Props extends Omit<ComponentProps<ButtonLike>, 'children'>, VariantProps<typeof classes> {
+	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof classes> {
 		text?: string;
 		iconClass?: string;
 		iconAlign?: 'left' | 'right';
@@ -34,7 +34,7 @@
 	}: $$Props = $props();
 </script>
 
-<ButtonLike {...props} class={classes({ variant, className })}>
+<Clickable {...props} class={classes({ variant, className })}>
 	<div class="flex items-center gap-2">
 		{#if iconAlign === 'left'}
 			<svelte:component this={icon} class={iconClass} fill={iconFill} />
@@ -46,4 +46,4 @@
 			<svelte:component this={icon} class={iconClass} fill={iconFill} />
 		{/if}
 	</div>
-</ButtonLike>
+</Clickable>

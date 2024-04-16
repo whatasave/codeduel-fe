@@ -36,7 +36,7 @@
 	<div class="size-20 overflow-hidden rounded-full border-4 border-transparent bg-[#151515]">
 		{#if data.user}
 			<PlayerCircle
-				class="h-full w-full"
+				class="size-full"
 				player={{
 					id: data.user.id,
 					username: data.user.username,

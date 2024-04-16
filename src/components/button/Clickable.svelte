@@ -9,6 +9,6 @@
 	let { children, ...props }: $$Props = $props();
 </script>
 
-<button type="button" {...props}>
+<button type="button" class="contents" {...props}>
 	{@render children()}
 </button>

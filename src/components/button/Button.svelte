@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cva, type VariantProps } from 'class-variance-authority';
 	import type { ComponentProps } from 'svelte';
-	import ButtonLike from './ButtonLike.svelte';
+	import Clickable from './Clickable.svelte';
 
 	const classes = cva('w-fit h-fit disabled:opacity-60 disabled:cursor-not-allowed', {
 		variants: {
@@ -14,13 +14,13 @@
 		}
 	});
 
-	interface $$Props extends Omit<ComponentProps<ButtonLike>, 'children'>, VariantProps<typeof classes> {
+	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof classes> {
 		text: string;
 	}
 
 	let { text, class: className, variant, ...props }: $$Props = $props();
 </script>
 
-<ButtonLike {...props} class={classes({ variant, className })}>
+<Clickable {...props} class={classes({ variant, className })}>
 	{text}
-</ButtonLike>
+</Clickable>

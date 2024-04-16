@@ -38,13 +38,13 @@
 
 		<div class="flex h-[26rem] flex-col gap-2 overflow-y-auto">
 			{#each users as user}
-				<div class="flex items-center gap-2 rounded bg-[#050505] px-4 py-2">
-					<PlayerCircle player={user} />
+				<div class="flex items-center gap-4 rounded bg-[#050505] p-4">
+					<PlayerCircle class="size-16" player={user} />
 					<div class="flex flex-1 flex-col">
 						<p class="text-2xl font-semibold">{user.username}</p>
 						<p>{isOwner(user) ? 'Owner' : 'Guest'}</p>
 					</div>
-					<div class="flex gap-4">
+					<div class="flex gap-4 pr-2">
 						<ButtonIcon icon={Broom} onclick={onKick} />
 						<ButtonIcon icon={Play} onclick={onReady} />
 					</div>

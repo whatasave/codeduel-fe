@@ -4,7 +4,7 @@
 	import clsx from 'clsx';
 	import type { ComponentType, SvelteComponent } from 'svelte';
 
-	const classes = cva('relative h-[4.5rem] w-[4.5rem] rounded-full border-[#A3A3A3]', {
+	const classes = cva('relative rounded-full border-[#A3A3A3]', {
 		variants: {
 			variant: {
 				status: 'border-[0.2rem]'
