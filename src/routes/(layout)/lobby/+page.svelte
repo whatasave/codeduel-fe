@@ -33,7 +33,6 @@
 
 			<!-- Actions -->
 			<div class="flex gap-4">
-				<Button text="Refresh" variant="primary" />
 				<a href="/lobby/create">
 					<Button text="Create" variant="accent" />
 				</a>
