@@ -39,11 +39,6 @@
 		selectedIndex = parseInt(this.value);
 		onselect?.call(this);
 	}
-
-	$effect(() => {
-		console.log('options', options);
-		console.log('selectedIndex', selectedIndex);
-	});
 </script>
 
 <select {...props} class={classes({ variant, className: customClass })} {onchange}>
