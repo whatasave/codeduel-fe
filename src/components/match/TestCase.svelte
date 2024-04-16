@@ -4,7 +4,6 @@
 	import type { MouseEventHandler } from 'svelte/elements';
 
 	let {
-		value,
 		state,
 		testNumber,
 		onclick

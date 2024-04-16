@@ -93,7 +93,11 @@
 				onchangecode={() => (canSubmit = false)}
 				onchangelanguage={() => (canSubmit = false)}
 			/>
-			<ConsolePane class="h-80" />
+			<ConsolePane
+				testCaseIndex={selectedTestCaseIndex}
+				testCase={testCaseStates[selectedTestCaseIndex]}
+				class="min-h-80"
+			/>
 		</div>
 	</div>
 </div>

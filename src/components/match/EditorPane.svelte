@@ -41,5 +41,5 @@
 		<Button variant="primary" text="Restore Last Submitted" />
 		<Button variant="primary" text="Restore Default" />
 	</div>
-	<Editor class="flex-1 p-2 px-4" language={selectedLanguage} bind:value={code} {onchangecode} />
+	<Editor class="flex-1 p-2 px-3" language={selectedLanguage} bind:value={code} {onchangecode} />
 </Pane>
