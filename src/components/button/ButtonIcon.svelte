@@ -16,10 +16,10 @@
 
 	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof classes> {
 		text?: string;
+		icon: ComponentType<SvelteComponent>;
 		iconClass?: string;
 		iconAlign?: 'left' | 'right';
 		iconFill?: string;
-		icon: ComponentType<SvelteComponent>;
 	}
 
 	let {
@@ -35,15 +35,10 @@
 </script>
 
 <Clickable {...props} class={classes({ variant, className })}>
-	<div class="flex items-center gap-2">
-		{#if iconAlign === 'left'}
-			<svelte:component this={icon} class={iconClass} fill={iconFill} />
-		{/if}
+	<div class="flex items-center gap-2" class:flex-row-reverse={iconAlign === 'left'}>
 		{#if text}
 			<span>{text}</span>
 		{/if}
-		{#if iconAlign === 'right'}
-			<svelte:component this={icon} class={iconClass} fill={iconFill} />
-		{/if}
+		<svelte:component this={icon} class={iconClass} fill={iconFill} />
 	</div>
 </Clickable>
