@@ -54,12 +54,21 @@ export type UserId = number;
 
 export type PlayerStatus = { phase: 'progress' } | { phase: 'done'; score: number };
 
+export type SimpleLobby = {
+	id: string;
+	owner: User;
+	users: number;
+	max_players: number;
+	state: string;
+};
+
 export type Lobby<State extends LobbyState = LobbyState> = {
 	id: string;
 	settings: LobbySettings;
 	owner: User;
 	users: { [id: UserId]: User };
 	state: State;
+	max_players?: number; // TODO: Make this required
 };
 
 export type LobbyStateByType = {
