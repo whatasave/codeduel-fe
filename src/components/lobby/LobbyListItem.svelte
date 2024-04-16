@@ -13,7 +13,7 @@
 		<p class="text-lg font-semibold">{lobby.owner.username}'s lobby</p>
 		<p class="text-sm">{lobby.state} | Locked | {lobby.users}/{lobby.max_players} Brogrammers</p>
 	</div>
-	<div class="flex gap-4">
+	<div class="flex gap-4 pr-2">
 		{#if lobby.state === 'game'}
 			<a href={`/match/${lobby.id}`}>
 				<ButtonIcon

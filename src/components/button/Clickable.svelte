@@ -13,10 +13,10 @@
 	let isLoading: boolean = $state(false);
 
 	async function handleClick(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
-		if (isLoading) return;
+		if (isLoading || !onclick) return;
 		isLoading = true;
-		await onclick?.(event);
-		await new Promise((resolve) => setTimeout(resolve, delay ?? 0));
+		await onclick(event);
+		if (!delay) await new Promise((resolve) => setTimeout(resolve, delay));
 		isLoading = false;
 	}
 </script>

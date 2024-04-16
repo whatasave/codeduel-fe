@@ -2,6 +2,7 @@
 	import type { ComponentProps, ComponentType, SvelteComponent } from 'svelte';
 	import Clickable from './Clickable.svelte';
 	import { cva, type VariantProps } from 'class-variance-authority';
+	import { Loading } from '$components/icons';
 
 	const classes = cva('w-fit h-fit disabled:opacity-60 disabled:cursor-not-allowed', {
 		variants: {
@@ -35,4 +36,7 @@
 		{/if}
 		<svelte:component this={icon.icon} class={icon.class} fill={icon.fill} />
 	</div>
+	{#snippet loading()}
+		<Loading fill="#ffffff" />
+	{/snippet}
 </Clickable>

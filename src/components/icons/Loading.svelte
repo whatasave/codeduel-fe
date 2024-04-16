@@ -1,5 +1,11 @@
-<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-	><style>
+<script lang="ts">
+	import type { SVGAttributes } from 'svelte/elements';
+
+	let { ...props }: SVGAttributes<SVGElement> = $props();
+</script>
+
+<svg width="24" height="24" viewBox="0 0 24 24" {...props} xmlns="http://www.w3.org/2000/svg">
+	<style>
 		.spinner_nOfF {
 			animation: spinner_qtyZ 2s cubic-bezier(0.36, 0.6, 0.31, 1) infinite;
 		}
@@ -33,15 +39,12 @@
 				cx: 20px;
 			}
 		}
-	</style><circle class="spinner_nOfF" cx="4" cy="12" r="3" /><circle
-		class="spinner_nOfF spinner_fVhf"
-		cx="4"
-		cy="12"
-		r="3"
-	/><circle class="spinner_nOfF spinner_piVe" cx="4" cy="12" r="3" /><circle
+	</style>
+	<circle class="spinner_nOfF" cx="4" cy="12" r="3" /><circle class="spinner_nOfF spinner_fVhf" cx="4" cy="12" r="3" />
+	<circle class="spinner_nOfF spinner_piVe" cx="4" cy="12" r="3" /><circle
 		class="spinner_nOfF spinner_MSNs"
 		cx="4"
 		cy="12"
 		r="3"
-	/></svg
->
+	/>
+</svg>
