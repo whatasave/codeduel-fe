@@ -9,5 +9,6 @@ import Youtube from '$components/icons/Youtube.svelte';
 import Join from '$components/icons/Join.svelte';
 import Settings from '$components/icons/Settings.svelte';
 import SignOut from '$components/icons/SignOut.svelte';
+import Loading from '$components/icons/Loading.svelte';
 
-export { Broom, Github, Play, ProfileDefault, Python, Stopwatch, Upload, Youtube, Join, Settings, SignOut };
+export { Broom, Github, Play, ProfileDefault, Python, Stopwatch, Upload, Youtube, Join, Settings, SignOut, Loading };
