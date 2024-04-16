@@ -6,7 +6,6 @@
 
 	let { data, children }: { data: PageData, children: Snippet } = $props();
 	
-	console.log(data);
 </script>
 
 <div class="min-h-0 h-full flex flex-col p-2">

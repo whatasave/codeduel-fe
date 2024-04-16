@@ -10,6 +10,9 @@
 	<div class="flex gap-4 px-4">
 		<a href="/">Home</a>
 		<a href="/lobby">Lobbies</a>
+		<a href="/challenges">Challenges</a>
+		<a href="/users">Users</a>
+		<a href="/achievements">Achievements</a>
 	</div>
 
 	<div class="flex items-center gap-4">
