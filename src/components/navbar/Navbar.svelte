@@ -20,7 +20,7 @@
 			<div class="group relative">
 				<a href="/user/1">
 					<PlayerCircle
-						class="h-[2rem] w-[2rem]"
+						class="h-[2.1rem] w-[2.1rem]"
 						player={{
 							id: user.id,
 							username: user.username,
