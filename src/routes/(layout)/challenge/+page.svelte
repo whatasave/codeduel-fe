@@ -4,7 +4,7 @@
 
 <div>
 	<Clickable
-		class="rounded bg-blue-500 p-2 px-6 text-white"
+		class="rounded bg-blue-600 p-2 px-6 text-white disabled:bg-red-600"
 		delay={2000}
 		onclick={async () => {
 			await new Promise((resolve) => setTimeout(resolve, 2000));
