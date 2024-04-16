@@ -11,7 +11,7 @@
 	let showDropdown = $state(false);
 </script>
 
-<nav class="flex items-center justify-between rounded bg-[#050505] p-4">
+<nav class="flex items-center justify-between rounded bg-[#050505] p-2">
 	<div class="flex gap-4 px-4">
 		<a href="/">Home</a>
 		<a href="/lobby">Lobbies</a>
@@ -54,7 +54,9 @@
 				{/if}
 			</div>
 		{:else}
-			<a class="flex gap-4 px-4" href="/login">Login</a>
+			<a class="flex gap-4" href="/login">
+				<Button text="Login" variant="accent" />
+			</a>
 		{/if}
 	</div>
 </nav>
