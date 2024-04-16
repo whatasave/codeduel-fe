@@ -16,11 +16,27 @@
 	<div class="flex gap-4">
 		{#if lobby.state === 'game'}
 			<a href={`/match/${lobby.id}`}>
-				<ButtonIcon text="Re-Join" class="text-sky-500" icon={Join} iconClass="size-6" iconFill="#0ea5e9" />
+				<ButtonIcon
+					text="Re-Join"
+					class="text-sky-500"
+					icon={{
+						icon: Join,
+						class: 'size-6',
+						fill: '#0ea5e9'
+					}}
+				/>
 			</a>
 		{:else}
 			<a href={`/lobby/${lobby.id}`}>
-				<ButtonIcon text="Join" class="text-green-500" icon={Play} iconClass="size-6" iconFill="#22c55e" />
+				<ButtonIcon
+					text="Join"
+					class="text-green-500"
+					icon={{
+						icon: Play,
+						class: 'size-6',
+						fill: '#22c55e'
+					}}
+				/>
 			</a>
 		{/if}
 	</div>

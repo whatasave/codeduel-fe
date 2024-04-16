@@ -14,31 +14,25 @@
 		}
 	});
 
-	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof classes> {
-		text?: string;
+	type IconComp = {
 		icon: ComponentType<SvelteComponent>;
-		iconClass?: string;
-		iconAlign?: 'left' | 'right';
-		iconFill?: string;
+		class?: string;
+		align?: 'left' | 'right';
+		fill?: string;
+	};
+	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof classes> {
+		icon: IconComp;
+		text?: string;
 	}
 
-	let {
-		text,
-		class: className,
-		variant,
-		icon,
-		iconClass,
-		iconAlign = 'right',
-		iconFill = '#ffffff',
-		...props
-	}: $$Props = $props();
+	let { text, class: className, variant, icon, ...props }: $$Props = $props();
 </script>
 
 <Clickable {...props} class={classes({ variant, className })}>
-	<div class="flex items-center gap-2" class:flex-row-reverse={iconAlign === 'left'}>
+	<div class="flex items-center gap-2" class:flex-row-reverse={icon.align === 'left'}>
 		{#if text}
 			<span>{text}</span>
 		{/if}
-		<svelte:component this={icon} class={iconClass} fill={iconFill} />
+		<svelte:component this={icon.icon} class={icon.class} fill={icon.fill} />
 	</div>
 </Clickable>

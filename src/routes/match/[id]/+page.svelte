@@ -64,14 +64,11 @@
 <div class="flex h-full flex-col gap-2 p-2">
 	<Pane class="flex shrink-0 justify-center gap-2 p-2 ">
 		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
-		<ButtonIcon variant="primary" text="Run" icon={Play} iconAlign="left" iconClass="size-4" onclick={onRun} />
+		<ButtonIcon variant="primary" text="Run" icon={{ icon: Play, align: 'left', class: 'size-4' }} onclick={onRun} />
 		<ButtonIcon
 			variant="accent"
 			text="Submit"
-			icon={Upload}
-			iconAlign="left"
-			iconClass="size-4"
-			iconFill="#000000"
+			icon={{ icon: Upload, align: 'left', class: 'size-4', fill: '#000000' }}
 			onclick={onSubmit}
 			disabled={!canSubmit}
 		/>

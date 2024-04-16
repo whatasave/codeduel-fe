@@ -45,8 +45,8 @@
 						<p>{isOwner(user) ? 'Owner' : 'Guest'}</p>
 					</div>
 					<div class="flex gap-4 pr-2">
-						<ButtonIcon icon={Broom} onclick={onKick} />
-						<ButtonIcon icon={Play} onclick={onReady} />
+						<ButtonIcon icon={{ icon: Broom }} onclick={onKick} />
+						<ButtonIcon icon={{ icon: Play }} onclick={onReady} />
 					</div>
 				</div>
 			{/each}
