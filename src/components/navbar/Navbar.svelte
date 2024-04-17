@@ -1,24 +1,40 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import Button from '$components/button/Button.svelte';
+	import ButtonLink from '$components/button/ButtonLink.svelte';
 	import Clickable from '$components/button/Clickable.svelte';
 	import { Settings, SignOut, User } from '$components/icons';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import { clickOutside } from '$lib/hooks/clickOutside';
 	import type { UserProfile } from '$lib/types';
+	import NavbarProfileDropDown from './NavbarProfileDropDown.svelte';
 
 	let { user }: { user?: UserProfile } = $props();
+
+	let links = {
+		main: [
+			{ name: 'Home', href: '/' },
+			{ name: 'Lobbies', href: '/lobby' },
+			{ name: 'Challenges', href: '/challenge' },
+			{ name: 'Users', href: '/user' },
+			{ name: 'Achievements', href: '/achievement' }
+		],
+		profile: [
+			{ icon: User, name: 'Profile', href: `/user/${user?.username}` },
+			{ icon: Settings, name: 'Settings', href: '/settings' },
+			{ icon: SignOut, name: 'Logout', href: '/logout' }
+		]
+	};
 
 	let showDropdown = $state(false);
 </script>
 
-<nav class="flex items-center justify-between rounded bg-[#050505] p-2">
-	<div class="flex gap-4 px-4">
-		<a href="/">Home</a>
-		<a href="/lobby">Lobbies</a>
-		<a href="/challenge">Challenges</a>
-		<a href="/user">Users</a>
-		<a href="/achievement">Achievements</a>
-	</div>
+<header class="flex items-center justify-between rounded bg-[#050505] p-2">
+	<nav class="flex gap-4 px-4">
+		{#each links.main as { name, href }}
+			<a class:underline={$page.url.pathname === href} {href} aria-current={$page.url.pathname === href}>{name}</a>
+		{/each}
+	</nav>
 
 	<div class="flex items-center gap-4">
 		{#if user}
@@ -35,40 +51,11 @@
 					/>
 				</Clickable>
 				{#if showDropdown}
-					<div class="absolute right-0 py-2">
-						<div class="flex flex-col gap-2 rounded bg-[#242424] p-4">
-							<a
-								class="flex items-center gap-4 rounded bg-[#050505] p-2 px-10 text-center"
-								href="/user/{user.username}"
-								onclick={() => (showDropdown = false)}
-							>
-								<User class="size-4" />
-								<span>Profile</span>
-							</a>
-							<a
-								class="flex items-center gap-4 rounded bg-[#050505] p-2 px-10 text-center"
-								href="/settings"
-								onclick={() => (showDropdown = false)}
-							>
-								<Settings class="size-4" />
-								<span>Settings</span>
-							</a>
-							<a
-								class="flex items-center gap-4 rounded bg-[#050505] p-2 px-10 text-center"
-								href="/logout"
-								onclick={() => (showDropdown = false)}
-							>
-								<SignOut class="size-4" />
-								<span>Logout</span>
-							</a>
-						</div>
-					</div>
+					<NavbarProfileDropDown links={links.profile} onclick={() => (showDropdown = false)} />
 				{/if}
 			</div>
 		{:else}
-			<a class="flex gap-4" href="/login">
-				<Button text="Login" variant="accent" />
-			</a>
+			<ButtonLink class="flex gap-4" href="/login" text="Login" variant="accent" />
 		{/if}
 	</div>
-</nav>
+</header>
