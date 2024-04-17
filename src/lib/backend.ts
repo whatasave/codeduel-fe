@@ -1,6 +1,6 @@
 import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_HOST_PORT } from '$env/static/public';
-import { Ok, type Result, Error, isError, isSuccess } from './result';
-import type { SimpleLobby, UserProfile } from './types';
+import { Ok, type Result, Error, isSuccess, isError } from './result';
+import type { SimpleLobby, UserId, UserProfile } from './types';
 
 class Backend {
 	private url: string;
@@ -40,15 +40,15 @@ class Backend {
 		return await this.call<T>('POST', path, body ?? {});
 	}
 
-	private async get<T = unknown>(path: string, body?: Record<string, unknown>): Promise<Result<T>> {
-		return await this.call<T>('GET', path, body);
+	private async get<T = unknown>(path: string): Promise<Result<T>> {
+		return await this.call<T>('GET', path);
 	}
 
 	get logged() {
 		return Boolean(this.jwt);
 	}
 
-	async setJwt(jwt: string) {
+	setJwt(jwt: string) {
 		this.jwt = jwt;
 	}
 
@@ -63,6 +63,33 @@ class Backend {
 		}
 
 		return res;
+	}
+
+	async getUser(username: string) {
+		return this.get<{
+			id: UserId;
+			name: string;
+			username: string;
+			email: string;
+			avatar: string;
+			background_img: string;
+			bio: string;
+			created_at: string;
+			updated_at: string;
+		}>(`v1/user/${username}`);
+	}
+
+	async getUsers() {
+		return this.get<
+			{
+				name: string;
+				username: string;
+				avatar: string;
+				background_img: string;
+				bio: string;
+				created_at: string;
+			}[]
+		>(`v1/user`);
 	}
 
 	async getLobbies(): Promise<Result<SimpleLobby[]>> {
