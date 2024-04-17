@@ -1,46 +1,15 @@
 <script>
 	import { ProfileDefault } from '$components/icons';
 	import ProfileTag from '$components/profile/ProfileTag.svelte';
-	import ProfileStats from '$components/profile/ProfileStats.svelte';
 	import ProfileBackground from '$components/profile/ProfileBackground.svelte';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import dayjs from 'dayjs';
 
 	let { data } = $props();
-
-	const user = {
-		...(data.user
-			? data.user
-			: {
-					id: 1,
-					username: '@johndoe',
-					avatar: '/img/avatar.jpg',
-					created_at: '2021-01-01T00:00:00Z'
-				}),
-		name: 'John Doe',
-		bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet quas excepturi sequi dolorum accusantium nisi, similique numquam voluptas ea voluptate! Ex beatae laudantium ullam quidem ea soluta assumenda incidunt modi?',
-		stats: [
-			{ name: 'Games', stat: '2k' },
-			{ name: 'Won', stat: '69' },
-			{ name: 'Top 3', stat: '128' },
-			{ name: 'Followers', stat: '100' },
-			{ name: 'Following', stat: '200' }
-		]
-	};
 </script>
 
 <div class="flex flex-1 flex-col overflow-y-auto pr-2">
 	<ProfileBackground image={data.user?.background_img || '/img/profile-bg.jpg'} />
-
-	{#await data.testUser}
-		<div class="flex h-full items-center justify-center">
-			<div class="spinner">Loading...</div>
-		</div>
-	{:then testUser}
-		<div>{JSON.stringify(testUser)}</div>
-	{:catch error}
-		<div>Error: {error.message}</div>
-	{/await}
 
 	<div class="mx-auto -mt-10 flex w-full max-w-[1000px] flex-col gap-1 px-8">
 		<div class="size-20 overflow-hidden rounded-full border-8 border-transparent bg-[#151515]">
@@ -64,11 +33,12 @@
 					<ProfileTag tag={data.user?.username || ''} />
 				</div>
 				<div class="text-sm">{data.user?.bio}</div>
-				<div class="flex flex-wrap justify-center gap-2">
+				<!-- USER STATISTICS -->
+				<!-- <div class="flex flex-wrap justify-center gap-2">
 					{#each data.user?.stats || [] as stat}
 						<ProfileStats name={stat.name} stat={stat.stat} />
 					{/each}
-				</div>
+				</div> -->
 				<div>
 					<span class="font-semibold">Member since</span>
 					<span>{dayjs(data.user?.created_at).format('DD.MM.YY HH:mm:ss')}</span>

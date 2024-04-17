@@ -1,4 +1,4 @@
-import type { languages } from './languages';
+import { languages } from './languages';
 
 export type TestCase = {
 	input: string;
