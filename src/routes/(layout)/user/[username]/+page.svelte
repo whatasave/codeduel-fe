@@ -1,5 +1,4 @@
 <script>
-	import { page } from '$app/stores';
 	import { ProfileDefault } from '$components/icons';
 	import ProfileTag from '$components/profile/ProfileTag.svelte';
 	import ProfileStats from '$components/profile/ProfileStats.svelte';
@@ -32,6 +31,16 @@
 
 <div class="flex flex-1 flex-col overflow-y-auto pr-2">
 	<ProfileBackground image={data.user?.background_img || '/img/profile-bg.jpg'} />
+
+	{#await data.testUser}
+		<div class="flex h-full items-center justify-center">
+			<div class="spinner">Loading...</div>
+		</div>
+	{:then testUser}
+		<div>{JSON.stringify(testUser)}</div>
+	{:catch error}
+		<div>Error: {error.message}</div>
+	{/await}
 
 	<div class="mx-auto -mt-10 flex w-full max-w-[1000px] flex-col gap-1 px-8">
 		<div class="size-20 overflow-hidden rounded-full border-8 border-transparent bg-[#151515]">

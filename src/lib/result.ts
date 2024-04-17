@@ -16,9 +16,9 @@ export class Ok<T> {
 
 export class Error {
 	code?: number;
-	message?: unknown;
+	message?: string;
 
-	constructor(message?: unknown, code?: number) {
+	constructor(message?: string, code?: number) {
 		this.code = code;
 		this.message = message;
 	}
