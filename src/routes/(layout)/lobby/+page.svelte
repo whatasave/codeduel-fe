@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$components/button/Button.svelte';
+	import ButtonLink from '$components/button/ButtonLink.svelte';
 	import LobbyListItem from '$components/lobby/LobbyListItem.svelte';
 	import backend from '$lib/backend';
 	import { isSuccess } from '$lib/result';
@@ -33,9 +33,7 @@
 
 			<!-- Actions -->
 			<div class="flex gap-4">
-				<a href="/lobby/create">
-					<Button text="Create" variant="accent" />
-				</a>
+				<ButtonLink href="/lobby/create" text="Create" variant="accent" />
 			</div>
 		</div>
 

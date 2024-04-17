@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
+	import ButtonIconLink from '$components/button/ButtonIconLink.svelte';
 	import { Join, Play } from '$components/icons';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import type { SimpleLobby } from '$lib/types';
@@ -15,29 +16,27 @@
 	</div>
 	<div class="flex gap-4 pr-2">
 		{#if lobby.state === 'game'}
-			<a href={`/match/${lobby.id}`}>
-				<ButtonIcon
-					text="Re-Join"
-					class="text-sky-500"
-					icon={{
-						icon: Join,
-						class: 'size-6',
-						fill: '#0ea5e9'
-					}}
-				/>
-			</a>
+			<ButtonIconLink
+				href="/match/{lobby.id}"
+				text="Re-Join"
+				class="text-sky-500"
+				icon={{
+					icon: Join,
+					class: 'size-6',
+					fill: '#0ea5e9'
+				}}
+			/>
 		{:else}
-			<a href={`/lobby/${lobby.id}`}>
-				<ButtonIcon
-					text="Join"
-					class="text-green-500"
-					icon={{
-						icon: Play,
-						class: 'size-6',
-						fill: '#22c55e'
-					}}
-				/>
-			</a>
+			<ButtonIconLink
+				href="/lobby/{lobby.id}"
+				text="Join"
+				class="text-green-500"
+				icon={{
+					icon: Play,
+					class: 'size-6',
+					fill: '#22c55e'
+				}}
+			/>
 		{/if}
 	</div>
 </div>
