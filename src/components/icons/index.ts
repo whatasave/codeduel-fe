@@ -11,6 +11,7 @@ import Settings from '$components/icons/Settings.svelte';
 import SignOut from '$components/icons/SignOut.svelte';
 import Loading from '$components/icons/Loading.svelte';
 import User from '$components/icons/User.svelte';
+import Trophy from './Trophy.svelte';
 
 export {
 	Broom,
@@ -25,5 +26,6 @@ export {
 	Settings,
 	SignOut,
 	Loading,
-	User
+	User,
+	Trophy
 };
