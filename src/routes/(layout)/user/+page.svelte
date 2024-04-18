@@ -5,23 +5,18 @@
 
 	for (let i = 0; i < 5; i++) {
 		users[i] = {
-			realname: 'Kaysucacogliniosssssss',
-			username: 'Xedom'
+			realname: 'John Doe',
+			username: 'Monkey'
 		};
 	}
 </script>
 
 <div class="m-auto w-[60%] overflow-y-auto">
-	<div class="myGrid gap-2 pe-2">
+	<div class=" grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-2 pe-2">
 		{#each users as user}
-			<UserInfo realName={user.realname} username={user.username} wins={12} lang={'C#'} since={'2y'} />
+			<article class="contents">
+				<UserInfo realName={user.realname} username={user.username} wins={12} lang={'C#'} since={'2y'} />
+			</article>
 		{/each}
 	</div>
 </div>
-
-<style>
-	.myGrid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-	}
-</style>

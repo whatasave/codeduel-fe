@@ -11,7 +11,9 @@ import Settings from '$components/icons/Settings.svelte';
 import SignOut from '$components/icons/SignOut.svelte';
 import Loading from '$components/icons/Loading.svelte';
 import User from '$components/icons/User.svelte';
-import Trophy from './Trophy.svelte';
+import Trophy from '$components/icons/Trophy.svelte';
+import Quotes from '$components/icons/Quotes.svelte';
+import Cake from '$components/icons/Cake.svelte';
 
 export {
 	Broom,
@@ -27,5 +29,7 @@ export {
 	SignOut,
 	Loading,
 	User,
-	Trophy
+	Trophy,
+	Quotes,
+	Cake
 };

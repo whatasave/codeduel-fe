@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { Trophy } from '$components/icons';
-	import Cake from '$components/icons/Cake.svelte';
-	import Quotes from '$components/icons/Quotes.svelte';
+	import { Trophy, Cake, Quotes } from '$components/icons';
 	let { realName, username, wins, lang, since } = $props();
 </script>
 
-<article class="flex gap-x-5 rounded-sm bg-[#090909] p-5">
+<div class="flex gap-x-5 rounded-sm bg-[#090909] p-5">
 	<img src="https://picsum.photos/200/300" alt="" class="h-[5.75rem] min-w-[5.75rem] rounded-full object-cover" />
 	<div class="flex flex-col overflow-hidden">
 		<h1 class="truncate text-xl font-bold">{realName}</h1>
@@ -19,4 +17,4 @@
 			<p class="font-bold">{since}</p>
 		</div>
 	</div>
-</article>
+</div>
