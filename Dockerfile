@@ -1,22 +1,40 @@
-FROM node:18 AS build
+FROM node:18 AS yarn
+RUN corepack enable && corepack prepare yarn@stable --activate
 
-ENV NODE_ENV=production
-
-WORKDIR /usr/src/app
-# RUN corepack enable && corepack prepare yarn@stable --activate
-# RUN npm install -g yarn
-# RUN npm install -g pnpm
-# install vite
+FROM node:18 AS vite
 RUN npm install -g vite
+RUN npm install -g @sveltejs/kit
+RUN npm install -g @sveltejs/adapter-auto
+RUN npm install -g @sveltejs/vite-plugin-svelte
+RUN npm install -g sirv-cli
 
-# COPY package.json yarn.lock ./
-COPY package.json ./
+FROM yarn AS build
 
-# RUN yarn install --immutable
-RUN npm i
-COPY . ./
-# RUN yarn build
-RUN npm run build
+WORKDIR /app
 
-FROM nginx:1.19-alpine
-COPY --from=build /usr/src/app/public /usr/share/nginx/html
+COPY .yarn/ ./.yarn/
+COPY .yarnrc.yml .
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install
+
+COPY . .
+RUN yarn run build
+# RUN yarn dlx vite build
+
+FROM yarn AS production
+
+WORKDIR /app
+
+# COPY --from=build /app/.svelte-kit ./.svelte-kit/
+# COPY --from=build /app/.svelte-kit/output ./dist/
+# COPY --from=build /app/vite.config.ts vite.config.ts
+# COPY --from=build /app/svelte.config.js svelte.config.js
+# COPY --from=build /app/node_modules node_modules/
+COPY --from=build /app .
+
+EXPOSE 4173
+
+# CMD vite preview --host --outDir ./dist
+CMD yarn run preview --host
+# CMD sirv dist --port 4173 --host
