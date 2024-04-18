@@ -3,16 +3,16 @@
 	import type { ComponentProps } from 'svelte';
 	import Clickable from './Clickable.svelte';
 	import { Loading } from '$components/icons';
-	import { ButtonStyles } from './ButtonStyles';
+	import { styles } from './styles';
 
-	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof ButtonStyles> {
+	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
 		text: string;
 	}
 
 	let { text, class: className, variant, ...props }: $$Props = $props();
 </script>
 
-<Clickable {...props} class={ButtonStyles({ variant, className })}>
+<Clickable {...props} class={styles({ variant, className })}>
 	{text}
 	{#snippet loading()}
 		<Loading />

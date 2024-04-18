@@ -3,7 +3,7 @@
 	import Clickable from './Clickable.svelte';
 	import { type VariantProps } from 'class-variance-authority';
 	import { Loading } from '$components/icons';
-	import { ButtonStyles } from './ButtonStyles';
+	import { styles } from './styles';
 
 	type IconComp = {
 		icon: ComponentType<SvelteComponent>;
@@ -11,7 +11,7 @@
 		align?: 'left' | 'right';
 		fill?: string;
 	};
-	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof ButtonStyles> {
+	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
 		icon: IconComp;
 		text?: string;
 	}
@@ -19,7 +19,7 @@
 	let { text, class: className, variant, icon, ...props }: $$Props = $props();
 </script>
 
-<Clickable {...props} class={ButtonStyles({ variant, className })}>
+<Clickable {...props} class={styles({ variant, className })}>
 	<div class="flex items-center gap-2" class:flex-row-reverse={icon.align === 'left'}>
 		{#if text}
 			<span>{text}</span>
