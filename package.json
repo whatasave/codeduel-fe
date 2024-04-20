@@ -19,7 +19,7 @@
 		"format": "prettier --write .",
 		"docker:build": "docker build -t xedom/codeduel-fe .",
 		"docker:push": "docker push xedom/codeduel-fe",
-		"docker:up": "docker run -p 5500:4173 xedom/codeduel-fe",
+		"docker:up": "docker run -p 8000:80 xedom/codeduel-fe",
 		"docker:down": "docker stop xedom/codeduel-fe",
 		"docker:clean": "docker system prune -f",
 		"docker:restart": "yarn docker:down && yarn docker:up"

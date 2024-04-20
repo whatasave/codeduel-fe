@@ -1,7 +1,8 @@
-FROM node:18-alpine AS build
+FROM node:18 AS build
 
-ENV SVELTEKIT_ADAPTER="node"
+ENV SVELTEKIT_ADAPTER="auto"
 ENV NODE_ENV="production"
+EXPOSE 80
 
 WORKDIR /app
 
@@ -16,14 +17,16 @@ RUN yarn install --immutable
 COPY . .
 RUN yarn run build
 
-FROM node:18 AS production
+CMD yarn run preview --port 80 --host
 
-WORKDIR /app
+# FROM node:18 AS production
 
-COPY --from=build /app/build ./build/
-COPY --from=build /app/node_modules ./node_modules/
-COPY --from=build /app/package.json ./package.json
+# WORKDIR /app
 
-EXPOSE 4173
+# COPY --from=build /app/build ./build/
+# COPY --from=build /app/node_modules ./node_modules/
+# COPY --from=build /app/package.json ./package.json
 
-CMD node build
+# EXPOSE 4173
+
+# CMD node build
