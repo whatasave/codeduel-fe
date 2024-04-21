@@ -2,6 +2,8 @@ FROM node:18 AS build
 
 ENV SVELTEKIT_ADAPTER="auto"
 ENV NODE_ENV="production"
+ENV PUBLIC_LOBBY_HOST_PORT="xed.im:5010"
+ENV PUBLIC_BACKEND_URL="http://xed.im:5000"
 EXPOSE 80
 
 WORKDIR /app

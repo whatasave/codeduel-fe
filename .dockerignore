@@ -9,6 +9,7 @@ node_modules
 .gitattributes
 README.md
 
+.env
 .eslintignore
 .eslintrc.cjs
 .npmrc
