@@ -29,7 +29,7 @@
 	let showDropdown = $state(false);
 </script>
 
-<header class="flex items-center justify-between rounded bg-[#050505] p-2">
+<header class="flex items-center justify-between rounded bg-black/50 p-2">
 	<nav class="flex gap-4 px-4">
 		{#each links.main as { name, href }}
 			<a class:underline={$page.url.pathname === href} {href} aria-current={$page.url.pathname === href}>{name}</a>
