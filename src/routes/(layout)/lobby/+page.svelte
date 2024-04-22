@@ -28,7 +28,7 @@
 
 <div class="m-auto flex w-full max-w-[60rem] gap-2 overflow-y-auto px-2">
 	<div class="flex w-full min-w-[25rem] flex-col gap-2">
-		<div class="flex items-center justify-between rounded bg-black/50 p-4">
+		<div class="flex items-center justify-between rounded bg-white/5 p-4">
 			<p class="text-3xl font-bold">Lobbies</p>
 
 			<!-- Actions -->

@@ -7,7 +7,7 @@
 	let { lobby }: { lobby: SimpleLobby } = $props();
 </script>
 
-<div class="flex items-center gap-4 rounded bg-black/50 p-4">
+<div class="flex items-center gap-4 rounded bg-white/5 p-4">
 	<PlayerCircle class="size-11" player={lobby.owner} />
 	<div class="flex flex-1 flex-col">
 		<p class="text-lg font-semibold">{lobby.owner.username}'s lobby</p>

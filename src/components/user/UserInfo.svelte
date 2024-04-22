@@ -3,7 +3,7 @@
 	let { realName, username, wins, lang, since } = $props();
 </script>
 
-<div class="flex gap-x-5 rounded-sm bg-[#090909] p-5">
+<div class="flex gap-x-5 rounded bg-white/5 p-5">
 	<img src="https://picsum.photos/200/300" alt="" class="h-[5.75rem] min-w-[5.75rem] rounded-full object-cover" />
 	<div class="flex flex-col overflow-hidden">
 		<h1 class="truncate text-xl font-bold">{realName}</h1>
