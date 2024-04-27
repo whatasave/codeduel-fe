@@ -3,7 +3,7 @@ FROM node:18 AS build
 ENV SVELTEKIT_ADAPTER="auto"
 ENV NODE_ENV="production"
 ENV PUBLIC_LOBBY_HOST_PORT="api.codeduel.it:5010"
-ENV PUBLIC_BACKEND_URL="http://api.codeduel.it"
+ENV PUBLIC_BACKEND_URL="https://api.codeduel.it"
 EXPOSE 80
 
 WORKDIR /app

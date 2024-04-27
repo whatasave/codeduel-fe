@@ -57,7 +57,7 @@ class Backend {
 	async getProfile() {
 		if (this.user) return new Ok(this.user);
 
-		const res = await this.get<UserProfile>('v1/profile');
+		const res = await this.get<UserProfile>('v1/user/profile');
 		if (isSuccess(res)) {
 			this.user = res.data;
 		}

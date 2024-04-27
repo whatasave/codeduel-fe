@@ -46,16 +46,16 @@
 			</div>
 			<div class="flex flex-1 flex-col gap-2">
 				<div>Games</div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
-				<div class="h-16 w-full rounded bg-[#050505]"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
+				<div class="h-16 w-full rounded bg-white/5"></div>
 			</div>
 		</div>
 	</div>
