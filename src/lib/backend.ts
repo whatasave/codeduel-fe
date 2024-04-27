@@ -1,4 +1,4 @@
-import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_HOST_PORT } from '$env/static/public';
+import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_API } from '$env/static/public';
 import { Ok, type Result, Error, isSuccess, isError } from './result';
 import type { SimpleLobby, UserId, UserProfile } from './types';
 
@@ -93,7 +93,7 @@ class Backend {
 	}
 
 	async getLobbies(): Promise<Result<SimpleLobby[]>> {
-		const res = await fetch(`http://${PUBLIC_LOBBY_HOST_PORT}/lobbies`);
+		const res = await fetch(`${PUBLIC_LOBBY_API}/lobbies`);
 		const json = (await res.json()) as SimpleLobby[];
 		return new Ok(json);
 	}
