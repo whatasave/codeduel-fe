@@ -16,7 +16,7 @@
 		<h1>Not logged in</h1>
 		<a
 			href="{PUBLIC_BACKEND_URL}/v1/auth/github"
-			class="flex w-fit items-center gap-2 rounded-sm bg-[#ECC206] px-8 py-2 text-[1.25rem] font-semibold text-black"
+			class="flex w-fit items-center gap-2 rounded-sm bg-[#8DD741] px-8 py-2 text-[1.25rem] font-semibold text-black"
 		>
 			<Github fill="#000000" />
 			<span>Login with Github</span>

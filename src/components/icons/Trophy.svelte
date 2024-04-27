@@ -1,7 +1,7 @@
 <script lang="ts">
 	let { fill: colorFill }: { fill?: string } = $props();
 
-	let fill = colorFill || '#ECC206';
+	let fill = colorFill || '#8DD741';
 </script>
 
 <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">

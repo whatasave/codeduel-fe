@@ -22,8 +22,8 @@
 </script>
 
 <button type="button" class="contents" {...props} onclick={handleClick} disabled={isLoading}>
-	{#if isLoading}
-		{@render (loading ?? children)()}
+	{#if isLoading && loading}
+		{@render loading()}
 	{:else}
 		{@render children()}
 	{/if}

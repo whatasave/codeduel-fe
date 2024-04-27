@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$components/button/Button.svelte';
+	import ButtonLink from '$components/button/ButtonLink.svelte';
 	import LobbyListItem from '$components/lobby/LobbyListItem.svelte';
 	import backend from '$lib/backend';
 	import { isSuccess } from '$lib/result';
@@ -28,14 +28,12 @@
 
 <div class="m-auto flex w-full max-w-[60rem] gap-2 overflow-y-auto px-2">
 	<div class="flex w-full min-w-[25rem] flex-col gap-2">
-		<div class="flex items-center justify-between rounded bg-[#050505] p-4">
+		<div class="flex items-center justify-between rounded bg-white/5 p-4">
 			<p class="text-3xl font-bold">Lobbies</p>
 
 			<!-- Actions -->
 			<div class="flex gap-4">
-				<a href="/lobby/create">
-					<Button text="Create" variant="accent" />
-				</a>
+				<ButtonLink href="/lobby/create" text="Create" variant="accent" />
 			</div>
 		</div>
 

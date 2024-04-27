@@ -1,16 +1,14 @@
 import backend from '$lib/backend.js';
-import { isError, isSuccess } from '$lib/result.js';
-import type { UserProfile } from '$lib/types.js';
+import { isError } from '$lib/result.js';
 import { error } from '@sveltejs/kit';
 
-export async function load({}) {
-	let user: UserProfile | undefined = undefined;
+export async function load({ params }) {
+	let username = params.username;
 
-	const userRes = await backend.getProfile();
+	const userRes = await backend.getUser(username);
 	if (isError(userRes)) throw error(userRes.code ?? 500, userRes.message ?? 'Internal Server Error');
-	if (isSuccess(userRes)) user = userRes.data;
 
 	return {
-		user
+		user: userRes.data
 	};
 }

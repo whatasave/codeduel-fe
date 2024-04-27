@@ -1,22 +1,34 @@
 FROM node:18 AS build
 
-ENV NODE_ENV=production
+ENV SVELTEKIT_ADAPTER="auto"
+ENV NODE_ENV="production"
+ENV PUBLIC_LOBBY_HOST_PORT="api.codeduel.it:5010"
+ENV PUBLIC_BACKEND_URL="https://api.codeduel.it"
+EXPOSE 80
 
-WORKDIR /usr/src/app
-# RUN corepack enable && corepack prepare yarn@stable --activate
-# RUN npm install -g yarn
-# RUN npm install -g pnpm
-# install vite
-RUN npm install -g vite
+WORKDIR /app
 
-# COPY package.json yarn.lock ./
-COPY package.json ./
+RUN corepack enable && corepack prepare yarn@stable --activate
 
-# RUN yarn install --immutable
-RUN npm i
-COPY . ./
-# RUN yarn build
-RUN npm run build
+COPY .yarn/ ./.yarn/
+COPY .yarnrc.yml .
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install --immutable
 
-FROM nginx:1.19-alpine
-COPY --from=build /usr/src/app/public /usr/share/nginx/html
+COPY . .
+RUN yarn run build
+
+CMD yarn run preview --port 80 --host
+
+# FROM node:18 AS production
+
+# WORKDIR /app
+
+# COPY --from=build /app/build ./build/
+# COPY --from=build /app/node_modules ./node_modules/
+# COPY --from=build /app/package.json ./package.json
+
+# EXPOSE 4173
+
+# CMD node build

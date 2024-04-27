@@ -12,7 +12,7 @@
 	<Navbar user={data.user} />
 
 	<div class="h-full w-full py-2">
-		<div class="flex h-full flex-col items-center justify-center gap-8 rounded bg-[#050505] text-white">
+		<div class="flex h-full flex-col items-center justify-center gap-8 rounded bg-white/5 text-white">
 			<div class="flex flex-col items-center">
 				<div class="text-6xl">{$page.status}</div>
 				<div class="text-2xl">{$page.error?.message}</div>
