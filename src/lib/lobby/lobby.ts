@@ -1,5 +1,5 @@
 import type { Challenge, ExecutionResult, Lobby, LobbySettings, LobbyState, User, UserId } from '$lib/types';
-import { PUBLIC_LOBBY_HOST_PORT } from '$env/static/public';
+import { PUBLIC_LOBBY_WS } from '$env/static/public';
 
 export class LobbyService {
 	path: string;
@@ -31,7 +31,7 @@ export class LobbyService {
 
 	async start() {
 		return new Promise<void>((resolve, reject) => {
-			this.connection = new WebSocket(`ws://${PUBLIC_LOBBY_HOST_PORT}/${this.path}`);
+			this.connection = new WebSocket(`${PUBLIC_LOBBY_WS}/${this.path}`);
 			this.connection!.addEventListener('open', () => {
 				this.connection!.addEventListener('message', (event) => {
 					const packet = JSON.parse(event.data) as PacketIn;
