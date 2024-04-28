@@ -2,13 +2,13 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes, MouseEventHandler } from 'svelte/elements';
 
-	interface $$Props extends HTMLButtonAttributes {
+	interface $Props extends HTMLButtonAttributes {
 		children: Snippet;
 		loading?: Snippet;
 		delay?: number;
 	}
 
-	let { children, delay, loading, onclick, ...props }: $$Props = $props();
+	let { children, delay, loading, onclick, ...props }: $Props = $props();
 
 	let isLoading: boolean = $state(false);
 

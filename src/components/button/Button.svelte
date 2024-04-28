@@ -5,11 +5,11 @@
 	import { Loading } from '$components/icons';
 	import { styles } from './styles';
 
-	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
+	interface $Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
 		text: string;
 	}
 
-	let { text, class: className, variant, ...props }: $$Props = $props();
+	let { text, class: className, variant, ...props }: $Props = $props();
 </script>
 
 <Clickable {...props} class={styles({ variant, className })}>

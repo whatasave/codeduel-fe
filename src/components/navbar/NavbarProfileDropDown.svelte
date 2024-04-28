@@ -2,12 +2,12 @@
 	import { page } from '$app/stores';
 	import type { ComponentType, SvelteComponent } from 'svelte';
 
-	interface $$Props {
+	interface $Props {
 		links: { icon: ComponentType<SvelteComponent>; name: string; href: string }[];
 		onclick: () => void;
 	}
 
-	let { links, onclick }: $$Props = $props();
+	let { links, onclick }: $Props = $props();
 </script>
 
 <div class="absolute right-0 py-2">

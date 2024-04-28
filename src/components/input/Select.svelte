@@ -18,7 +18,7 @@
 		}
 	);
 
-	interface $$Props extends HTMLSelectAttributes, VariantProps<typeof classes> {
+	interface $Props extends HTMLSelectAttributes, VariantProps<typeof classes> {
 		options: T[];
 		selectedIndex: number;
 		mapToString: (option: T) => string;
@@ -33,7 +33,7 @@
 		variant = 'primary',
 		class: customClass,
 		...props
-	}: $$Props = $props();
+	}: $Props = $props();
 
 	function onchange(this: HTMLSelectElement) {
 		selectedIndex = parseInt(this.value);

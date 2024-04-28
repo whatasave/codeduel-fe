@@ -11,12 +11,12 @@
 		align?: 'left' | 'right';
 		fill?: string;
 	};
-	interface $$Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
+	interface $Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
 		icon: IconComp;
 		text?: string;
 	}
 
-	let { text, class: className, variant, icon, ...props }: $$Props = $props();
+	let { text, class: className, variant, icon, ...props }: $Props = $props();
 </script>
 
 <Clickable {...props} class={styles({ variant, className })}>
