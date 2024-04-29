@@ -7,6 +7,8 @@ export const ssr = true;
 export async function load() {
 	let user: UserProfile | undefined;
 
+	let test: string;
+
 	const userData = await backend.getProfile();
 	if (isSuccess(userData)) user = userData.data;
 
