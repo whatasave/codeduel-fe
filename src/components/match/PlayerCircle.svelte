@@ -18,7 +18,7 @@
 		}
 	});
 
-	interface $$Props extends VariantProps<typeof classes> {
+	interface $Props extends VariantProps<typeof classes> {
 		player: User;
 		class?: string;
 		badge?: ComponentType<SvelteComponent>;
@@ -26,7 +26,7 @@
 		badgeBackground?: string;
 	}
 
-	let { player, badge, badgeClass, variant, status = 'default', class: className }: $$Props = $props();
+	let { player, badge, badgeClass, variant, status = 'default', class: className }: $Props = $props();
 	let showImg = $state(true);
 </script>
 

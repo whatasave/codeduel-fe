@@ -4,7 +4,7 @@
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import { styles } from './styles';
 
-	interface $$Props extends HTMLAnchorAttributes, VariantProps<typeof styles> {
+	interface $Props extends HTMLAnchorAttributes, VariantProps<typeof styles> {
 		icon: {
 			icon: ComponentType<SvelteComponent>;
 			class?: string;
@@ -14,7 +14,7 @@
 		text?: string;
 	}
 
-	let { text, class: className, variant, icon, ...props }: $$Props = $props();
+	let { text, class: className, variant, icon, ...props }: $Props = $props();
 </script>
 
 <a {...props} class={styles({ variant, className })}>
