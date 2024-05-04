@@ -1,25 +1,10 @@
 <script lang="ts">
 	import UserInfo from '$components/user/UserInfo.svelte';
 	import dayjs from 'dayjs';
+	import relativeTime from 'dayjs/plugin/relativeTime.js';
 
 	const { data } = $props();
-
-	function parseDate(createdAt: string): string {
-		const now = dayjs();
-		let diff = now.diff(dayjs(createdAt));
-
-		let days = Math.floor(diff / 86400000);
-		let months = Math.floor(days / 30);
-		let years = Math.floor(months / 12);
-
-		if (years > 0) {
-			return years == 1 ? `${years} year ago` : `${years} years ago`;
-		} else if (months > 0) {
-			return months == 1 ? `${months} month ago` : `${months} moths ago`;
-		}
-
-		return days == 1 ? `${days} day ago` : `${days} days ago`;
-	}
+	dayjs.extend(relativeTime);
 </script>
 
 <div class="m-auto w-[60%] overflow-y-auto">
@@ -32,7 +17,7 @@
 					username={user.username}
 					wins={12}
 					lang={'C#'}
-					since={parseDate(user.created_at)}
+					since={dayjs().to(dayjs(user.created_at))}
 				/>
 			</article>
 		{/each}

@@ -24,7 +24,7 @@ class Backend {
 			const result = await fetch(this.url + '/' + path, {
 				method,
 				credentials: 'include',
-				mode: 'cors',
+				mode: 'no-cors',
 				headers,
 				body: body ? JSON.stringify(body) : undefined
 			});
