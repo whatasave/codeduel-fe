@@ -69,6 +69,20 @@ class Backend {
 		}>(`v1/user/${username}`, {}, fetch);
 	}
 
+	async getUserById(id: number, fetch: Fetch = defaultFetch) {
+		return this.get<{
+			id: UserId;
+			name: string;
+			username: string;
+			email: string;
+			avatar: string;
+			background_img: string;
+			bio: string;
+			created_at: string;
+			updated_at: string;
+		}>(`v1/user?id=${id}`, {}, fetch);
+	}
+
 	async getUsers(fetch: Fetch = defaultFetch) {
 		return this.get<
 			{
@@ -80,6 +94,32 @@ class Backend {
 				created_at: string;
 			}[]
 		>(`v1/user`, {}, fetch);
+	}
+
+	async getChallenge(id: number, fetch: Fetch = defaultFetch) {
+		return this.get<{
+			id: number;
+			owner_id: number;
+			title: string;
+			description: string;
+			content: string;
+			created_at: string;
+			updated_at: string;
+		}>(`v1/challenge/${id}`, {}, fetch);
+	}
+
+	async getChallenges(fetch: Fetch = defaultFetch) {
+		return this.get<
+			{
+				id: number;
+				owner_id: number;
+				title: string;
+				description: string;
+				content: string;
+				created_at: string;
+				updated_at: string;
+			}[]
+		>(`v1/challenge`, {}, fetch);
 	}
 
 	// TODO move
