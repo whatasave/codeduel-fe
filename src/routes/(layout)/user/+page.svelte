@@ -2,9 +2,8 @@
 	import UserInfo from '$components/user/UserInfo.svelte';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime.js';
-	import type { PageData } from '../$types';
 	import Loading from '$components/icons/Loading.svelte';
-	import { tempFixFetch } from '$lib/result';
+	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
 	dayjs.extend(relativeTime);
@@ -12,12 +11,11 @@
 
 <div class="m-auto w-[60%] overflow-y-auto">
 	<div class=" grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-2">
-		{#await tempFixFetch(data.users)}
+		{#await data.users}
 			<div class="mx-auto">
 				<Loading fill="#8dd741" />
 			</div>
-		{:then res}
-			{@const users = res as any}
+		{:then users}
 			{#if users.length === 0}
 				<p>No users found</p>
 			{/if}

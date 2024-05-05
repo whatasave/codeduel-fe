@@ -9,7 +9,6 @@
 	{#if data.user}
 		<div class="overflow-auto p-4">
 			<h1>Logged in</h1>
-			<p class="max-w-96 overflow-x-scroll text-wrap">JWT: {data.jwt}</p>
 			<pre class="h-[80%] w-[80%] overflow-auto">{JSON.stringify(data.user, null, 2)}</pre>
 		</div>
 	{:else}

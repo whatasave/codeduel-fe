@@ -1,9 +1,9 @@
-<script lang="ts" generics="T">
+<script lang="ts">
 	import type { HTMLSelectAttributes } from 'svelte/elements';
-
 	import { cva, type VariantProps } from 'class-variance-authority';
 
-	// cursor-pointer px-1 py-1
+	type T = $$Generic;
+
 	const classes = cva(
 		[
 			'outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
@@ -35,9 +35,9 @@
 		...props
 	}: $Props = $props();
 
-	function onchange(e: HTMLSelectElement) {
-		selectedIndex = parseInt(e.value);
-		onselect?.call(e);
+	function onchange(this: HTMLSelectElement) {
+		selectedIndex = parseInt(this.value);
+		onselect?.call(this);
 	}
 </script>
 

@@ -1,79 +1,52 @@
 import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_API } from '$env/static/public';
-import { Ok, type Result, Error, isSuccess } from './result';
+import { HttpError } from './result';
 import type { SimpleLobby, UserId, UserProfile } from './types';
+
+type Fetch = typeof fetch;
+const defaultFetch = fetch;
 
 class Backend {
 	private url: string;
-	private fetch: typeof fetch = fetch;
-	private jwt?: string;
-	private user?: UserProfile;
 
-	constructor(url: string, jwt?: string) {
+	constructor(url: string) {
 		this.url = url;
-		this.jwt = jwt;
-		this.user = undefined;
 	}
 
 	private async call<T = unknown>(
 		method: string,
 		path: string,
-		body?: Record<string, unknown>,
-		headers: Record<string, string> = {}
-	): Promise<Result<T>> {
-		// if (this.jwt) headers['Authorization'] = `Bearer ${this.jwt}`;
-		try {
-			const result = await this.fetch(this.url + '/' + path, {
-				method,
-				credentials: 'include',
-				mode: 'cors',
-				headers,
-				body: body ? JSON.stringify(body) : undefined
-			});
-			const json = (await result.json()) as T;
-			if (!result.ok) return new Error(JSON.stringify(json), result.status);
-			return new Ok(json);
-		} catch (e) {
-			return new Error((e as Record<string, string>).message);
-		}
+		body: Record<string, unknown> = {},
+		fetch: Fetch = defaultFetch
+	): Promise<T> {
+		const headers = {};
+		const result = await fetch(this.url + '/' + path, {
+			method,
+			mode: 'cors',
+			credentials: 'include',
+			headers,
+			body: body && method !== 'GET' ? JSON.stringify(body) : undefined
+		});
+		const json = (await result.json()) as T;
+		if (!result.ok) throw new HttpError(result.status, `Received error code ${result.status} from backend: ${JSON.stringify(json)}`);
+		return json;
 	}
 
-	private async post<T = unknown>(path: string, body?: Record<string, unknown>): Promise<Result<T>> {
-		return await this.call<T>('POST', path, body ?? {});
+	private async post<T = unknown>(path: string, body: Record<string, unknown> = {}, fetch: Fetch = defaultFetch): Promise<T> {
+		return await this.call<T>('POST', path, body, fetch);
 	}
 
-	private async get<T = unknown>(path: string): Promise<Result<T>> {
-		return await this.call<T>('GET', path);
-	}
-
-	setFetch(newFetch: typeof fetch) {
-		this.fetch = newFetch;
-		return this;
-	}
-
-	get logged() {
-		return Boolean(this.jwt);
-	}
-
-	setJwt(jwt: string) {
-		this.jwt = jwt;
+	private async get<T = unknown>(path: string, body: Record<string, unknown> = {}, fetch: Fetch = defaultFetch): Promise<T> {
+		const query = new URLSearchParams(Object.entries(body).map(([key, value]) => [key, JSON.stringify(value)]));
+		return await this.call<T>('GET', `${path}?${query}`, {}, fetch);
 	}
 
 	// API CALLS
 
-	async getProfile() {
-		if (this.user) return new Ok(this.user);
-
-		const res = await this.get<UserProfile>('v1/user/profile');
-		if (isSuccess(res)) {
-			this.user = res.data;
-		} else {
-			this.jwt = undefined;
-		}
-
-		return res;
+	async getProfile(fetch: Fetch = defaultFetch) {
+		return await this.get<UserProfile>('v1/user/profile', {}, fetch);
 	}
 
-	async getUser(username: string) {
+	async getUser(username: string, fetch: Fetch = defaultFetch) {
 		return this.get<{
 			id: UserId;
 			name: string;
@@ -84,28 +57,25 @@ class Backend {
 			bio: string;
 			created_at: string;
 			updated_at: string;
-		}>(`v1/user/${username}`);
+		}>(`v1/user/${username}`, {}, fetch);
 	}
 
-	async getUsers() {
-		await new Promise((resolve) => setTimeout(resolve, 1500));
-
-		return this.get<
-			{
-				name: string;
-				username: string;
-				avatar: string;
-				background_img: string;
-				bio: string;
-				created_at: string;
-			}[]
-		>(`v1/user`);
+	async getUsers(fetch: Fetch = defaultFetch) {
+		return this.get<{
+			name: string;
+			username: string;
+			avatar: string;
+			background_img: string;
+			bio: string;
+			created_at: string;
+		}[]>(`v1/user`, {}, fetch);
 	}
 
-	async getLobbies(): Promise<Result<SimpleLobby[]>> {
+	// TODO move
+	async getLobbies(): Promise<SimpleLobby[]> {
 		const res = await fetch(`${PUBLIC_LOBBY_API}/lobbies`);
 		const json = (await res.json()) as SimpleLobby[];
-		return new Ok(json);
+		return json
 	}
 }
 
