@@ -37,5 +37,11 @@ export function isSuccess<T>(result: Result<T>): result is Ok<T> {
 	return result instanceof Ok;
 }
 
+export async function tempFixFetch<T>(request: Promise<Result<T>>): Promise<T> {
+	const response = await request;
+	if (isError(response)) throw response.message;
+	return response.data;
+}
+
 export const OK = new Ok(undefined);
 export const ERROR = new Error();

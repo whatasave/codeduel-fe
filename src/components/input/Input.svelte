@@ -10,7 +10,7 @@
 		{
 			variants: {
 				variant: {
-					primary: 'bg-[#151515] rounded-sm px-2 py-1'
+					primary: 'bg-white/5 rounded-sm px-2 py-1'
 				}
 			}
 		}

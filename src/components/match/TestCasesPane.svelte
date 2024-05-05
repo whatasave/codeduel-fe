@@ -24,7 +24,7 @@
 <Pane class={clsx('flex items-center gap-4 p-2', className)}>
 	<div
 		class="scrollbar-hide scrollbar-touch flex min-w-0 flex-1 justify-center gap-2 overflow-x-auto pl-1"
-		on:wheel={scrollHorizontally}
+		onwheel={scrollHorizontally}
 	>
 		{#each challenge.testCases as testCase, i}
 			<TestCase state={testCaseStates[i]} testNumber={i} value={testCase} onclick={() => (selectedTestCaseIndex = i)} />

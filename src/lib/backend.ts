@@ -1,9 +1,10 @@
 import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_API } from '$env/static/public';
-import { Ok, type Result, Error, isSuccess, isError } from './result';
+import { Ok, type Result, Error, isSuccess } from './result';
 import type { SimpleLobby, UserId, UserProfile } from './types';
 
 class Backend {
 	private url: string;
+	private fetch: typeof fetch = fetch;
 	private jwt?: string;
 	private user?: UserProfile;
 
@@ -21,10 +22,10 @@ class Backend {
 	): Promise<Result<T>> {
 		// if (this.jwt) headers['Authorization'] = `Bearer ${this.jwt}`;
 		try {
-			const result = await fetch(this.url + '/' + path, {
+			const result = await this.fetch(this.url + '/' + path, {
 				method,
 				credentials: 'include',
-				mode: 'no-cors',
+				mode: 'cors',
 				headers,
 				body: body ? JSON.stringify(body) : undefined
 			});
@@ -44,6 +45,11 @@ class Backend {
 		return await this.call<T>('GET', path);
 	}
 
+	setFetch(newFetch: typeof fetch) {
+		this.fetch = newFetch;
+		return this;
+	}
+
 	get logged() {
 		return Boolean(this.jwt);
 	}
@@ -60,6 +66,8 @@ class Backend {
 		const res = await this.get<UserProfile>('v1/user/profile');
 		if (isSuccess(res)) {
 			this.user = res.data;
+		} else {
+			this.jwt = undefined;
 		}
 
 		return res;
@@ -80,6 +88,8 @@ class Backend {
 	}
 
 	async getUsers() {
+		await new Promise((resolve) => setTimeout(resolve, 1500));
+
 		return this.get<
 			{
 				name: string;

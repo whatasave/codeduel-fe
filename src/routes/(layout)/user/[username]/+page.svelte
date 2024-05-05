@@ -12,7 +12,7 @@
 	<ProfileBackground image={data.user?.background_img || '/img/profile-bg.jpg'} />
 
 	<div class="mx-auto -mt-10 flex w-full max-w-[1000px] flex-col gap-1 px-8">
-		<div class="size-20 overflow-hidden rounded-full border-8 border-transparent bg-[#151515]">
+		<div class="size-20 overflow-hidden rounded-full border-8 border-transparent bg-[#010f1f]">
 			{#if data.user}
 				<PlayerCircle
 					class="size-full"
@@ -27,7 +27,7 @@
 			{/if}
 		</div>
 		<div class="flex flex-wrap gap-8">
-			<div class="flex w-full min-w-[326px] flex-1 shrink-0 grow flex-col gap-4">
+			<div class="flex w-full min-w-[326px] flex-1 shrink-0 grow flex-col gap-2">
 				<div>
 					<div class="text-xl font-bold">{data.user?.name}</div>
 					<ProfileTag tag={data.user?.username || ''} />

@@ -32,13 +32,13 @@
 
 <div class="m-auto flex gap-2">
 	<div class="flex min-w-[25rem] flex-col gap-2">
-		<div class="rounded bg-[#050505] p-4">
+		<div class="rounded bg-white/5 p-4">
 			<p class="text-3xl font-bold">Players</p>
 		</div>
 
 		<div class="flex h-[26rem] flex-col gap-2 overflow-y-auto">
 			{#each users as user}
-				<div class="flex items-center gap-4 rounded bg-[#050505] p-4">
+				<div class="flex items-center gap-4 rounded bg-white/5 p-4">
 					<PlayerCircle class="size-16" player={user} />
 					<div class="flex flex-1 flex-col">
 						<p class="text-2xl font-semibold">{user.username}</p>
@@ -52,7 +52,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="flex min-w-[35rem] flex-col gap-2 rounded bg-[#050505] p-2">
+	<div class="flex min-w-[35rem] flex-col gap-2 rounded bg-white/5 p-2">
 		<div class=" rounded p-2">
 			<p class="text-3xl font-bold">Lobby settings</p>
 		</div>
@@ -66,8 +66,8 @@
 					await goto('/match/' + lobby.id);
 				}}
 			/>
-			<Button text="Cancel" variant="primary" />
 			<Button text="Lock" variant="primary" />
+			<Button text="Cancel" variant="primary" />
 		</div>
 
 		<div class="flex flex-col gap-4">

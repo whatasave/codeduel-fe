@@ -1,14 +1,19 @@
 <script lang="ts">
+	import Button from '$components/button/Button.svelte';
 	import ButtonLink from '$components/button/ButtonLink.svelte';
 	import LobbyListItem from '$components/lobby/LobbyListItem.svelte';
 	import backend from '$lib/backend';
 	import { isSuccess } from '$lib/result';
 	import type { SimpleLobby } from '$lib/types';
+	import type { PageData } from '../$types';
+
+	const { data }: { data: PageData } = $props();
 
 	const LOBBY_REFRESH_INTERVAL = 1000;
 	let lobbies = $state<SimpleLobby[]>([]);
 
 	async function fetchLobbies() {
+		console.log('Fetching lobbies');
 		const lobbiesData = await backend.getLobbies();
 		if (isSuccess(lobbiesData)) {
 			lobbies = lobbiesData.data;
@@ -18,11 +23,8 @@
 	$effect(() => {
 		fetchLobbies();
 
-		const lobbiesRefresher = setInterval(fetchLobbies, LOBBY_REFRESH_INTERVAL);
-
-		return () => {
-			clearInterval(lobbiesRefresher);
-		};
+		// const lobbiesRefresher = setInterval(fetchLobbies, LOBBY_REFRESH_INTERVAL);
+		// return () => { clearInterval(lobbiesRefresher); };
 	});
 </script>
 
@@ -33,7 +35,10 @@
 
 			<!-- Actions -->
 			<div class="flex gap-4">
-				<ButtonLink href="/lobby/create" text="Create" variant="accent" />
+				<Button text="Refresh" variant="primary" onclick={fetchLobbies} />
+				{#if data.user}
+					<ButtonLink href="/lobby/create" data-sveltekit-preload-data="off" text="Create" variant="accent" />
+				{/if}
 			</div>
 		</div>
 

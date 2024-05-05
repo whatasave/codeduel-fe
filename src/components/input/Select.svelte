@@ -12,7 +12,7 @@
 		{
 			variants: {
 				variant: {
-					primary: 'bg-[#151515] rounded-sm px-2 py-1'
+					primary: 'bg-white/5 text-black rounded-sm px-2 py-1'
 				}
 			}
 		}
@@ -35,9 +35,9 @@
 		...props
 	}: $Props = $props();
 
-	function onchange(this: HTMLSelectElement) {
-		selectedIndex = parseInt(this.value);
-		onselect?.call(this);
+	function onchange(e: HTMLSelectElement) {
+		selectedIndex = parseInt(e.value);
+		onselect?.call(e);
 	}
 </script>
 
