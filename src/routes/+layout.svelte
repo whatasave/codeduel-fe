@@ -1,8 +1,7 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import '../app.postcss';
 
-	const { children }: { children: Snippet } = $props();
+	const { children } = $props();
 </script>
 
 <svelte:head>
