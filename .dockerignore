@@ -1,6 +1,6 @@
 
 .github
-# .svelte-kit
+.svelte-kit
 .vscode
 node_modules
 
