@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Button from '$components/button/Button.svelte';
 	import ButtonLink from '$components/button/ButtonLink.svelte';
 	import Clickable from '$components/button/Clickable.svelte';
 	import { Settings, SignOut, User } from '$components/icons';
@@ -17,7 +16,7 @@
 			{ name: 'Lobbies', href: '/lobby' },
 			{ name: 'Challenges', href: '/challenge' },
 			{ name: 'Users', href: '/user' },
-			{ name: 'Achievements', href: '/achievement' }
+			{ name: 'Achievements', href: '/achievements' }
 		],
 		profile: [
 			{ icon: User, name: 'Profile', href: `/user/${user?.username}` },

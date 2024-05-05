@@ -14,7 +14,7 @@
 			<p>No challenges found</p>
 		{/if}
 		{#each challenges as challenge}
-			<a href={`/challenge/${challenge.id}`} class="rounded bg-white/5 p-4">
+			<a href={`/challenge/${challenge.id}`} class="rounded bg-white/5 p-4 px-6">
 				<h2 class="text-2xl font-bold">{challenge.title}</h2>
 				<p>{challenge.description}</p>
 			</a>

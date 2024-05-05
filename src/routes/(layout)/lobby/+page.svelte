@@ -8,7 +8,7 @@
 
 	const { data }: { data: PageData } = $props();
 
-	const LOBBY_REFRESH_INTERVAL = 3000;
+	// const LOBBY_REFRESH_INTERVAL = 3000;
 	let lobbies = $state<SimpleLobby[]>([]);
 
 	async function fetchLobbies() {
@@ -18,8 +18,8 @@
 	$effect(() => {
 		fetchLobbies();
 
-		const lobbiesRefresher = setInterval(fetchLobbies, LOBBY_REFRESH_INTERVAL);
-		return () => clearInterval(lobbiesRefresher);
+		// const lobbiesRefresher = setInterval(fetchLobbies, LOBBY_REFRESH_INTERVAL);
+		// return () => clearInterval(lobbiesRefresher);
 	});
 </script>
 

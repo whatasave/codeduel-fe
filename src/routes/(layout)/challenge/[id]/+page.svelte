@@ -26,7 +26,7 @@
 			{/await}
 		</h2>
 	</div>
-	<h2>{data.challenge.description}</h2>
+	<div class="text-center">{data.challenge.description}</div>
 	<!-- <p>{@html data.challenge.content}</p> -->
 	<Markdown source={data.challenge.content} />
 </div>
