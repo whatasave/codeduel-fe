@@ -17,7 +17,11 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			out: 'build',
+			precompress: true,
+			envPrefix: ''
+		}),
 		alias: {
 			$components: './src/components'
 		}

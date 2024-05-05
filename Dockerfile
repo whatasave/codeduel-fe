@@ -1,35 +1,31 @@
-FROM node:18 AS build
+FROM node:22.1.0 AS base
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 ENV SVELTEKIT_ADAPTER="auto"
-ENV NODE_ENV="production"
+ENV NODE_ENV="development"
 ENV PUBLIC_LOBBY_WS="wss://lobby.codeduel.it"
 ENV PUBLIC_LOBBY_API="https://lobby.codeduel.it"
 ENV PUBLIC_BACKEND_URL="https://api.codeduel.it"
 EXPOSE 80
 
+RUN corepack enable 
+
 WORKDIR /app
-
-RUN corepack enable && corepack prepare yarn@stable --activate
-
-COPY .yarn/ ./.yarn/
-COPY .yarnrc.yml .
-COPY package.json .
-COPY yarn.lock .
-RUN yarn install --immutable
-
 COPY . .
-RUN yarn run build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
-CMD yarn run preview --port 80 --host
+# FROM base AS prod-deps
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-# FROM node:18 AS production
+# FROM base AS build
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# ENV NODE_ENV="production"
+# RUN pnpm run build
 
-# WORKDIR /app
+# FROM base
+# COPY --from=prod-deps /app/node_modules /app/node_modules
+# COPY --from=build /app/build /app/build
 
-# COPY --from=build /app/build ./build/
-# COPY --from=build /app/node_modules ./node_modules/
-# COPY --from=build /app/package.json ./package.json
-
-# EXPOSE 4173
-
-# CMD node build
+CMD [ "pnpm", "preview", "--port", "80", "--host"]
