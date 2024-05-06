@@ -5,6 +5,6 @@ export const prerender = false;
 
 export async function load({ fetch }) {
 	return {
-		users: backend.getUsers(fetch)
+		users: backend.getUsers(undefined, fetch)
 	};
 }

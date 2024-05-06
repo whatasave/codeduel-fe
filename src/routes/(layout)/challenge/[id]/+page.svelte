@@ -2,6 +2,7 @@
 	import Loading from '$components/icons/Loading.svelte';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import type { PageData } from './$types';
+	import Markdown from '$components/Markdown.svelte';
 
 	const { data }: { data: PageData } = $props();
 </script>
@@ -14,16 +15,10 @@
 			<!-- owner -->
 			{#await data.owner}
 				<Loading fill="#8dd741" class="mx-auto" />
-			{:then owner}
-				<a href="user/{owner.id}" class="flex gap-2">
-					<PlayerCircle
-						player={{
-							id: owner.id,
-							avatar: owner.avatar,
-							username: owner.username
-						}}
-						class="size-6"
-					/>
+			{:then users}
+				{@const owner = users[0]}
+				<a href="/user/{owner.username}" class="flex gap-2">
+					<PlayerCircle player={{ id: 999, avatar: owner.avatar, username: owner.username }} class="size-6" />
 					<p class="font-bold">{owner.username}</p>
 				</a>
 			{:catch}
@@ -32,5 +27,6 @@
 		</h2>
 	</div>
 	<h2>{data.challenge.description}</h2>
-	<p>{data.challenge.content}</p>
+	<!-- <p>{@html data.challenge.content}</p> -->
+	<Markdown source={data.challenge.content} />
 </div>

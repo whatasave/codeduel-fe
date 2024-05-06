@@ -6,6 +6,6 @@ export async function load({ params, fetch }) {
 
 	return {
 		challenge,
-		owner: backend.getUserById(challenge.owner_id, fetch)
+		owner: backend.getUsers({ id: challenge.owner_id }, fetch)
 	};
 }

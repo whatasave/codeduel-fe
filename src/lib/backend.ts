@@ -70,20 +70,6 @@ class Backend {
 	}
 
 	async getUserById(id: number, fetch: Fetch = defaultFetch) {
-		return this.get<{
-			id: UserId;
-			name: string;
-			username: string;
-			email: string;
-			avatar: string;
-			background_img: string;
-			bio: string;
-			created_at: string;
-			updated_at: string;
-		}>(`v1/user?id=${id}`, {}, fetch);
-	}
-
-	async getUsers(fetch: Fetch = defaultFetch) {
 		return this.get<
 			{
 				name: string;
@@ -93,7 +79,20 @@ class Backend {
 				bio: string;
 				created_at: string;
 			}[]
-		>(`v1/user`, {}, fetch);
+		>(`v1/user`, { id }, fetch);
+	}
+
+	async getUsers(queries?: Record<string, unknown>, fetch: Fetch = defaultFetch) {
+		return this.get<
+			{
+				name: string;
+				username: string;
+				avatar: string;
+				background_img: string;
+				bio: string;
+				created_at: string;
+			}[]
+		>(`v1/user`, { ...queries }, fetch);
 	}
 
 	async getChallenge(id: number, fetch: Fetch = defaultFetch) {
