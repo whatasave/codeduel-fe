@@ -121,6 +121,35 @@ class Backend {
 		>(`v1/challenge`, {}, fetch);
 	}
 
+	async getResults(lobbyId: string, fetch: Fetch = defaultFetch) {
+		return this.get<{
+			lobby: {
+				id: number;
+				uuid: string;
+				challenge_id: number;
+				owner_id: number;
+				users_id: null;
+				status: string;
+				max_players: number;
+				game_duration: number;
+				allowed_languages: string[];
+				created_at: string;
+				updated_at: string;
+			};
+			results: {
+				id: number;
+				lobby_id: number;
+				user_id: number;
+				code: string;
+				language: string;
+				tests_passed: number;
+				submission_date: string;
+				created_at: string;
+				updated_at: string;
+			}[];
+		}>(`v1/lobby/results/${lobbyId}`, {}, fetch);
+	}
+
 	// TODO move
 	async getLobbies(): Promise<SimpleLobby[]> {
 		const res = await fetch(`${PUBLIC_LOBBY_API}/lobbies`);

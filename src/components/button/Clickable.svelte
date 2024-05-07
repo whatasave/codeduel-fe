@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes, MouseEventHandler } from 'svelte/elements';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	interface $Props extends HTMLButtonAttributes {
 		children: Snippet;
@@ -21,7 +21,7 @@
 	}
 </script>
 
-<button type="button" class="contents" {...props} onclick={handleClick} disabled={isLoading}>
+<button type="button" class="contents" onclick={handleClick} disabled={isLoading} {...props} >
 	{#if isLoading && loading}
 		{@render loading()}
 	{:else}

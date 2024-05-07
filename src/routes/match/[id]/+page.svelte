@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Pane from '$components/Pane.svelte';
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 	import { Play, Upload } from '$components/icons';
@@ -24,11 +25,18 @@
 	let canSubmit = $state(false);
 
 	async function onSubmit() {
-		console.log('submit');
+		const result = await data.lobby.submit({ language: selectedLanguage, code: code.trim() });
+		if (result.error) {
+			console.log(result.error);
+			console.error(result.error);
+		} else {
+			console.log(result);
+			goto(`/result/${lobby.id}`);
+		}
 	}
 
 	async function onRun() {
-		const result = await data.lobby.check({ language: selectedLanguage, code });
+		const result = await data.lobby.check({ language: selectedLanguage, code: code.trim() });
 		if (result.error) {
 			console.error(result.error);
 		} else {

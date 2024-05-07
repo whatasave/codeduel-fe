@@ -66,6 +66,11 @@ export class LobbyService {
 		return await this.waitPacket('checkResult');
 	}
 
+	async submit(packet: PacketOutFromType['submit']): Promise<PacketInFromType['submitResult']> {
+		await this.sendPacket({ type: 'submit', ...packet });
+		return await this.waitPacket('submitResult');
+	}
+
 	on<PacketType extends keyof PacketInFromType>(
 		event: PacketType,
 		listener: (packet: PacketInFromType[PacketType]) => void
@@ -128,11 +133,19 @@ type PacketInFromType = {
 		result: ExecutionResult[] | null;
 		error: string | null;
 	};
+	submitResult: {
+		result: ExecutionResult[] | null;
+		error: string | null;
+	};
 };
 
 type PacketOutFromType = {
 	startLobby: { start: true };
 	check: {
+		language: string;
+		code: string;
+	};
+	submit: {
 		language: string;
 		code: string;
 	};

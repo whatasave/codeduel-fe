@@ -46,3 +46,14 @@
 		<option value={i} selected={i == selectedIndex}>{mapToString(option)}</option>
 	{/each}
 </select>
+
+<style lang="postcss">
+	select {
+		@apply rounded-sm bg-white/5 px-2 py-1 text-white;
+	}
+
+	select option {
+		@apply appearance-none border-none outline-none;
+		@apply rounded-sm bg-white/5 px-2 py-1 text-black;
+	}
+</style>
