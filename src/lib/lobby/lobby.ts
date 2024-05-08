@@ -37,7 +37,9 @@ export class LobbyService {
 			this.connection!.addEventListener('open', () => {
 				this.connection!.addEventListener('message', (event) => {
 					const packet = JSON.parse(event.data) as PacketIn;
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					this.packetHandlers[packet.type]?.(packet as any);
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					this.customEventListeners[packet.type]?.(packet as any);
 					if (packet.type === 'lobby') {
 						resolve();
@@ -75,6 +77,7 @@ export class LobbyService {
 		event: PacketType,
 		listener: (packet: PacketInFromType[PacketType]) => void
 	) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(this.customEventListeners as any)[event] = listener;
 		return () => delete this.customEventListeners[event];
 	}
@@ -88,6 +91,7 @@ export class LobbyService {
 
 	async waitPacket<PacketType extends keyof PacketInFromType>(type: PacketType): Promise<PacketInFromType[PacketType]> {
 		return new Promise<PacketInFromType[PacketType]>((resolve) => {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			(this.packetHandlers as any)[type] = (packet: PacketInFromType[PacketType]) => {
 				delete this.packetHandlers[type];
 				resolve(packet);

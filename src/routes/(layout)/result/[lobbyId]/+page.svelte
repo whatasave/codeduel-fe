@@ -50,7 +50,7 @@
 							</div>
 							<div class="flex flex-col items-center">
 								<span class="font-bold">Tests</span>
-								<span class="text-sm">{player.tests_passed} / 6</span>
+								<span class="text-sm">{player.tests_passed} / 6 &lt;mockato&gt;</span>
 							</div>
 							<div class="flex flex-col items-center">
 								<span class="font-bold">Time</span>
