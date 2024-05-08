@@ -1,44 +1,31 @@
-FROM node:18 AS yarn
-RUN corepack enable && corepack prepare yarn@stable --activate
+FROM node:22.1.0 AS base
 
-FROM node:18 AS vite
-RUN npm install -g vite
-RUN npm install -g @sveltejs/kit
-RUN npm install -g @sveltejs/adapter-auto
-RUN npm install -g @sveltejs/vite-plugin-svelte
-RUN npm install -g sirv-cli
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+ENV SVELTEKIT_ADAPTER="auto"
+ENV NODE_ENV="development"
+ENV PUBLIC_LOBBY_WS="wss://lobby.codeduel.it"
+ENV PUBLIC_LOBBY_API="https://lobby.codeduel.it"
+ENV PUBLIC_BACKEND_URL="https://api.codeduel.it"
+EXPOSE 80
 
-FROM yarn AS build
-
-ENV NODE_ENV=node
+RUN corepack enable 
 
 WORKDIR /app
-
-COPY .yarn/ ./.yarn/
-COPY .yarnrc.yml .
-COPY package.json .
-COPY yarn.lock .
-RUN yarn install
-
 COPY . .
-RUN yarn run build
-# RUN yarn dlx vite build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
-FROM yarn AS production
+# FROM base AS prod-deps
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-WORKDIR /app
+# FROM base AS build
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# ENV NODE_ENV="production"
+# RUN pnpm run build
 
-# COPY --from=build /app/.svelte-kit ./.svelte-kit/
-COPY --from=build /app/build ./build/
-COPY --from=build /app/node_modules ./node_modules/
-COPY --from=build /app/package.json ./package.json
-# COPY --from=build /app/.svelte-kit/output ./dist/
-# COPY --from=build /app/vite.config.ts vite.config.ts
-# COPY --from=build /app/svelte.config.js svelte.config.js
-# COPY --from=build /app .
+# FROM base
+# COPY --from=prod-deps /app/node_modules /app/node_modules
+# COPY --from=build /app/build /app/build
 
-EXPOSE 4173
-
-# CMD vite preview --host --outDir ./dist
-CMD yarn run preview --host
-# CMD sirv dist --port 4173 --host
+CMD [ "pnpm", "preview", "--port", "80", "--host"]
