@@ -9,7 +9,6 @@
 	import { codeToHtml } from 'shiki';
 
 	const parseCode = async (code: string, lang: string) => {
-		await new Promise((resolve) => setTimeout(resolve, 5000));
 		return await codeToHtml(code, {
 			lang,
 			theme: 'monokai',
