@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import Pane from '$components/Pane.svelte';
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 	import { Play, Upload } from '$components/icons';
@@ -13,7 +13,6 @@
 	import { languageTemplate } from '$lib/languages.js';
 	import type { LobbyStateByType, TestCaseState } from '$lib/types.js';
 	import dayjs from 'dayjs';
-	import { onDestroy } from 'svelte';
 
 	let { data } = $props();
 	let lobby = $derived(data.lobby.getLobby());
@@ -69,7 +68,7 @@
 		}
 	}
 
-	onDestroy(() => {
+	beforeNavigate(() => {
 		data.lobby.close();
 	});
 </script>

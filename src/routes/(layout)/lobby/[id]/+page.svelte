@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, replaceState } from '$app/navigation';
+	import { beforeNavigate, goto, replaceState } from '$app/navigation';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import Button from '$components/button/Button.svelte';
 	import type { User } from '$lib/types';
@@ -7,7 +7,6 @@
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 	import Input from '$components/input/Input.svelte';
 	import Select from '$components/input/Select.svelte';
-	import { onDestroy } from 'svelte';
 
 	const { data } = $props();
 	let lobby = data.lobby.getLobby();
@@ -30,7 +29,7 @@
 		return () => unlisten();
 	});
 
-	onDestroy(() => {
+	beforeNavigate(() => {
 		data.lobby.close();
 	});
 </script>
