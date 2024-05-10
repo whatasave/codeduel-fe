@@ -56,6 +56,10 @@ export class LobbyService {
 		});
 	}
 
+	async close() {
+		this.connection?.close();
+	}
+
 	async sendPacket(packet: PacketOut) {
 		if (!this.connection) {
 			throw new Error('Connection not available, call start() first.');

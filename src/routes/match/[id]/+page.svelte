@@ -13,6 +13,7 @@
 	import { languageTemplate } from '$lib/languages.js';
 	import type { LobbyStateByType, TestCaseState } from '$lib/types.js';
 	import dayjs from 'dayjs';
+	import { onDestroy } from 'svelte';
 
 	let { data } = $props();
 	let lobby = $derived(data.lobby.getLobby());
@@ -67,6 +68,10 @@
 			}
 		}
 	}
+
+	onDestroy(() => {
+		data.lobby.close();
+	});
 </script>
 
 <div class="flex h-full flex-col gap-2 p-2">

@@ -7,6 +7,7 @@
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 	import Input from '$components/input/Input.svelte';
 	import Select from '$components/input/Select.svelte';
+	import { onDestroy } from 'svelte';
 
 	const { data } = $props();
 	let lobby = data.lobby.getLobby();
@@ -27,6 +28,10 @@
 		replaceState(`/lobby/${lobby.id}`, {});
 		const unlisten = data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`));
 		return () => unlisten();
+	});
+
+	onDestroy(() => {
+		data.lobby.close();
 	});
 </script>
 

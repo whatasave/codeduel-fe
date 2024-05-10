@@ -1,7 +1,7 @@
 import { LobbyService } from '$lib/lobby/lobby.js';
 import { error, type NumericRange } from '@sveltejs/kit';
 
-export let ssr = false;
+export const ssr = false;
 
 export async function load({ params }) {
 	try {
