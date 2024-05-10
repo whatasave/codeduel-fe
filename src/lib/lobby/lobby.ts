@@ -31,7 +31,7 @@ export class LobbyService {
 
 	async start() {
 		return new Promise<void>((resolve, reject) => {
-			this.connection = new WebSocket(`${PUBLIC_LOBBY_WS}/${this.path}`, 'echo-protocol');
+			this.connection = new WebSocket(`${PUBLIC_LOBBY_WS}/${this.path}`);
 			if (!this.connection) throw new Error('Failed to create WebSocket connection.');
 
 			this.connection!.addEventListener('open', () => {

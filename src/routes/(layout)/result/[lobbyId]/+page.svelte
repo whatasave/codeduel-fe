@@ -5,9 +5,25 @@
 	import relativeTime from 'dayjs/plugin/relativeTime.js';
 	import type { PageData } from './$types';
 	import Button from '$components/button/Button.svelte';
+	import { slide } from 'svelte/transition';
+	import { codeToHtml } from 'shiki';
+
+	const parseCode = async (code: string, lang: string) => {
+		return await codeToHtml(code, {
+			lang,
+			theme: 'monokai',
+			defaultColor: false
+		});
+	};
 
 	const { data }: { data: PageData } = $props();
 	dayjs.extend(relativeTime);
+
+	let showingCode: number[] = $state([]);
+	const showCode = (id: number) => {
+		if (showingCode.includes(id)) showingCode = showingCode.filter((code) => code !== id);
+		else showingCode = [...showingCode, id];
+	};
 </script>
 
 <div class="py-8">
@@ -27,7 +43,7 @@
 		{@const lobby = res.lobby}
 		{@const results = res.results}
 		<div class="flex flex-col gap-4">
-			{#each results as player}
+			{#each results as player (player.user_id)}
 				<div class="flex flex-col gap-1">
 					<div class="flex w-full items-center justify-between rounded-t bg-white/10 p-4">
 						<div class="flex w-[30%] items-center gap-2">
@@ -57,12 +73,26 @@
 								<span class="text-sm">{dayjs(player.submission_date).from(dayjs(lobby.created_at), true)}</span>
 							</div>
 							<div class="flex flex-col items-center">
-								<Button text="View Code" variant="accent" />
+								<Button text="Share Code" variant="accent" />
 							</div>
 						</div>
 					</div>
 
-					<pre class="w-full rounded-b bg-white/5 px-4 py-2">{player.code}</pre>
+					{#if showingCode.includes(player.user_id)}
+						<div transition:slide class="code w-full select-text bg-white/5 px-4 py-2">
+							{#await parseCode(player.code, player.language)}
+								<pre class="shiki monokai">{player.code}</pre>
+							{:then html}
+								{@html html}
+							{/await}
+						</div>
+					{/if}
+
+					<Button
+						text="Show Code"
+						class="flex w-full justify-center rounded-b bg-white/10 py-2"
+						onclick={() => showCode(player.user_id)}
+					/>
 				</div>
 			{/each}
 		</div>
@@ -70,3 +100,12 @@
 		<p>{error.message}</p>
 	{/await}
 </div>
+
+<style>
+	:global(pre.shiki.monokai) {
+		background-color: #00000000 !important;
+	}
+	:global(.line) {
+		user-select: text !important;
+	}
+</style>
