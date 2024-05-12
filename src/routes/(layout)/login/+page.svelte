@@ -5,31 +5,20 @@
 
 	let { data } = $props();
 
-	console.log('data', data);
-
-	const githubLoginUrl = () => {
-		const url = new URL('/v1/auth/github', PUBLIC_BACKEND_URL);
-		const returnTo = new URL('/lobby', window.location.origin);
-		url.searchParams.set('return_to', returnTo.toString());
-		return url.toString();
-	};
+	const githubLoginUrl = new URL('/v1/auth/github', PUBLIC_BACKEND_URL).href;
 </script>
 
 <div class="m-auto flex flex-col items-center justify-center gap-4">
 	{#if data.user}
-		<div class="overflow-auto p-4">
+		<div class="w-full max-w-screen-xl p-2">
 			<h1>Logged in</h1>
-			<pre class="h-[90%] w-[90%] overflow-auto">{JSON.stringify(data.user, null, 2)}</pre>
+			<pre class="max-h-[600px] max-w-[600px] overflow-auto p-6">{JSON.stringify({ ...data }, null, 2)}</pre>
 		</div>
 	{:else}
 		<ButtonIconLink
 			variant="accent"
-			href={githubLoginUrl()}
-			icon={{
-				icon: Github,
-				align: 'left',
-				fill: '#01162E'
-			}}
+			href={githubLoginUrl}
+			icon={{ icon: Github, align: 'left', fill: '#01162E' }}
 			text="Login with Github"
 		/>
 	{/if}
