@@ -1,5 +1,5 @@
 import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_API } from '$env/static/public';
-import { HttpError } from './result';
+import { HttpError, StatusCode } from './result';
 import type { SimpleLobby, UserId, UserProfile } from './types';
 
 type Fetch = typeof fetch;
@@ -10,6 +10,14 @@ class Backend {
 
 	constructor(url: string) {
 		this.url = url;
+	}
+
+	private getCookie(name: string): string | null {
+		const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+		if (match) {
+			return match[2];
+		}
+		return null;
 	}
 
 	private async call<T = unknown>(
@@ -26,8 +34,17 @@ class Backend {
 			headers,
 			body: body && method !== 'GET' ? JSON.stringify(body) : undefined
 		});
-		if (!result.ok)
+
+		if (result.status === StatusCode.Unauthorized && this.getCookie('logged_in') === 'true') {
+			console.log('Unauthorized, refreshing token');
+			await this.call('GET', 'v1/auth/refresh', {}, fetch);
+			return await this.call(method, path, body, fetch);
+		} else if (result.status === StatusCode.Forbidden) {
 			throw new HttpError(result.status, `Received error code ${result.status} from backend: ${await result.text()}`);
+		} else if (!result.ok) {
+			throw new HttpError(result.status, `Received error code ${result.status} from backend: ${await result.text()}`);
+		}
+
 		const json = (await result.json()) as T;
 		return json;
 	}
