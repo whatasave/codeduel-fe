@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { ComponentType, SvelteComponent } from 'svelte';
+	import { get } from 'svelte/store';
 
 	interface $Props {
 		links: { icon: ComponentType<SvelteComponent>; name: string; href: string }[];
@@ -16,7 +17,7 @@
 			<a
 				class="flex items-center gap-4 rounded bg-[#050505] p-2 px-10 text-center"
 				{href}
-				aria-current={$page.url.pathname === href}
+				aria-current={get(page).url.pathname === href}
 				{onclick}
 			>
 				<svelte:component this={icon} class="size-4" />

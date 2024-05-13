@@ -6,6 +6,7 @@
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import { clickOutside } from '$lib/hooks/clickOutside';
 	import type { UserProfile } from '$lib/types';
+	import { get } from 'svelte/store';
 	import NavbarProfileDropDown from './NavbarProfileDropDown.svelte';
 
 	let { user }: { user?: UserProfile } = $props();
@@ -31,7 +32,9 @@
 <header class="flex items-center justify-between rounded bg-white/5 p-2">
 	<nav class="flex gap-4 px-4">
 		{#each links.main as { name, href }}
-			<a class:underline={$page.url.pathname === href} {href} aria-current={$page.url.pathname === href}>{name}</a>
+			<a class:underline={get(page).url.pathname === href} {href} aria-current={get(page).url.pathname === href}
+				>{name}</a
+			>
 		{/each}
 	</nav>
 
