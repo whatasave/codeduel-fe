@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_API } from '$env/static/public';
 import { HttpError, StatusCode } from './result';
 import type { SimpleLobby, UserId, UserProfile } from './types';
@@ -13,10 +14,9 @@ class Backend {
 	}
 
 	private getCookie(name: string): string | null {
+		if (browser) return null;
 		const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-		if (match) {
-			return match[2];
-		}
+		if (match) return match[2];
 		return null;
 	}
 
