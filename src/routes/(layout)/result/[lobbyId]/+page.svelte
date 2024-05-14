@@ -140,7 +140,7 @@
 					<Button
 						text="Show Code"
 						class="flex w-full justify-center rounded-b bg-white/10 py-2"
-						disabled={!isOwner(data, player) && player.show_code}
+						disabled={!isOwner(data, player) && !player.show_code}
 						onclick={() => showCode(player.user_id)}
 					/>
 				</div>
