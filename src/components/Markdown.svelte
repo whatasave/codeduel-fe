@@ -2,14 +2,20 @@
 	import { marked } from 'marked';
 	import DOMPurify from 'dompurify';
 	import clsx from 'clsx';
+	import { browser } from '$app/environment';
+	import Loading from './icons/Loading.svelte';
 
 	let { source, class: className }: { source: string; class?: string } = $props();
 </script>
 
 <div class={clsx('markdown overflow-auto', className)}>
-	{#await marked.parse(source) then html}
-		{@html DOMPurify.sanitize(html)}
-	{/await}
+	{#if browser}
+		{#await marked.parse(source) then html}
+			{@html DOMPurify.sanitize(html)}
+		{/await}
+	{:else}
+		<Loading fill="#8dd741" class="mx-auto" />
+	{/if}
 </div>
 
 <style>

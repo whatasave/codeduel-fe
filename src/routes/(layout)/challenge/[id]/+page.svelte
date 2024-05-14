@@ -28,5 +28,6 @@
 	</div>
 	<div class="text-center">{data.challenge.description}</div>
 	<!-- <p>{@html data.challenge.content}</p> -->
-	<Markdown source={data.challenge.content} />
+
+	<Markdown source={data.challenge.content} class="markdown" />
 </div>

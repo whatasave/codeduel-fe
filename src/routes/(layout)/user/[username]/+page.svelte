@@ -86,7 +86,7 @@
 							<!-- CHALLENGE -->
 							<a
 								class="flex w-full flex-col items-center justify-center rounded bg-white/5 p-2"
-								href={`/challenges/${challenge.id}`}
+								href={`/challenge/${challenge.id}`}
 							>
 								<div class="text-xs text-[#8DD741]">challenge</div>
 								<div>{challenge.title}</div>
