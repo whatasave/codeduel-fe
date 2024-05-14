@@ -7,7 +7,7 @@
 	import { clickOutside } from '$lib/hooks/clickOutside';
 	import type { UserProfile } from '$lib/types';
 	import { get } from 'svelte/store';
-	import NavbarProfileDropDown from './NavbarProfileDropDown.svelte';
+	import { slide } from 'svelte/transition';
 
 	let { user }: { user?: UserProfile } = $props();
 
@@ -20,28 +20,37 @@
 			{ name: 'Achievements', href: '/achievements' }
 		],
 		profile: [
-			{ icon: User, name: 'Profile', href: `/user/${user?.username}` },
+			{ icon: SignOut, name: 'Logout', href: '/logout' },
 			{ icon: Settings, name: 'Settings', href: '/settings' },
-			{ icon: SignOut, name: 'Logout', href: '/logout' }
+			{ icon: User, name: 'Profile', href: `/user/${user?.username}` }
 		]
 	};
 
-	let showDropdown = $state(false);
+	let showUserLinks = $state(false);
 </script>
 
 <header class="flex items-center justify-between rounded bg-white/5 p-2">
 	<nav class="flex gap-4 px-4">
 		{#each links.main as { name, href }}
-			<a class:underline={get(page).url.pathname === href} {href} aria-current={get(page).url.pathname === href}
-				>{name}</a
-			>
+			<a class:underline={get(page).url.pathname === href} {href} aria-current={get(page).url.pathname === href}>
+				{name}
+			</a>
 		{/each}
 	</nav>
 
 	<div class="flex items-center gap-4">
 		{#if user}
-			<div class="relative" use:clickOutside={() => (showDropdown = false)}>
-				<Clickable onclick={() => (showDropdown = !showDropdown)}>
+			{#if showUserLinks}
+				<nav transition:slide={{ axis: 'x' }} class="flex gap-4">
+					{#each links.profile as { name, href }}
+						<a class:underline={get(page).url.pathname === href} {href} aria-current={get(page).url.pathname === href}>
+							{name}
+						</a>
+					{/each}
+				</nav>
+			{/if}
+			<div class="relative" use:clickOutside={() => (showUserLinks = false)}>
+				<Clickable onclick={() => (showUserLinks = !showUserLinks)}>
 					<PlayerCircle
 						class="size-8"
 						player={{
@@ -52,9 +61,9 @@
 						}}
 					/>
 				</Clickable>
-				{#if showDropdown}
-					<NavbarProfileDropDown links={links.profile} onclick={() => (showDropdown = false)} />
-				{/if}
+				<!-- {#if showUserLinks}
+					<NavbarProfileDropDown links={links.profile} onclick={() => (showUserLinks = false)} />
+				{/if} -->
 			</div>
 		{:else}
 			<ButtonLink class="flex gap-4" href="/login" text="Login" variant="accent" />
