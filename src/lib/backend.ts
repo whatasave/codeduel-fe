@@ -1,4 +1,3 @@
-import { browser } from '$app/environment';
 import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_API } from '$env/static/public';
 import { HttpError, StatusCode } from './result';
 import type { SimpleLobby, UserId, UserProfile } from './types';
@@ -14,7 +13,7 @@ class Backend {
 	}
 
 	private getCookie(name: string): string | null {
-		if (!browser) return null;
+		// if (!browser) return null;
 		const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
 		if (match) return match[2];
 		return null;
@@ -55,6 +54,14 @@ class Backend {
 		fetch: Fetch = defaultFetch
 	): Promise<T> {
 		return await this.call<T>('POST', path, body, fetch);
+	}
+
+	private async patch<T = unknown>(
+		path: string,
+		body: Record<string, unknown> = {},
+		fetch: Fetch = defaultFetch
+	): Promise<T> {
+		return await this.call<T>('PATCH', path, body, fetch);
 	}
 
 	private async get<T = unknown>(
@@ -160,11 +167,54 @@ class Backend {
 				code: string;
 				language: string;
 				tests_passed: number;
-				submission_date: string;
+				show_code: boolean;
+				submitted_at: string;
 				created_at: string;
 				updated_at: string;
 			}[];
 		}>(`v1/lobby/results/${lobbyId}`, {}, fetch);
+	}
+
+	async getUserMatches(username: string, fetch: Fetch = defaultFetch) {
+		return this.get<
+			{
+				match: {
+					id: number;
+					uuid: string;
+					mode: string;
+					max_players: number;
+					duration: number;
+					allowed_languages: string[];
+					created_at: string;
+				};
+				challenge: {
+					id: number;
+					title: string;
+					description: string;
+					owner: {
+						id: number;
+						username: string;
+						name: string;
+						avatar: string;
+					};
+				};
+				player: {
+					id: number;
+					username: string;
+					name: string;
+					avatar: string;
+					code: string;
+					language: string;
+					tests_passed: number;
+					show_code: false;
+					submitted_at: string;
+				};
+			}[]
+		>(`v1/lobby/user/${username}`, {}, fetch);
+	}
+
+	async shareCode(lobbyUniqueId: string, fetch: Fetch = defaultFetch) {
+		return this.patch(`v1/lobby/${lobbyUniqueId}/sharecode`, { share_code: true }, fetch);
 	}
 
 	// TODO move

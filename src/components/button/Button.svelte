@@ -9,8 +9,8 @@
 		{
 			variants: {
 				variant: {
-					primary: 'px-6 py-1 bg-white/60 text-[#01162E] rounded-sm',
-					accent: 'px-6 py-1 bg-[#8DD741] rounded-sm text-[#01162E]',
+					primary: 'px-6 py-1 bg-[#020a0f] text-[#8DD741] rounded-sm',
+					accent: 'px-6 py-1 bg-[#82d332] rounded-sm text-[#01162E]',
 					empty: 'px-6 py-1 border-2 text-[#8DD741] border-[#8DD741] rounded-sm',
 					danger: 'px-6 py-1 bg-red-500 text-[#01162E] rounded-sm'
 				}
@@ -20,14 +20,21 @@
 
 	interface $Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
 		text: string;
+		loaderColor?: string;
 	}
 
-	let { text, class: className, variant, ...props }: $Props = $props();
+	let {
+		text,
+		class: className,
+		variant,
+		loaderColor = variant == 'accent' ? 'black' : '#8DD741',
+		...props
+	}: $Props = $props();
 </script>
 
 <Clickable {...props} class={styles({ variant, className })}>
 	{text}
 	{#snippet loading()}
-		<Loading />
+		<Loading class="mx-auto" fill={loaderColor} />
 	{/snippet}
 </Clickable>
