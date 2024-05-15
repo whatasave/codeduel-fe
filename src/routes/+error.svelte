@@ -3,6 +3,7 @@
 	import Button from '$components/button/Button.svelte';
 	import Footer from '$components/footer/Footer.svelte';
 	import Navbar from '$components/navbar/Navbar.svelte';
+	import { get } from 'svelte/store';
 	import type { PageData } from './(layout)/$types';
 
 	let { data }: { data: PageData } = $props();
@@ -14,8 +15,8 @@
 	<div class="h-full w-full py-2">
 		<div class="flex h-full flex-col items-center justify-center gap-8 rounded bg-white/5 text-white">
 			<div class="flex flex-col items-center">
-				<div class="text-6xl">{$page.status}</div>
-				<div class="text-2xl">{$page.error?.message}</div>
+				<div class="text-6xl">{get(page).status}</div>
+				<div class="text-2xl">{get(page).error?.message}</div>
 			</div>
 			<Button text="Go back" variant="accent" onclick={() => window.history.back()} />
 		</div>

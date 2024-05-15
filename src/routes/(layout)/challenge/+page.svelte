@@ -5,7 +5,7 @@
 	const { data }: { data: PageData } = $props();
 </script>
 
-<div class="mx-auto my-auto flex w-[800px] flex-col items-stretch justify-center gap-2">
+<div class="mx-auto my-auto flex w-full max-w-[800px] flex-col items-stretch justify-center gap-2">
 	<h1 class="text-center text-4xl font-bold">Challenges</h1>
 	{#await data.challenges}
 		<Loading fill="#8dd741" class="mx-auto" />

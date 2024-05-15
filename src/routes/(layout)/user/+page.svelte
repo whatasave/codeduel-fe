@@ -9,8 +9,9 @@
 	dayjs.extend(relativeTime);
 </script>
 
-<div class="m-auto w-[60%] overflow-y-auto">
-	<div class=" grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-2">
+<div class="m-auto flex w-full max-w-[1200px] flex-col gap-2 overflow-y-auto">
+	<h1 class="text-center text-4xl font-bold">Users</h1>
+	<div class="grid grid-cols-[repeat(auto-fit,minmax(22rem,1fr))] gap-2">
 		{#await data.users}
 			<div class="mx-auto">
 				<Loading fill="#8dd741" />

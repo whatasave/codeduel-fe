@@ -7,7 +7,7 @@
 	const { data }: { data: PageData } = $props();
 </script>
 
-<div class="mx-auto my-auto flex w-[800px] flex-col items-stretch justify-center gap-8">
+<div class="mx-auto my-auto flex w-full max-w-[800px] flex-col items-stretch justify-center gap-8">
 	<div class="flex flex-col items-center gap-2">
 		<span class="text-xs">{data.challenge.created_at}</span>
 		<h1 class="text-4xl font-bold">{data.challenge.title}</h1>
@@ -28,5 +28,6 @@
 	</div>
 	<div class="text-center">{data.challenge.description}</div>
 	<!-- <p>{@html data.challenge.content}</p> -->
-	<Markdown source={data.challenge.content} />
+
+	<Markdown source={data.challenge.content} class="markdown" />
 </div>

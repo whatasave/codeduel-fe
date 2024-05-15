@@ -5,6 +5,7 @@ export async function load({ params, fetch }) {
 	const user = await backend.getUser(username, fetch);
 
 	return {
-		user
+		user,
+		matches: backend.getUserMatches(username, fetch)
 	};
 }
