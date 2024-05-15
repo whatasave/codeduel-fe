@@ -18,7 +18,7 @@
 
 	interface $Props extends HTMLInputAttributes, VariantProps<typeof classes> {}
 
-	let { variant = 'primary', class: customClass, ...props }: $Props = $props();
+	let { variant = 'primary', value = $bindable(), class: customClass, ...props }: $Props = $props();
 </script>
 
-<input {...props} class={classes({ variant, className: customClass })} />
+<input {value} {...props} class={classes({ variant, className: customClass })} />

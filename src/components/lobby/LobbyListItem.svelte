@@ -7,10 +7,10 @@
 	let { lobby }: { lobby: SimpleLobby } = $props();
 </script>
 
-<div class="flex items-center gap-4 rounded bg-white/5 p-4">
+<div class="flex items-center gap-4 rounded bg-white/5 p-2">
 	<PlayerCircle class="size-11" player={lobby.owner} />
-	<div class="flex flex-1 flex-col">
-		<p class="text-lg font-semibold">{lobby.owner.username}'s lobby</p>
+	<div class="flex flex-1 flex-col truncate">
+		<p class="truncate text-lg font-semibold">{lobby.owner.username}'s lobby</p>
 		<p class="text-sm">{lobby.state} | Locked | {lobby.users}/{lobby.max_players} Brogrammers</p>
 	</div>
 	<div class="flex gap-4 pr-2">
@@ -19,6 +19,7 @@
 				href="/match/{lobby.id}"
 				text="Re-Join"
 				class="text-sky-500"
+				data-sveltekit-preload-data="off"
 				icon={{
 					icon: Join,
 					class: 'size-6',
@@ -30,6 +31,7 @@
 				href="/lobby/{lobby.id}"
 				text="Join"
 				class="text-green-500"
+				data-sveltekit-preload-data="off"
 				icon={{
 					icon: Play,
 					class: 'size-6',
