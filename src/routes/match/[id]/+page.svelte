@@ -74,7 +74,7 @@
 </script>
 
 <div class="flex h-full flex-col gap-2 p-2">
-	<Pane class="flex shrink-0 justify-center gap-2 p-2 ">
+	<Pane class="flex justify-center gap-2 p-2 ">
 		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
 		<ButtonIcon variant="primary" text="Run" icon={{ icon: Play, align: 'left', class: 'size-4' }} onclick={onRun} />
 		<ButtonIcon
@@ -85,14 +85,14 @@
 			disabled={!canSubmit}
 		/>
 	</Pane>
-	<div class="flex h-full gap-2">
+	<div class="flex flex-1 min-h-0 gap-2">
 		<PlayersPane players={lobby.users} />
 
 		<!-- Statement / Tests -->
-		<div class="flex flex-[0.7_0.7_0%] flex-col gap-2">
-			<ChallengeDescriptionPane class="flex-1" challenge={gameState.challenge} />
-			<InputOutputPane class="max-h-[15rem] flex-1" challenge={gameState.challenge} {selectedTestCaseIndex} />
-			<TestCasesPane class="" challenge={gameState.challenge} {testCaseStates} bind:selectedTestCaseIndex />
+		<div class="flex flex-[0.7_0.7_0%] min-w-0 flex-col gap-2">
+			<ChallengeDescriptionPane class="min-h-0 flex-1" challenge={gameState.challenge} />
+			<InputOutputPane class="min-h-0 max-h-[15rem] flex-1" challenge={gameState.challenge} {selectedTestCaseIndex} />
+			<TestCasesPane class="min-h-0" challenge={gameState.challenge} {testCaseStates} bind:selectedTestCaseIndex />
 		</div>
 
 		<!-- Editor / Console -->
@@ -108,7 +108,7 @@
 			<ConsolePane
 				testCaseIndex={selectedTestCaseIndex}
 				testCase={testCaseStates[selectedTestCaseIndex]}
-				class="min-h-80"
+				class="min-h-60"
 			/>
 		</div>
 	</div>
