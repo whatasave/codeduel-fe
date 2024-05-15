@@ -102,6 +102,11 @@ export class LobbyService {
 		return Object.values(this.getLobby().users);
 	}
 
+	getGameDurationInMinutes() {
+		const lobby = this.getLobby();
+		return lobby.settings.gameDuration / 60000000000;
+	}
+
 	async waitPacket<PacketType extends keyof PacketInFromType>(type: PacketType): Promise<PacketInFromType[PacketType]> {
 		return new Promise<PacketInFromType[PacketType]>((resolve) => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
