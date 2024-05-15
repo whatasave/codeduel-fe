@@ -10,8 +10,8 @@
 	import { toHumanString } from '$lib/languages.js';
 
 	const { data } = $props();
-	let lobby = $derived(data.lobby.getLobby());
-	const users: User[] = $derived(lobby.users ? Object.values(lobby.users) : []);
+	let lobby = data.lobby.getLobby();
+	let users: User[] = $state(data.lobby.getUsersList());
 	const isOwner = (userId: UserId) => lobby.owner.id == userId;
 	const isSelf = (userId: UserId) => data.user?.id == userId;
 
@@ -29,7 +29,6 @@
 
 	async function onDelete() {
 		await data.lobby.sendPacket({ type: 'delete', delete: true });
-		await goto('/lobby');
 	}
 
 	async function onLock(lock: boolean) {
@@ -43,8 +42,19 @@
 
 	$effect(() => {
 		replaceState(`/lobby/${lobby.id}`, {});
-		const unlisten = data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`));
-		return () => unlisten();
+		const unlisteners = [
+			data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`)),
+			data.lobby.on('lobbyDelete', () => {
+				console.log('lobby deleted');
+				goto(`/lobby`)
+			}),
+			data.lobby.on('usersUpdate', (packet) => {
+				users = Object.values(packet.users);
+			})
+		];
+		return () => {
+			for (const unlisten of unlisteners) unlisten();
+		};
 	});
 
 	beforeNavigate(() => {
