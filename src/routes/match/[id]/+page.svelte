@@ -75,12 +75,12 @@
 
 <div class="flex h-full flex-col gap-2 p-2">
 	<Pane class="flex justify-center gap-2 p-2 ">
-		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
-		<ButtonIcon variant="primary" text="Run" icon={{ icon: Play, align: 'left', class: 'size-4' }} onclick={onRun} />
+		<Timer time={dayjs(gameState.startTime).add(data.lobby.getGameDurationInMinutes(), 'minutes').toISOString()} />
+		<ButtonIcon variant="accent" text="Run" icon={{ icon: Play, align: 'left', class: 'size-4', fill: "#020a0f" }} onclick={onRun} />
 		<ButtonIcon
-			variant="accent"
+			variant="primary"
 			text="Submit"
-			icon={{ icon: Upload, align: 'left', class: 'size-4', fill: '#000000' }}
+			icon={{ icon: Upload, align: 'left', class: 'size-4', fill: '#8DD741' }}
 			onclick={onSubmit}
 			disabled={!canSubmit}
 		/>

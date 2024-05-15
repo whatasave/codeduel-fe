@@ -9,7 +9,7 @@
 </script>
 
 <Pane class={clsx('flex h-40 flex-col p-4 pr-2', className)}>
-	<div class="flex items-center gap-2 pb-4">
+	<div class="flex items-center gap-2 pb-2">
 		<PlayerCircle class="size-8" player={challenge.owner} />
 		<div class="flex flex-col">
 			<h2 class="text-lg font-bold">{challenge.title}</h2>
