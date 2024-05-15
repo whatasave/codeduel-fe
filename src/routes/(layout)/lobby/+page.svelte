@@ -4,6 +4,7 @@
 	import Loading from '$components/icons/Loading.svelte';
 	import LobbyListItem from '$components/lobby/LobbyListItem.svelte';
 	import backend from '$lib/backend';
+	import { slide } from 'svelte/transition';
 	import type { PageData } from '../$types';
 
 	const { data }: { data: PageData } = $props();
@@ -31,7 +32,7 @@
 			<p class="m-2 mx-auto">No lobbies found.</p>
 		{:else}
 			{#each lobbies as lobby}
-				<LobbyListItem {lobby} />
+					<LobbyListItem {lobby} />
 			{/each}
 		{/if}
 	{:catch error}

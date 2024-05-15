@@ -10,6 +10,7 @@
 	import { slide } from 'svelte/transition';
 
 	let { user }: { user?: UserProfile } = $props();
+	let currentPath = get(page).url.pathname;
 
 	let links = {
 		main: [
@@ -29,21 +30,34 @@
 	let showUserLinks = $state(false);
 </script>
 
-<header class="flex items-center justify-between rounded bg-white/5 p-2">
-	<nav class="flex gap-4 px-4">
-		{#each links.main as { name, href }}
-			<a class:underline={get(page).url.pathname === href} {href} aria-current={get(page).url.pathname === href}>
-				{name}
-			</a>
-		{/each}
-	</nav>
+<header class="relative flex items-center justify-between rounded bg-white/5 p-2">
+	<div class="flex flex-col">
+		<!-- max-[730px]:absolute max-[730px]:left-0 max-[730px]:top-[calc(100%+0.5rem)] max-[730px]:flex-col max-[730px]:rounded max-[730px]:bg-white/5 max-[730px]:p-4 max-[730px]:backdrop-blur-lg -->
+		<nav transition:slide class="flex gap-4 px-2">
+			{#each links.main as { name, href }}
+				<a
+					class="text-sm"
+					class:underline={currentPath === href}
+					{href}
+					aria-current={currentPath === href}
+				>
+					{name}
+				</a>
+			{/each}
+		</nav>
+	</div>
 
 	<div class="flex items-center gap-4">
 		{#if user}
 			{#if showUserLinks}
 				<nav transition:slide={{ axis: 'x' }} class="flex gap-4">
 					{#each links.profile as { name, href }}
-						<a class:underline={get(page).url.pathname === href} {href} aria-current={get(page).url.pathname === href}>
+						<a
+							class="text-sm"
+							class:underline={currentPath === href}
+							{href}
+							aria-current={currentPath === href}
+						>
 							{name}
 						</a>
 					{/each}
