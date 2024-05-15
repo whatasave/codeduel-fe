@@ -28,6 +28,7 @@ class Backend {
 		});
 		if (!result.ok)
 			throw new HttpError(result.status, `Received error code ${result.status} from backend: ${await result.text()}`);
+		if (result.status === 204) return undefined as T;
 		const json = (await result.json()) as T;
 		return json;
 	}
