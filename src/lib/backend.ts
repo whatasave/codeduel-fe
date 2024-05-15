@@ -7,12 +7,13 @@ const defaultFetch = fetch;
 
 class Backend {
 	private url: string;
+	private maxApiCalls = 3;
 
 	constructor(url: string) {
 		this.url = url;
 	}
 
-	private getCookie(name: string): string | null {
+	public getCookie(name: string): string | null {
 		// if (!browser) return null;
 		const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
 		if (match) return match[2];
@@ -23,8 +24,11 @@ class Backend {
 		method: string,
 		path: string,
 		body: Record<string, unknown> = {},
-		fetch: Fetch = defaultFetch
+		fetch: Fetch = defaultFetch,
+		limit = this.maxApiCalls
 	): Promise<T> {
+		if (limit === 0) throw new Error('Max call limit reached');
+
 		const headers = {};
 		const result = await fetch(this.url + '/' + path, {
 			method,
@@ -34,10 +38,10 @@ class Backend {
 			body: body && method !== 'GET' ? JSON.stringify(body) : undefined
 		});
 
-		if (result.status === StatusCode.Unauthorized && this.getCookie('logged_in') === 'true') {
+		if (result.status === StatusCode.Unauthorized && this.auth.isLoggedIn()) {
 			console.log('Unauthorized, refreshing token');
-			await this.call('GET', 'v1/auth/refresh', {}, fetch);
-			return await this.call(method, path, body, fetch);
+			await this.auth.refresh();
+			return await this.call(method, path, body, fetch, limit - 1);
 		} else if (result.status === StatusCode.Forbidden) {
 			throw new HttpError(result.status, `Received error code ${result.status} from backend: ${await result.text()}`);
 		} else if (!result.ok) {
@@ -72,6 +76,12 @@ class Backend {
 		const query = new URLSearchParams(Object.entries(body).map(([key, value]) => [key, JSON.stringify(value)]));
 		return await this.call<T>('GET', `${path}?${query}`, {}, fetch);
 	}
+
+	// AUTH
+	auth = {
+		refresh: async (fetch: Fetch = defaultFetch) => await this.get('v1/auth/refresh', {}, fetch),
+		isLoggedIn: () => this.getCookie('logged_in') === 'true'
+	};
 
 	// API CALLS
 

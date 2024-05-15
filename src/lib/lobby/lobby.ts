@@ -1,5 +1,6 @@
 import type { Challenge, ExecutionResult, Lobby, LobbySettings, LobbyState, User, UserId } from '$lib/types';
 import { PUBLIC_LOBBY_WS } from '$env/static/public';
+import backend from '$lib/backend';
 
 export class LobbyService {
 	path: string;
@@ -50,7 +51,12 @@ export class LobbyService {
 					reject(event);
 				});
 			});
-			this.connection!.addEventListener('close', (event) => {
+			this.connection!.addEventListener('close', async (event) => {
+				if (event.code === 4401) {
+					await backend.auth.refresh();
+					if (backend.auth.isLoggedIn()) this.start();
+				}
+
 				reject(event);
 			});
 		});
@@ -121,6 +127,19 @@ export class LobbyService {
 				challenge: packet.challenge
 			};
 			console.log('gameStarted', packet);
+		},
+		usersUpdate: (packet) => {
+			this.getLobby().users = packet.users;
+			// TODO check with typescript
+			if (this.getLobby().state.type === 'preLobby') {
+				this.getLobby().state = { type: 'preLobby', ready: packet.readyUsers };
+			}
+		},
+		lobbyDelete: (packet) => {
+			if (packet.deleted) {
+				this.lobby = undefined;
+				this.close();
+			}
 		}
 	};
 }
@@ -145,10 +164,17 @@ type PacketInFromType = {
 		result: ExecutionResult[] | null;
 		error: string | null;
 	};
+	usersUpdate: {
+		users: { [id: UserId]: User };
+		readyUsers: UserId[];
+	};
+	lobbyDelete: {
+		deleted: boolean;
+	};
 };
 
 type PacketOutFromType = {
-	startLobby: { start: true };
+	start: { start: true };
 	check: {
 		language: string;
 		code: string;
@@ -157,6 +183,10 @@ type PacketOutFromType = {
 		language: string;
 		code: string;
 	};
+	lock: { lock: boolean };
+	delete: { delete: true };
+	ready: { ready: boolean };
+	kick: { userId: UserId };
 };
 
 type PacketIn = { [Type in keyof PacketInFromType]: { type: Type } & PacketInFromType[Type] }[keyof PacketInFromType];
