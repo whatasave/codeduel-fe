@@ -8,7 +8,7 @@ export default {
 		borderRadius: {
 			DEFAULT: '0.5rem',
 			sm: '0.25rem',
-			full: '50%'
+			full: '999px'
 		}
 	},
 	plugins: []
