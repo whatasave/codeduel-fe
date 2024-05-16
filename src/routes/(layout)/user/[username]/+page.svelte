@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ProfileTag from '$components/profile/ProfileTag.svelte';
 	import ProfileBackground from '$components/profile/ProfileBackground.svelte';
-	import PlayerCircle from '$components/match/PlayerCircle.svelte';
+	import Avatar from '$components/match/Avatar.svelte';
 	import dayjs from 'dayjs';
 	import duration from 'dayjs/plugin/duration.js';
 	import type { PageData } from './$types';
@@ -29,9 +29,9 @@
 	/>
 
 	<div class="mx-auto -mt-12 flex w-full max-w-[1000px] flex-col gap-1 px-8">
-		<PlayerCircle
-			class="size-24 border-8 border-[#08111b]"
-			player={{ id: 999, username: data.user?.username || '', avatar: data.user?.avatar || '' }}
+		<Avatar
+			class="size-24  border-8 border-[#010f20]"
+			user={{ username: data.user?.username || '', avatar: data.user?.avatar || '' }}
 		/>
 		<div class="flex flex-wrap gap-8">
 			<div class="flex w-full min-w-[326px] flex-1 shrink-0 grow flex-col gap-2">
@@ -60,10 +60,10 @@
 					<div class="h-16 w-full rounded bg-white/5"></div>
 					<div class="h-16 w-full rounded bg-white/5"></div>
 				{:then matches}
-					{#each matches as singleMatch}
-						{@const match = singleMatch.match}
-						{@const challenge = singleMatch.challenge}
-						{@const player = singleMatch.player}
+					{#each matches as game}
+						{@const match = game.match}
+						{@const challenge = game.challenge}
+						{@const player = game.player}
 
 						<div class="flex w-full flex-col items-center justify-center gap-2 rounded bg-white/5 p-2">
 							<!-- MATCH -->

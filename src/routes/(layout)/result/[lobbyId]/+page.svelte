@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PlayerCircle from '$components/match/PlayerCircle.svelte';
+	import Avatar from '$components/match/Avatar.svelte';
 	import backend from '$lib/backend';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime.js';
@@ -87,16 +87,13 @@
 					<div class="flex w-full flex-wrap justify-between gap-2 rounded-t bg-white/5 p-4">
 						<div class="flex min-w-[14rem] items-center gap-2">
 							{#await backend.getUserById(player.user_id)}
-								<PlayerCircle
-									player={{ id: player.id, username: 'username', avatar: '/logo/codeduel_logo_1.png' }}
-									class="size-10"
-								/>
+								<Avatar user={{ username: 'username', avatar: '/logo/codeduel_logo_1.png' }} class="size-10" />
 								<div class="font-bold">Loading...</div>
 							{:then users}
 								{@const user = users[0]}
 								<a class="contents" href={`/user/${user.username}`}>
-									<PlayerCircle player={{ id: 999, username: user.username, avatar: user.avatar }} class="size-10" />
-								<div class="line-clamp-1 font-bold" title={user.username}>{user.username}</div>
+									<Avatar {user} class="size-10" />
+									<div class="line-clamp-1 font-bold" title={user.username}>{user.username}</div>
 								</a>
 							{/await}
 						</div>
@@ -106,6 +103,7 @@
 								{@render stats('Tests', `${player.tests_passed} / 6`)}
 								{@render stats('Time', calcTime(lobby.created_at, player.submitted_at))}
 							</div>
+
 							<Button
 								text="Share Code"
 								variant="accent"

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import ButtonIconLink from '$components/button/ButtonIconLink.svelte';
 	import { Join, Play } from '$components/icons';
-	import PlayerCircle from '$components/match/PlayerCircle.svelte';
+	import Avatar from '$components/match/Avatar.svelte';
 	import type { SimpleLobby } from '$lib/types';
 
 	let { lobby }: { lobby: SimpleLobby } = $props();
 </script>
 
 <div class="flex items-center gap-4 rounded bg-white/5 p-2">
-	<PlayerCircle class="size-11" player={lobby.owner} />
+	<Avatar class="size-11" user={lobby.owner} />
 	<div class="flex flex-1 flex-col truncate">
 		<p class="truncate text-lg font-semibold">{lobby.owner.username}'s lobby</p>
 		<p class="text-sm">{lobby.state} | Locked | {lobby.users}/{lobby.max_players} Brogrammers</p>

@@ -1,19 +1,22 @@
 <script lang="ts">
 	import { Trophy, Cake, Quotes } from '$components/icons';
-	import PlayerCircle from '$components/match/PlayerCircle.svelte';
+	import Avatar from '$components/match/Avatar.svelte';
 	import ProfileTag from '$components/profile/ProfileTag.svelte';
-	let {
-		name,
-		username,
-		wins,
-		lang,
-		since,
-		avatar
-	}: { name: string; username: string; wins: number; lang: string; since: string; avatar: string } = $props();
+
+	interface $Props {
+		name: string;
+		username: string;
+		wins: number;
+		lang: string;
+		since: string;
+		avatar: string;
+	}
+
+	let { name, username, wins, lang, since, avatar }: $Props = $props();
 </script>
 
 <a href="user/{username}" class="flex gap-x-5 rounded bg-white/5 p-5">
-	<PlayerCircle player={{ id: 0, username, avatar }} class="size-16" />
+	<Avatar user={{ username, avatar }} class="size-16" />
 	<div class="flex flex-col gap-2 overflow-hidden">
 		<div>
 			<h1 class="truncate text-xl font-bold">{name}</h1>

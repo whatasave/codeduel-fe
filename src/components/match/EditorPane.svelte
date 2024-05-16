@@ -7,6 +7,15 @@
 	import clsx from 'clsx';
 	import Button from '$components/button/Button.svelte';
 
+	interface $Props {
+		lobby: Lobby;
+		selectedLanguageIndex: number;
+		class?: string;
+		code: string;
+		onchangelanguage?: (language: string) => void;
+		onchangecode?: (code: string) => void;
+	}
+
 	let {
 		lobby,
 		code = $bindable(),
@@ -14,14 +23,7 @@
 		onchangelanguage,
 		onchangecode,
 		class: className
-	}: {
-		lobby: Lobby;
-		selectedLanguageIndex: number;
-		class?: string;
-		code: string;
-		onchangelanguage?: (language: string) => void;
-		onchangecode?: (code: string) => void;
-	} = $props();
+	}: $Props = $props();
 	let selectedLanguage = $derived(lobby.settings.allowedLanguages[selectedLanguageIndex]);
 </script>
 
@@ -38,7 +40,7 @@
 				onchangecode?.(code);
 			}}
 		/>
-		<Button variant="primary" text="Restore Last Submitted" />
+		<!-- <Button variant="primary" text="Restore Last Submitted" /> -->
 		<Button variant="primary" text="Restore Default" />
 	</div>
 	<Editor class="flex-1 p-2 px-3" language={selectedLanguage} bind:value={code} {onchangecode} />

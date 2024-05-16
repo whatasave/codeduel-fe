@@ -1,1 +1,4 @@
-export default `print("Hello, World!")`;
+export default `i = input()
+
+print(f'input: {i}')
+`;

@@ -4,8 +4,28 @@
 	import clsx from 'clsx';
 	import { browser } from '$app/environment';
 	import Loading from './icons/Loading.svelte';
+	import { codeToHtml } from 'shiki';
 
 	let { source, class: className }: { source: string; class?: string } = $props();
+
+	marked.use({
+		async: true,
+		walkTokens: async (token) => {
+			if (token.type === 'code') {
+				try {
+					const html = await codeToHtml(token.text, {
+						lang: token.lang,
+						theme: 'monokai',
+						defaultColor: false
+					});
+					token.type = 'html';
+					token.text = html;
+				} catch (e) {
+					console.error("Couldn't highlight code block: ", e);
+				}
+			}
+		}
+	});
 </script>
 
 <div class={clsx('markdown overflow-auto', className)}>
@@ -19,6 +39,18 @@
 </div>
 
 <style>
+	:global(pre.shiki.monokai) {
+		background-color: #ffffff15 !important;
+		padding: 1rem !important;
+		margin: 0.5rem 0 !important;
+		border-radius: 0.5rem !important;
+		line-height: 1.25 !important;
+		overflow-x: auto !important;
+	}
+	:global(.line) {
+		user-select: text !important;
+	}
+
 	.markdown {
 		font-size: 1rem;
 		line-height: 1.5;
@@ -38,7 +70,8 @@
 	}
 
 	.markdown :global(h1),
-	.markdown :global(h2) {
+	.markdown :global(h2),
+	.markdown :global(h3) {
 		border-bottom: 3px solid #ffffff15;
 	}
 

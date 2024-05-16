@@ -9,9 +9,9 @@ export enum StatusCode {
 }
 
 export class HttpError extends Error {
-	code: number;
+	code: StatusCode;
 
-	constructor(code: number, message?: string) {
+	constructor(code: StatusCode, message?: string) {
 		super(message ?? `Received error code ${code}`);
 		this.code = code;
 	}
