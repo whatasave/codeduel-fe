@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { beforeNavigate, goto, replaceState } from '$app/navigation';
+	import { goto, replaceState } from '$app/navigation';
 	import PlayerCircle from '$components/match/PlayerCircle.svelte';
 	import Button from '$components/button/Button.svelte';
 	import type { User, UserId } from '$lib/types';
@@ -45,10 +45,6 @@
 		replaceState(`/lobby/${lobby.id}`, {});
 		const unlisten = data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`));
 		return () => unlisten();
-	});
-
-	beforeNavigate(() => {
-		data.lobby.close();
 	});
 </script>
 

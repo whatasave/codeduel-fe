@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { beforeNavigate, goto } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import Pane from '$components/Pane.svelte';
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 	import { Play, Upload } from '$components/icons';
@@ -67,10 +67,6 @@
 			}
 		}
 	}
-
-	beforeNavigate(() => {
-		data.lobby.close();
-	});
 </script>
 
 <div class="flex h-full flex-col gap-2 p-2">

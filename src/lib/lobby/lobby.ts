@@ -2,6 +2,8 @@ import type { Challenge, ExecutionResult, Lobby, LobbySettings, LobbyState, User
 import { PUBLIC_LOBBY_WS } from '$env/static/public';
 import backend from '$lib/backend';
 
+let currentLobby: LobbyService | undefined;
+
 export class LobbyService {
 	path: string;
 	connection: WebSocket | undefined;
@@ -21,9 +23,11 @@ export class LobbyService {
 	}
 
 	static async connect(lobbyId: string) {
-		const service = new LobbyService(`connect/${lobbyId}`);
-		await service.start();
-		return service;
+		if (!currentLobby) {
+			currentLobby = new LobbyService(`connect/${lobbyId}`);
+			await currentLobby.start();
+		}
+		return currentLobby;
 	}
 
 	constructor(path: string) {
