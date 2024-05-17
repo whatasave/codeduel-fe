@@ -61,7 +61,7 @@
 				{/if} -->
 			</div>
 		{:else}
-			<ButtonLink href="/register" class="flex gap-4" text="Login" variant="accent" />
+			<ButtonLink href="/login" class="flex gap-4" text="Login" variant="accent" />
 		{/if}
 	</div>
 </header>
