@@ -14,6 +14,6 @@
 	<div class="text-xl font-semibold">Console (Test Case #{testCaseIndex + 1})</div>
 	{#if testCase && testCase.type === 'failure'}
 		<!-- {JSON.stringify(testCase)} -->
-		<pre class="h-full rounded bg-black p-2 text-red-500">{testCase.output}</pre>
+		<pre class="min-h-0 flex-1 overflow-y-auto text-wrap rounded bg-black p-2 text-red-500">{testCase.output}</pre>
 	{/if}
 </Pane>
