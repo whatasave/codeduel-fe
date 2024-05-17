@@ -1,1 +1,4 @@
-export default `console.log("Hello, World!")`;
+export default `const input = readline();
+
+console.log('input:', input);
+`;

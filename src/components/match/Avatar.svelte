@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type { User } from '$lib/types';
 	import { cva, type VariantProps } from 'class-variance-authority';
 	import clsx from 'clsx';
 	import type { ComponentType, SvelteComponent } from 'svelte';
 
-	const classes = cva('relative rounded-full min-w-max border-[#A3A3A3]', {
+	const classes = cva('relative rounded-full min-w-max', {
 		variants: {
 			variant: {
 				status: 'border-[0.2rem]'
@@ -19,14 +18,14 @@
 	});
 
 	interface $Props extends VariantProps<typeof classes> {
-		player: User;
+		user: { avatar: string; username: string };
 		class?: string;
 		badge?: ComponentType<SvelteComponent>;
 		badgeClass?: string;
 		badgeBackground?: string;
 	}
 
-	let { player, badge, badgeClass, variant, status = 'default', class: className }: $Props = $props();
+	let { user, badge, badgeClass, variant, status, class: className }: $Props = $props();
 	let showImg = $state(true);
 </script>
 
@@ -35,9 +34,9 @@
 		{#if showImg}
 			<img
 				class="h-full w-full rounded-full"
-				src={player.avatar}
-				alt={player.username}
-				title={player.username}
+				src={user.avatar}
+				alt={user.username}
+				title={user.username}
 				onerror={() => {
 					showImg = false;
 				}}

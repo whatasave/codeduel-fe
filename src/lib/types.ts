@@ -16,13 +16,21 @@ export type TestCaseState =
 export type Language = (typeof languages)[number];
 
 export type Challenge = {
+	id: number;
+	owner: User;
 	title: string;
 	description: string;
+	content: string;
+
 	testCases: TestCase[];
+
+	created_at: number;
+	updated_at: number;
 };
 
 export type User = {
 	id: UserId;
+	name: string;
 	username: string;
 	avatar: string;
 	email?: string;

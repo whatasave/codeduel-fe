@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Loading from '$components/icons/Loading.svelte';
-	import PlayerCircle from '$components/match/PlayerCircle.svelte';
+	import Avatar from '$components/match/Avatar.svelte';
 	import type { PageData } from './$types';
 	import Markdown from '$components/Markdown.svelte';
 
@@ -18,7 +18,7 @@
 			{:then users}
 				{@const owner = users[0]}
 				<a href="/user/{owner.username}" class="flex gap-2">
-					<PlayerCircle player={{ id: 999, avatar: owner.avatar, username: owner.username }} class="size-6" />
+					<Avatar user={owner} class="size-6" />
 					<p class="font-bold">{owner.username}</p>
 				</a>
 			{:catch}
@@ -27,7 +27,6 @@
 		</h2>
 	</div>
 	<div class="text-center">{data.challenge.description}</div>
-	<!-- <p>{@html data.challenge.content}</p> -->
 
 	<Markdown source={data.challenge.content} class="markdown" />
 </div>

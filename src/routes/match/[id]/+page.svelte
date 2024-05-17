@@ -22,17 +22,11 @@
 	let selectedTestCaseIndex = $state(0);
 	let selectedLanguage = $derived(lobby.settings.allowedLanguages[selectedLanguageIndex]);
 	let code = $state((() => languageTemplate(selectedLanguage) ?? '')());
-	let canSubmit = $state(false);
 
 	async function onSubmit() {
 		const result = await data.lobby.submit({ language: selectedLanguage, code: code.trim() });
-		if (result.error) {
-			console.log(result.error);
-			console.error(result.error);
-		} else {
-			console.log(result);
-			goto(`/result/${lobby.id}`);
-		}
+		if (result.error) console.error(result.error);
+		else goto(`/result/${lobby.id}`);
 	}
 
 	async function onRun() {
@@ -62,49 +56,43 @@
 			for (let i = result.result!.length; i < gameState.challenge.testCases.length; i++) {
 				testCaseStates[i] = { type: 'skipped' };
 			}
-			if (testCaseStates.some((state) => state.type === 'success')) {
-				canSubmit = true;
-			}
 		}
 	}
 </script>
 
 <div class="flex h-full flex-col gap-2 p-2">
-	<Pane class="flex shrink-0 justify-center gap-2 p-2 ">
-		<Timer time={dayjs(gameState.startTime).add(lobby.settings.gameDuration, 'ms').toISOString()} />
-		<ButtonIcon variant="primary" text="Run" icon={{ icon: Play, align: 'left', class: 'size-4' }} onclick={onRun} />
+	<Pane class="flex justify-center gap-2 p-2 ">
+		<Timer time={dayjs(gameState.startTime).add(data.lobby.getGameDurationInMinutes(), 'minutes').toISOString()} />
 		<ButtonIcon
 			variant="accent"
+			text="Run"
+			icon={{ icon: Play, align: 'left', class: 'size-4', fill: '#020a0f' }}
+			onclick={onRun}
+		/>
+		<ButtonIcon
+			variant="primary"
 			text="Submit"
-			icon={{ icon: Upload, align: 'left', class: 'size-4', fill: '#000000' }}
+			icon={{ icon: Upload, align: 'left', class: 'size-4', fill: '#8DD741' }}
 			onclick={onSubmit}
-			disabled={!canSubmit}
 		/>
 	</Pane>
-	<div class="flex h-full gap-2">
+	<div class="flex min-h-0 flex-1 gap-2">
 		<PlayersPane players={lobby.users} />
 
 		<!-- Statement / Tests -->
-		<div class="flex flex-[0.7_0.7_0%] flex-col gap-2">
-			<ChallengeDescriptionPane class="flex-1" challenge={gameState.challenge} />
-			<InputOutputPane class="max-h-[15rem] flex-1" challenge={gameState.challenge} {selectedTestCaseIndex} />
-			<TestCasesPane class="" challenge={gameState.challenge} {testCaseStates} bind:selectedTestCaseIndex />
+		<div class="flex min-w-0 flex-[0.7_0.7_0%] flex-col gap-2">
+			<ChallengeDescriptionPane class="min-h-0 flex-1" challenge={gameState.challenge} />
+			<InputOutputPane class="max-h-[15rem] min-h-0 flex-1" challenge={gameState.challenge} {selectedTestCaseIndex} />
+			<TestCasesPane class="min-h-0" challenge={gameState.challenge} {testCaseStates} bind:selectedTestCaseIndex />
 		</div>
 
 		<!-- Editor / Console -->
 		<div class="flex flex-1 flex-col gap-2">
-			<EditorPane
-				class="flex-1"
-				{lobby}
-				bind:selectedLanguageIndex
-				bind:code
-				onchangecode={() => (canSubmit = false)}
-				onchangelanguage={() => (canSubmit = false)}
-			/>
+			<EditorPane class="flex-1" {lobby} bind:selectedLanguageIndex bind:code />
 			<ConsolePane
 				testCaseIndex={selectedTestCaseIndex}
 				testCase={testCaseStates[selectedTestCaseIndex]}
-				class="min-h-80"
+				class="min-h-60"
 			/>
 		</div>
 	</div>

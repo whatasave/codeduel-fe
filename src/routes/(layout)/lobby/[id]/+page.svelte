@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto, replaceState } from '$app/navigation';
-	import PlayerCircle from '$components/match/PlayerCircle.svelte';
+	import Avatar from '$components/match/Avatar.svelte';
 	import Button from '$components/button/Button.svelte';
 	import type { User, UserId } from '$lib/types';
 	import { Broom, Play } from '$components/icons';
@@ -8,10 +8,15 @@
 	import Input from '$components/input/Input.svelte';
 	import Select from '$components/input/Select.svelte';
 	import { toHumanString } from '$lib/languages.js';
+	import dayjs from 'dayjs';
+	import duration from 'dayjs/plugin/duration';
+	import Checkbox from '$components/checkbox/Checkbox.svelte';
 
 	const { data } = $props();
-	let lobby = $derived(data.lobby.getLobby());
-	const users: User[] = $derived(lobby.users ? Object.values(lobby.users) : []);
+	dayjs.extend(duration);
+
+	let lobby = data.lobby.getLobby();
+	let users: User[] = $state(data.lobby.getUsersList());
 	const isOwner = (userId: UserId) => lobby.owner.id == userId;
 	const isSelf = (userId: UserId) => data.user?.id == userId;
 
@@ -29,7 +34,6 @@
 
 	async function onDelete() {
 		await data.lobby.sendPacket({ type: 'delete', delete: true });
-		await goto('/lobby');
 	}
 
 	async function onLock(lock: boolean) {
@@ -43,14 +47,26 @@
 
 	$effect(() => {
 		replaceState(`/lobby/${lobby.id}`, {});
-		const unlisten = data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`));
-		return () => unlisten();
+		const cleanupHandlers = [
+			data.lobby.on('gameStarted', () => goto(`/match/${lobby.id}`)),
+			data.lobby.on('lobbyDelete', () => {
+				console.log('lobby deleted');
+				goto(`/lobby`);
+			}),
+			data.lobby.on('usersUpdate', (packet) => {
+				users = Object.values(packet.users);
+			})
+		];
+		return () => {
+			for (const unlisten of cleanupHandlers) unlisten();
+		};
 	});
 </script>
 
 <div
 	class="m-auto flex w-full max-w-[1000px] justify-center gap-2 max-[680px]:flex-col-reverse max-[680px]:items-center"
 >
+	<!-- PLAYERS -->
 	<div
 		class="flex w-full min-w-[300px] max-w-[400px] flex-1 flex-col gap-1 max-[680px]:min-w-[200px] max-[680px]:max-w-[500px]"
 	>
@@ -65,7 +81,7 @@
 				<!-- PLAYER ITEM -->
 				<div class="flex items-center gap-4 bg-white/5 p-2 last:rounded-b">
 					<!-- PLAYER IMAGE -->
-					<PlayerCircle class="size-12" player={user} />
+					<Avatar class="size-12" {user} />
 
 					<!-- PLAYER INFO -->
 					<div class="flex w-full min-w-[130px] flex-1 flex-col">
@@ -86,6 +102,8 @@
 			{/each}
 		</div>
 	</div>
+
+	<!-- SETTINGS -->
 	<div class="flex w-full min-w-[350px] max-w-[500px] flex-col gap-1 max-[680px]:min-w-[200px]">
 		<!-- SECTION TITLE -->
 		<div class="flex justify-center rounded-t bg-white/5 p-2">
@@ -113,17 +131,16 @@
 		{#if isOwner(data.user!.id)}
 			<div class="flex flex-col gap-4 rounded-b bg-white/5 p-2">
 				<div class="flex flex-col gap-1">
-					<label class="text-nowrap" for="lang">Languages</label>
-					<Select
-						class="w-full"
-						selectedIndex={0}
-						mapToString={(language) => language.name}
-						options={allowedLanguages}
-					/>
+					<label class="text-nowrap font-semibold" for="lang">Allowed Languages</label>
+					<div class="flex flex-wrap justify-stretch gap-2">
+						{#each allowedLanguages as lang}
+							<Checkbox name={lang.name} value={true} />
+						{/each}
+					</div>
 				</div>
 				<div class="flex flex-wrap gap-4 gap-x-2">
 					<div class="flex flex-1 flex-col gap-1">
-						<label class="text-nowrap" for="maxPlayers">Max Players</label>
+						<label class="text-nowrap font-semibold" for="maxPlayers">Max Players</label>
 						<Input
 							type="number"
 							name="maxPlayers"
@@ -133,20 +150,21 @@
 						/>
 					</div>
 					<div class="flex flex-1 flex-col gap-1">
-						<label class="text-nowrap" for="gameDuration">
+						<label class="text-nowrap font-semibold" for="gameDuration">
 							Game Duration <span class="text-sm text-white/60">(in minutes)</span>
 						</label>
 						<Input
 							type="number"
+							disabled
 							name="gameDuration"
-							value={lobby.settings.gameDuration}
+							value={data.lobby.getGameDurationInMinutes()}
 							id="gameDuration"
 							class="w-full"
 						/>
 					</div>
 				</div>
 				<div class="flex flex-col gap-1">
-					<label class="text-nowrap" for="mode">Mode</label>
+					<label class="text-nowrap font-semibold" for="mode">Mode</label>
 					<Select
 						class="w-full"
 						selectedIndex={0}
@@ -162,10 +180,10 @@
 		{:else}
 			<div class="flex flex-col gap-4 rounded-b bg-white/5 p-2">
 				<div class="flex flex-col gap-1">
-					<div class="font-semibold">Languages</div>
-					<div class="flex gap-2">
+					<div class="font-semibold">Allowed Languages</div>
+					<div class="flex flex-wrap gap-2">
 						{#each allowedLanguages as lang}
-							<div class="rounded bg-white/5 p-1 px-4 text-sm">{lang.name}</div>
+							<Checkbox disabled name={lang.name} value={true} />
 						{/each}
 					</div>
 				</div>
@@ -180,7 +198,7 @@
 				<div class="flex flex-col gap-1">
 					<div class="font-semibold">Game Duration</div>
 					<div class="flex gap-2">
-						<div class="text-sm">{lobby.settings.gameDuration} minutes</div>
+						<div class="text-sm">{data.lobby.getGameDurationInMinutes()} minutes</div>
 					</div>
 				</div>
 				<div class="flex flex-col gap-1">

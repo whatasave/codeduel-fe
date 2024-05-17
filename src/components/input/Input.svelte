@@ -5,6 +5,7 @@
 	const classes = cva(
 		[
 			'outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
+			'disabled:cursor-not-allowed disabled:opacity-50 disabled:text-white/50',
 			'w-fit h-fit min-w-0'
 		],
 		{

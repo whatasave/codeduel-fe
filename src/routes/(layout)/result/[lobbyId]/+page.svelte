@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PlayerCircle from '$components/match/PlayerCircle.svelte';
+	import Avatar from '$components/match/Avatar.svelte';
 	import backend from '$lib/backend';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime.js';
@@ -61,12 +61,12 @@
 	<h2 class="text-center font-mono text-sm">Lobby ID: {data.lobbyId}</h2>
 </div>
 
-<!-- {#snippet stats(title, value)}
-	<div class="flex flex-col items-center">
+{#snippet stats(title, value)}
+	<div class="flex min-w-[6rem] flex-col items-center overflow-hidden">
 		<span class="font-bold">{title}</span>
 		<span class="text-sm">{value}</span>
 	</div>
-{/snippet} -->
+{/snippet}
 
 <div class="mx-auto flex w-full max-w-[800px] flex-1 flex-col gap-2 pb-8">
 	<!-- <div class="h-16 w-full rounded bg-white/5"></div> -->
@@ -87,32 +87,23 @@
 					<div class="flex w-full flex-wrap justify-between gap-2 rounded-t bg-white/5 p-4">
 						<div class="flex min-w-[14rem] items-center gap-2">
 							{#await backend.getUserById(player.user_id)}
-								<PlayerCircle
-									player={{ id: player.id, username: 'username', avatar: '/logo/codeduel_logo_1.png' }}
-									class="size-10"
-								/>
+								<Avatar user={{ username: 'username', avatar: '/logo/codeduel_logo_1.png' }} class="size-10" />
 								<div class="font-bold">Loading...</div>
 							{:then users}
 								{@const user = users[0]}
-								<PlayerCircle player={{ id: 999, username: user.username, avatar: user.avatar }} class="size-10" />
-								<div class="line-clamp-1 font-bold" title={user.username}>{user.username}</div>
+								<a class="contents" href={`/user/${user.username}`}>
+									<Avatar {user} class="size-10" />
+									<div class="line-clamp-1 font-bold" title={user.username}>{user.username}</div>
+								</a>
 							{/await}
 						</div>
 						<div class="flex flex-wrap items-center justify-center gap-2">
 							<div class="flex items-center justify-center gap-2">
-								<div class="flex min-w-[6rem] flex-col items-center overflow-hidden">
-									<span class="font-bold">Language</span>
-									<span class="text-sm">{player.language}</span>
-								</div>
-								<div class="flex min-w-[6rem] flex-col items-center overflow-hidden">
-									<span class="font-bold">Tests</span>
-									<span class="text-sm">{player.tests_passed} / 6</span>
-								</div>
-								<div class="flex min-w-[6rem] flex-col items-center overflow-hidden">
-									<span class="font-bold">Time</span>
-									<span class="text-sm">{calcTime(lobby.created_at, player.submitted_at)}</span>
-								</div>
+								{@render stats('Language', player.language)}
+								{@render stats('Tests', `${player.tests_passed} / 6`)}
+								{@render stats('Time', calcTime(lobby.created_at, player.submitted_at))}
 							</div>
+
 							<Button
 								text="Share Code"
 								variant="accent"

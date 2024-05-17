@@ -47,21 +47,22 @@ export class LobbyService {
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					this.customEventListeners[packet.type]?.(packet as any);
 					if (packet.type === 'lobby') {
-						resolve();
+						return resolve();
 					}
 				});
 				this.connection!.addEventListener('error', (event) => {
 					console.error('WebSocket error', event);
-					reject(event);
+					return reject(event);
 				});
 			});
 			this.connection!.addEventListener('close', async (event) => {
 				if (event.code === 4401) {
+					console.log('Reconnecting...');
 					await backend.auth.refresh();
-					if (backend.auth.isLoggedIn()) this.start();
+					if (backend.auth.isLoggedIn()) return resolve(await this.start());
 				}
 
-				reject(event);
+				return reject(event);
 			});
 		});
 	}
@@ -97,10 +98,17 @@ export class LobbyService {
 	}
 
 	getLobby() {
-		if (!this.lobby) {
-			throw new Error('Lobby not available, call start() first.');
-		}
+		if (!this.lobby) throw new Error('Lobby not available, call start() first.');
 		return this.lobby!;
+	}
+
+	getUsersList() {
+		return Object.values(this.getLobby().users);
+	}
+
+	getGameDurationInMinutes() {
+		const lobby = this.getLobby();
+		return lobby.settings.gameDuration / 60000000000;
 	}
 
 	async waitPacket<PacketType extends keyof PacketInFromType>(type: PacketType): Promise<PacketInFromType[PacketType]> {
@@ -134,10 +142,8 @@ export class LobbyService {
 		},
 		usersUpdate: (packet) => {
 			this.getLobby().users = packet.users;
-			// TODO check with typescript
-			if (this.getLobby().state.type === 'preLobby') {
-				this.getLobby().state = { type: 'preLobby', ready: packet.readyUsers };
-			}
+			const state = this.getLobby().state;
+			if (state.type === 'preLobby') state.ready = packet.readyUsers;
 		},
 		lobbyDelete: (packet) => {
 			if (packet.deleted) {
