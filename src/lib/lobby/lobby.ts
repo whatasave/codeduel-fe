@@ -11,15 +11,15 @@ export class LobbyService {
 	customEventListeners: Partial<PacketHandlerFromType> = {};
 
 	static async create() {
-		const service = new LobbyService('create');
-		await service.start();
-		return service;
+		currentLobby = new LobbyService('create');
+		await currentLobby.start();
+		return currentLobby;
 	}
 
 	static async join(lobbyId: string) {
-		const service = new LobbyService(`join/${lobbyId}`);
-		await service.start();
-		return service;
+		currentLobby = new LobbyService(`join/${lobbyId}`);
+		await currentLobby.start();
+		return currentLobby;
 	}
 
 	static async connect(lobbyId: string) {
