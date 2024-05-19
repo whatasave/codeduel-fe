@@ -8,11 +8,11 @@
 		class?: string;
 	}
 
-	let { value = $bindable(false), name = '', class: customClass, ...props }: $Props = $props();
+	let { value = $bindable(false), name = '', onchange, class: customClass, ...props }: $Props = $props();
 </script>
 
 <label class={clsx('flex cursor-pointer items-center gap-2')}>
-	<input type="checkbox" class="hidden" {...props} bind:checked={value} />
+	<input type="checkbox" class="hidden" {...props} bind:checked={value} {onchange} />
 	<span
 		class={clsx('rounded p-1 px-4 font-mono text-xs font-bold uppercase', customClass, {
 			'bg-[#82d332] text-[#020a0f]': value,

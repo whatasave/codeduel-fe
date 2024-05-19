@@ -49,11 +49,13 @@
 
 <style lang="postcss">
 	select {
-		@apply rounded-sm bg-white/5 px-2 py-1 text-white;
+		@apply rounded-sm bg-white/5 px-2 py-1 text-inherit;
+		@apply cursor-pointer;
 	}
 
 	select option {
 		@apply appearance-none border-none outline-none;
-		@apply rounded-sm bg-white/5 px-2 py-1 text-black;
+		@apply rounded-sm bg-black/90 px-10 py-4 text-inherit;
+		@apply cursor-pointer;
 	}
 </style>
