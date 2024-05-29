@@ -2,7 +2,7 @@
 	import { goto, replaceState } from '$app/navigation';
 	import Avatar from '$components/match/Avatar.svelte';
 	import Button from '$components/button/Button.svelte';
-	import type { User, UserId } from '$lib/types';
+	import type { Language, User, UserId } from '$lib/types';
 	import { Broom, Play } from '$components/icons';
 	import ButtonIcon from '$components/button/ButtonIcon.svelte';
 	import Input from '$components/input/Input.svelte';
@@ -19,10 +19,37 @@
 	let users: User[] = $state(data.lobby.getUsersList());
 	const isOwner = (userId: UserId) => lobby.owner.id == userId;
 	const isSelf = (userId: UserId) => data.user?.id == userId;
+	let settings = $state({
+		allowedLanguages: lobby.settings.allowedLanguages,
+		maxPlayers: lobby.settings.maxPlayers,
+		gameDuration: data.lobby.getGameDurationInMinutes(),
+		mode: 0
+	});
+
+	$effect(() => {
+		settings = {
+			...settings
+		};
+		onSettingsChange();
+	});
 
 	const allowedLanguages = $derived(
 		lobby.settings.allowedLanguages.map((lang) => ({ name: toHumanString(lang), value: lang }))
 	);
+
+	function onLangUpdate(lang: { name: string; value: Language }) {
+		const index = settings.allowedLanguages.indexOf(lang.value);
+		if (index == -1) settings.allowedLanguages.push(lang.value);
+		else settings.allowedLanguages.splice(index, 1);
+	}
+
+	function onLeave() {
+		// data.lobby.sendPacket({ type: 'leave', leave: true });
+	}
+
+	function onSettingsChange() {
+		console.log('settings changed');
+	}
 
 	function onReady() {
 		data.lobby.sendPacket({ type: 'ready', ready: true });
@@ -118,13 +145,13 @@
 				<Button text="Delete" variant="primary" onclick={onDelete} />
 			</div>
 		{:else}
-			<!-- <div class="flex flex-wrap justify-center gap-2 bg-white/5 p-2">
+			<div class="flex flex-wrap justify-center gap-2 bg-white/5 p-2">
 				{#if users.length > 1}
 					<Button text="Ready" variant="accent" onclick={onReady} />
 				{/if}
 
-				<Button text="Leave" variant="danger" />
-			</div> -->
+				<Button text="Leave" variant="danger" onclick={onLeave} />
+			</div>
 		{/if}
 
 		<!-- LOBBY SETTINGS -->
@@ -134,20 +161,14 @@
 					<label class="text-nowrap font-semibold" for="lang">Allowed Languages</label>
 					<div class="flex flex-wrap justify-stretch gap-2">
 						{#each allowedLanguages as lang}
-							<Checkbox name={lang.name} value={true} />
+							<Checkbox name={lang.name} value={true} onchange={() => onLangUpdate(lang)} />
 						{/each}
 					</div>
 				</div>
 				<div class="flex flex-wrap gap-4 gap-x-2">
 					<div class="flex flex-1 flex-col gap-1">
 						<label class="text-nowrap font-semibold" for="maxPlayers">Max Players</label>
-						<Input
-							type="number"
-							name="maxPlayers"
-							id="maxPlayers"
-							class="w-full"
-							bind:value={lobby.settings.maxPlayers}
-						/>
+						<Input type="number" name="maxPlayers" id="maxPlayers" class="w-full" bind:value={settings.maxPlayers} />
 					</div>
 					<div class="flex flex-1 flex-col gap-1">
 						<label class="text-nowrap font-semibold" for="gameDuration">
@@ -155,9 +176,8 @@
 						</label>
 						<Input
 							type="number"
-							disabled
 							name="gameDuration"
-							value={data.lobby.getGameDurationInMinutes()}
+							bind:value={settings.gameDuration}
 							id="gameDuration"
 							class="w-full"
 						/>
@@ -167,7 +187,7 @@
 					<label class="text-nowrap font-semibold" for="mode">Mode</label>
 					<Select
 						class="w-full"
-						selectedIndex={0}
+						bind:selectedIndex={settings.mode}
 						mapToString={(language) => language.name}
 						options={[
 							{ name: 'Random', value: 'normal' },
@@ -177,6 +197,19 @@
 					/>
 				</div>
 			</div>
+			<!-- <div class="flex gap-2 rounded-b bg-white/5 p-2">
+				<Select
+					class="flex-1"
+					bind:selectedIndex={settings.mode}
+					mapToString={(language) => language.name}
+					options={[
+						{ name: 'Current', value: 'time' },
+						{ name: 'OOP Game', value: 'normal' },
+						{ name: 'Only for chads', value: 'shortest' }
+					]}
+				/>
+				<Button text="Save preset" variant="accent" />
+			</div> -->
 		{:else}
 			<div class="flex flex-col gap-4 rounded-b bg-white/5 p-2">
 				<div class="flex flex-col gap-1">

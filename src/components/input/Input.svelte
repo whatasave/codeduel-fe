@@ -22,4 +22,4 @@
 	let { variant = 'primary', value = $bindable(), class: customClass, ...props }: $Props = $props();
 </script>
 
-<input {value} {...props} class={classes({ variant, className: customClass })} />
+<input bind:value {...props} class={classes({ variant, className: customClass })} />
