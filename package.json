@@ -11,7 +11,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"openapi:gen": "openapi-typescript http://localhost:5000/docs/doc.json -o ./.svelte-kit/schema.d.ts",
+		"openapi:gen": "openapi-typescript http://127.0.0.1:5000/swagger/v1/swagger.json -o ./src/api.d.ts",
 		"docker:build": "docker build -t xedom/codeduel-fe .",
 		"docker:push": "docker push xedom/codeduel-fe",
 		"docker:up": "docker run -p 8000:80 xedom/codeduel-fe",
