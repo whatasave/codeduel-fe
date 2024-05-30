@@ -90,12 +90,12 @@ type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
 type EmptyObject = { [K in never]: never };
 type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never;
 
-type Fetch = typeof fetch;
-const defaultFetch = fetch;
+export type Fetch = typeof fetch;
 
 export class Fetcher<BaseUrl extends string = string> {
     private baseUrl: BaseUrl | undefined;
     private maxCallAttempts: number;
+    private defaultFetch: Fetch = fetch;
 
     constructor({ maxCallAttempts = 3, baseUrl }: { maxCallAttempts?: number; baseUrl?: BaseUrl }) {
         this.baseUrl = baseUrl;
@@ -105,7 +105,7 @@ export class Fetcher<BaseUrl extends string = string> {
     async fetch<Path extends MethodPath>(
         path: Path,
 		options: FetchOptions<Path>,
-		fetch: Fetch = defaultFetch,
+		fetch?: Fetch,
 		limit = this.maxCallAttempts
 	): Promise<Response<Path, StatusCodeSuccess, 'application/json'>> {
 		if (limit === 0) throw new Error('Max call limit reached');
@@ -117,7 +117,7 @@ export class Fetcher<BaseUrl extends string = string> {
         let url = new URL(urlPath, this.baseUrl).toString();
         if (query) url += '?' + new URLSearchParams(Object.entries(query).map(([k, v]) => [k, JSON.stringify(v)]) );
 		const headers = {};
-		const result = await fetch(url, {
+		const result = await (fetch ?? this.defaultFetch)(url, {
             mode: 'cors',
 			credentials: 'include',
 			method,
@@ -145,7 +145,7 @@ export class Fetcher<BaseUrl extends string = string> {
 		return null;
 	}
 
-	async refresh(fetch: Fetch = defaultFetch) {
+	async refresh(fetch?: Fetch) {
         return await this.fetch('GET /v1/auth/refresh', {}, fetch)
     }
 

@@ -24,22 +24,22 @@
 
 <div class="flex flex-1 flex-col overflow-y-auto">
 	<ProfileBackground
-		image={data.user?.background_img || '/img/profile-bg.jpg'}
-		links={[{ icon: Github, name: 'Github', url: `https://github.com/${data.user?.username}` }]}
+		image={data.user.backgroundImage ?? '/img/profile-bg.jpg'}
+		links={[{ icon: Github, name: 'Github', url: `https://github.com/${data.user.username}` }]}
 	/>
 
 	<div class="mx-auto -mt-12 flex w-full max-w-[1000px] flex-col gap-1 px-8">
 		<Avatar
 			class="size-24  border-8 border-[#010f20]"
-			user={{ username: data.user?.username || '', avatar: data.user?.avatar || '' }}
+			user={{ username: data.user.username, avatar: data.user.avatar || '' }}
 		/>
 		<div class="flex flex-wrap gap-8">
 			<div class="flex w-full min-w-[326px] flex-1 shrink-0 grow flex-col gap-2">
 				<div>
 					<div class="text-xl font-bold">{data.user?.name}</div>
-					<ProfileTag tag={data.user?.username || ''} />
+					<ProfileTag tag={data.user.username} />
 				</div>
-				<div class="text-sm">{data.user?.bio}</div>
+				<div class="text-sm">{data.user.biography}</div>
 				<!-- USER STATISTICS -->
 				<!-- <div class="flex flex-wrap justify-center gap-2">
 					{#each data.user?.stats || [] as stat}
@@ -48,7 +48,7 @@
 				</div> -->
 				<div>
 					<span class="font-semibold">Member since</span>
-					<span>{dayjs(data.user?.created_at).format('DD.MM.YY HH:mm:ss')}</span>
+					<span>{dayjs(data.user.createdAt).format('DD.MM.YY HH:mm:ss')}</span>
 				</div>
 			</div>
 			<div class="flex flex-1 flex-col gap-2">

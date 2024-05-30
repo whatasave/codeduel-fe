@@ -10,16 +10,18 @@ export interface paths {
       responses: {
         /** @description OK */
         200: {
-          content: never;
+          content: {
+            "application/json": components["schemas"]["HealthCheck"];
+          };
         };
       };
     };
   };
-  "/v1/user/{id}": {
+  "/v1/user/{username}": {
     get: {
       parameters: {
         path: {
-          id: number;
+          username: string;
         };
       };
       responses: {
@@ -28,6 +30,10 @@ export interface paths {
           content: {
             "application/json": components["schemas"]["User"];
           };
+        };
+        /** @description Not Found */
+        404: {
+          content: never;
         };
       };
     };
@@ -223,11 +229,16 @@ export interface components {
       game: components["schemas"]["Game"];
       userData: components["schemas"]["UserData"][];
     };
+    HealthCheck: {
+      status: string;
+    };
     User: {
       /** Format: int32 */
       id: number;
       username: string;
       name: string;
+      /** Format: date-time */
+      createdAt: string;
       avatar: string | null;
       backgroundImage: string | null;
       biography: string | null;

@@ -1,10 +1,13 @@
 import backend from '$lib/backend.js';
+import { error } from '@sveltejs/kit';
 
 export async function load({ params, fetch }) {
 	const username = params.username;
+	const user = await backend.getUser(username, fetch);
+	if (!user) throw error(404, 'User not found');
 
 	return {
-		user: await backend.getUser(username, fetch),
+		user,
 		matches: backend.getUserMatches(username, fetch)
 	};
 }
