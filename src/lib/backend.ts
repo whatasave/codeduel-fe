@@ -10,15 +10,10 @@ class Backend {
 		this.fetcher = new Fetcher({ baseUrl });
 	}
 
-	async getProfile(fetch?: Fetch) {
-		// TODO
-		return undefined;
-	}
-
-	async getUser(username: string, fetch?: Fetch) {
+	async getUserByUsername(username: string, fetch?: Fetch) {
 		try {
-			return this.fetcher.fetch('GET /v1/user/{username}', {
-				params: { username }
+			return this.fetcher.fetch('GET /v1/user', {
+				query: { username }
 			}, fetch);
 		} catch (e) {
 			if (e instanceof HttpError && e.code === 404) return null;
@@ -26,10 +21,13 @@ class Backend {
 	}
 
 	async getUserById(id: number, fetch?: Fetch) {
-		// TODO
-		return this.fetcher.fetch('GET /v1/user/{username}', {
-			params: { username: id.toString() }
+		return this.fetcher.fetch('GET /v1/user/{id}', {
+			params: { id }
 		}, fetch);
+	}
+
+	async getProfile(fetch?: Fetch) {
+		return this.fetcher.fetch('GET /v1/user/profile', {}, fetch);
 	}
 
 	async getUsers(queries?: Record<string, unknown>, fetch?: Fetch) {

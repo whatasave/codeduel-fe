@@ -115,8 +115,10 @@ export class Fetcher<BaseUrl extends string = string> {
         const body = 'body' in options ? JSON.stringify(options.body) : undefined;
         const [method, urlPath] = this.parse(path, params);
         let url = new URL(urlPath, this.baseUrl).toString();
-        if (query) url += '?' + new URLSearchParams(Object.entries(query).map(([k, v]) => [k, JSON.stringify(v)]) );
-		const headers = {};
+        if (query) url += '?' + new URLSearchParams(Object.entries(query).map(([k, v]) => [k, typeof v === 'object' ? JSON.stringify(v) : String(v)]) );
+		const headers = {
+            'Content-Type': 'application/json'
+        };
 		const result = await (fetch ?? this.defaultFetch)(url, {
             mode: 'cors',
 			credentials: 'include',

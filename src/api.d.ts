@@ -17,10 +17,31 @@ export interface paths {
       };
     };
   };
-  "/v1/user/{username}": {
+  "/v1/user/{id}": {
     get: {
       parameters: {
         path: {
+          id: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": components["schemas"]["User"];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/v1/user": {
+    get: {
+      parameters: {
+        query: {
           username: string;
         };
       };
@@ -33,6 +54,22 @@ export interface paths {
         };
         /** @description Not Found */
         404: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/v1/user/profile": {
+    get: {
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": components["schemas"]["User"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
           content: never;
         };
       };
