@@ -1,4 +1,4 @@
-import { HttpError } from '$lib/result';
+import { HttpError } from '$lib/fetcher';
 
 export function handleError({ error }) {
 	const message = error instanceof Error ? error.message : 'An error occurred';
