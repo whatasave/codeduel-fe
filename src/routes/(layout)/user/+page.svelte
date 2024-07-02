@@ -4,9 +4,9 @@
 	import relativeTime from 'dayjs/plugin/relativeTime.js';
 	import Loading from '$components/icons/Loading.svelte';
 	import type { PageData } from './$types';
+	dayjs.extend(relativeTime);
 
 	const { data }: { data: PageData } = $props();
-	dayjs.extend(relativeTime);
 </script>
 
 <div class="m-auto flex w-full max-w-[1200px] flex-col gap-2 overflow-y-auto">
@@ -28,7 +28,7 @@
 						username={user.username}
 						wins={12}
 						lang={'C#'}
-						since={dayjs().to(dayjs(user.created_at))}
+						since={dayjs().to(dayjs(user.createdAt))}
 					/>
 				</article>
 			{/each}

@@ -1,152 +1,114 @@
+import { browser } from '$app/environment';
 import { PUBLIC_BACKEND_URL, PUBLIC_LOBBY_API } from '$env/static/public';
-import { Fetcher, type Fetch } from './fetcher';
-import { HttpError } from './result';
+import { Fetcher, HttpError, type Fetch, type FetchOptions, type FetchResponse, type MethodPath } from './fetcher';
 import type { SimpleLobby } from './types';
+
+enum StatusCode {
+	OK = 200,
+	NoContent = 204,
+	BadRequest = 400,
+	Unauthorized = 401,
+	Forbidden = 403,
+	NotFound = 404,
+	InternalServerError = 500
+}
 
 class Backend {
 	private fetcher: Fetcher
 
-	constructor(baseUrl: string) {
-		this.fetcher = new Fetcher({ baseUrl });
+	constructor(origin: string) {
+		this.fetcher = new Fetcher({ origin });
 	}
+
+	isLoggedIn() {
+		return browserGetCookie('logged_in') === 'true';
+	}
+
+	private async fetch<Path extends MethodPath>(
+        path: Path,
+		options: FetchOptions<Path>,
+		fetch?: Fetch
+	): Promise<FetchResponse<Path>> {
+		try {
+			return await this.fetcher.fetch(path, options, fetch);
+		} catch (e) {
+			if (e instanceof HttpError && e.code === StatusCode.Unauthorized && this.isLoggedIn()) {
+				console.log('Unauthorized, refreshing token');
+				await this.refresh(fetch);
+				return await this.fetcher.fetch(path, options, fetch);
+			}
+			throw e;
+		}
+	}
+
+	private async refresh(fetch?: Fetch) {
+        return await this.fetcher.fetch('GET /v1/auth/refresh', {}, fetch)
+    }
 
 	async getUserByUsername(username: string, fetch?: Fetch) {
 		try {
-			return this.fetcher.fetch('GET /v1/user', {
-				query: { username }
-			}, fetch);
+			return this.fetch('GET /v1/user', { query: { username } }, fetch);
 		} catch (e) {
 			if (e instanceof HttpError && e.code === 404) return null;
 		}
 	}
 
 	async getUserById(id: number, fetch?: Fetch) {
-		return this.fetcher.fetch('GET /v1/user/{id}', {
+		return this.fetch('GET /v1/user/{id}', {
 			params: { id }
 		}, fetch);
 	}
 
 	async getProfile(fetch?: Fetch) {
-		return this.fetcher.fetch('GET /v1/user/profile', {}, fetch);
+		try {
+			return this.fetch('GET /v1/user/profile', {}, fetch);
+		} catch (e) {
+			if (e instanceof HttpError && e.code === StatusCode.Unauthorized) return null;
+			throw e;
+		}
 	}
 
-	async getUsers(queries?: Record<string, unknown>, fetch?: Fetch) {
-		// return this.get<
-		// 	{
-		// 		name: string;
-		// 		username: string;
-		// 		avatar: string;
-		// 		background_img: string;
-		// 		bio: string;
-		// 		created_at: string;
-		// 	}[]
-		// >(`v1/user`, { ...queries }, fetch);
+	async getUserList(fetch?: Fetch) {
+		return this.fetch('GET /v1/user/list', {}, fetch);
 	}
 
 	async getChallenge(id: number, fetch?: Fetch) {
-		// return this.get<{
-		// 	id: number;
-		// 	owner_id: number;
-		// 	title: string;
-		// 	description: string;
-		// 	content: string;
-		// 	created_at: string;
-		// 	updated_at: string;
-		// }>(`v1/challenge/${id}`, {}, fetch);
+		return this.fetch('GET /v1/challenge/{id}', { params: { id } }, fetch);
 	}
 
 	async getChallenges(fetch?: Fetch) {
-		// return this.get<
-		// 	{
-		// 		id: number;
-		// 		owner_id: number;
-		// 		title: string;
-		// 		description: string;
-		// 		content: string;
-		// 		created_at: string;
-		// 		updated_at: string;
-		// 	}[]
-		// >(`v1/challenge`, {}, fetch);
+		return this.fetch('GET /v1/challenge', {}, fetch);
 	}
 
 	async getResults(lobbyId: string, fetch?: Fetch) {
-		// return this.get<{
-		// 	lobby: {
-		// 		id: number;
-		// 		uuid: string;
-		// 		challenge_id: number;
-		// 		owner_id: number;
-		// 		users_id: null;
-		// 		status: string;
-		// 		max_players: number;
-		// 		game_duration: number;
-		// 		allowed_languages: string[];
-		// 		created_at: string;
-		// 		updated_at: string;
-		// 	};
-		// 	results: {
-		// 		id: number;
-		// 		lobby_id: number;
-		// 		user_id: number;
-		// 		code: string;
-		// 		language: string;
-		// 		tests_passed: number;
-		// 		show_code: boolean;
-		// 		submitted_at: string;
-		// 		created_at: string;
-		// 		updated_at: string;
-		// 	}[];
-		// }>(`v1/lobby/results/${lobbyId}`, {}, fetch);
+		return this.fetch('GET /v1/game/{uniqueId}/results', { params: { uniqueId: lobbyId } }, fetch);
 	}
 
-	async getUserMatches(username: string, fetch?: Fetch) {
-		// return this.get<
-		// 	{
-		// 		match: {
-		// 			id: number;
-		// 			uuid: string;
-		// 			mode: string;
-		// 			max_players: number;
-		// 			duration: number;
-		// 			allowed_languages: string[];
-		// 			created_at: string;
-		// 		};
-		// 		challenge: {
-		// 			id: number;
-		// 			title: string;
-		// 			description: string;
-		// 			owner: {
-		// 				id: number;
-		// 				username: string;
-		// 				name: string;
-		// 				avatar: string;
-		// 			};
-		// 		};
-		// 		player: {
-		// 			id: number;
-		// 			username: string;
-		// 			name: string;
-		// 			avatar: string;
-		// 			code: string;
-		// 			language: string;
-		// 			tests_passed: number;
-		// 			show_code: false;
-		// 			submitted_at: string;
-		// 		};
-		// 	}[]
-		// >(`v1/lobby/user/${username}`, {}, fetch);
+	async getUserMatches(userId: number, fetch?: Fetch) {
+		return this.fetch('GET /v1/game/user/{userId}', { params: { userId } }, fetch);
 	}
 
 	async shareCode(lobbyUniqueId: string, fetch?: Fetch) {
-		// return this.patch(`v1/lobby/${lobbyUniqueId}/sharecode`, { share_code: true }, fetch);
+		const res = await (fetch ?? globalThis.fetch)(`v1/lobby/${lobbyUniqueId}/sharecode`, {
+			method: 'PATCH',
+			body: JSON.stringify({ share_code: true })
+		});
+		if (!res.ok) throw new HttpError(res.status, await res.text());
 	}
 
-	// TODO move
-	async getLobbies(): Promise<SimpleLobby[]> {
-		const res = await fetch(`${PUBLIC_LOBBY_API}/lobbies`);
+	async getLobbies(fetch?: Fetch): Promise<SimpleLobby[]> {
+		const res = await (fetch ?? globalThis.fetch)(`${PUBLIC_LOBBY_API}/lobbies`);
+		if (!res.ok) throw new HttpError(res.status, await res.text());
 		const json = (await res.json()) as SimpleLobby[];
 		return json;
 	}
+}
+
+function browserGetCookie(name: string): string | null {
+	if (!browser) return null;
+	const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+	if (match) return match[2];
+	return null;
 }
 
 export default new Backend(PUBLIC_BACKEND_URL);

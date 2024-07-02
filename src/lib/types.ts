@@ -46,16 +46,13 @@ export type UserStats = {
 };
 
 export type UserProfile = {
-	id: UserId;
-	name: string;
-	username: string;
-	email: string;
-	avatar: string;
-	background_img: string;
-	bio: string;
-	created_at: string;
-	updated_at: string;
-	stats: UserStats[];
+    id: number;
+    username: string;
+    name: string;
+    createdAt: string;
+    avatar: string | null;
+    backgroundImage: string | null;
+    biography: string | null;
 };
 
 export type UserId = number;

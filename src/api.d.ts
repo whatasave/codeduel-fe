@@ -75,10 +75,49 @@ export interface paths {
       };
     };
   };
-  "/v1/lobby/{id}": {
+  "/v1/user/list": {
+    get: {
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": components["schemas"]["UserListItem"][];
+          };
+        };
+      };
+    };
+  };
+  "/v1/game": {
+    get: {
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": components["schemas"]["GameWithUsersData"][];
+          };
+        };
+      };
+    };
+    post: {
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateGame"];
+        };
+      };
+      responses: {
+        /** @description Created */
+        201: {
+          content: {
+            "application/json": components["schemas"]["Game"];
+          };
+        };
+      };
+    };
+  };
+  "/v1/game/{uniqueId}": {
     get: {
       parameters: {
-        query: {
+        path: {
           uniqueId: string;
         };
       };
@@ -88,6 +127,94 @@ export interface paths {
           content: {
             "application/json": components["schemas"]["GameWithUsersData"];
           };
+        };
+      };
+    };
+  };
+  "/v1/game/{uniqueId}/submit": {
+    patch: {
+      parameters: {
+        path: {
+          uniqueId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["UpdateSubmission"];
+        };
+      };
+      responses: {
+        /** @description No Content */
+        204: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/v1/game/{uniqueId}/endgame": {
+    patch: {
+      parameters: {
+        path: {
+          uniqueId: string;
+        };
+      };
+      responses: {
+        /** @description No Content */
+        204: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/v1/game/{uniqueId}/results": {
+    get: {
+      parameters: {
+        path: {
+          uniqueId: string;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": components["schemas"]["GameWithUsersData"];
+          };
+        };
+      };
+    };
+  };
+  "/v1/game/user/{userId}": {
+    get: {
+      parameters: {
+        path: {
+          userId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "application/json": components["schemas"]["GameWithUserData"][];
+          };
+        };
+      };
+    };
+  };
+  "/v1/game/sharecode": {
+    patch: {
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["ShareCodeRequest"];
+        };
+      };
+      responses: {
+        /** @description No Content */
+        204: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
         };
       };
     };
@@ -115,6 +242,10 @@ export interface paths {
           content: {
             "application/json": components["schemas"]["Challenge"];
           };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
         };
       };
     };
@@ -153,6 +284,14 @@ export interface paths {
             "application/json": components["schemas"]["Challenge"];
           };
         };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+        /** @description Not Found */
+        404: {
+          content: never;
+        };
       };
     };
     delete: {
@@ -162,8 +301,16 @@ export interface paths {
         };
       };
       responses: {
-        /** @description OK */
-        200: {
+        /** @description No Content */
+        204: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+        /** @description Not Found */
+        404: {
           content: never;
         };
       };
@@ -240,11 +387,29 @@ export interface components {
       title: string;
       description: string;
       content: string;
+      /** Format: date-time */
+      createdAt: string;
     };
     CreateChallenge: {
       title: string;
       description: string;
       content: string;
+    };
+    CreateGame: {
+      uniqueId: string;
+      /** Format: int32 */
+      challengeId: number;
+      /** Format: int32 */
+      ownerId: number;
+      ended: boolean;
+      /** Format: int32 */
+      modeId: number;
+      /** Format: int32 */
+      maxPlayers: number;
+      /** Format: int32 */
+      gameDuration: number;
+      allowedLanguages: string[];
+      users: number[];
     };
     Game: {
       /** Format: int32 */
@@ -262,12 +427,33 @@ export interface components {
       gameDuration: number;
       allowedLanguages: string[];
     };
+    GameWithUserData: {
+      game: components["schemas"]["Game"];
+      userData: components["schemas"]["UserData"];
+    };
     GameWithUsersData: {
       game: components["schemas"]["Game"];
       userData: components["schemas"]["UserData"][];
     };
     HealthCheck: {
       status: string;
+    };
+    ShareCodeRequest: {
+      /** Format: int32 */
+      lobbyId: number;
+      showCode: boolean;
+    };
+    UpdateSubmission: {
+      /** Format: int32 */
+      userId: number;
+      /** Format: int32 */
+      lobbyId: number;
+      code: string;
+      language: string;
+      /** Format: int32 */
+      testsPassed: number;
+      /** Format: date-time */
+      submittedAt: string;
     };
     User: {
       /** Format: int32 */
@@ -298,7 +484,9 @@ export interface components {
       /** Format: int32 */
       id: number;
       username: string;
-      name: string | null;
+      name: string;
+      /** Format: date-time */
+      createdAt: string;
       avatar: string | null;
     };
   };

@@ -1,6 +1,4 @@
-import { browser } from "$app/environment";
 import type { paths } from "../api";
-import { HttpError, StatusCode } from "./result";
 
 type Path = keyof paths;
 type HttpMethod<P extends Path = Path> = P extends Path ? Uppercase<keyof paths[P] & string> : never;
@@ -24,7 +22,7 @@ type PathWithMethod<Method extends HttpMethod = HttpMethod> = {
     [E in Path]: Lowercase<Method> extends keyof paths[E] ? E : never
 }[Path];
 
-type MethodPath<
+export type MethodPath<
     Method extends HttpMethod = HttpMethod
 > = Method extends HttpMethod ? `${Method} ${PathWithMethod<Method>}` : never;
 
@@ -80,7 +78,7 @@ type Response<Path extends MethodPath, StatusCode extends number, Type extends C
             never :
         never;
 
-type FetchOptions<Path extends MethodPath> = Expand<
+export type FetchOptions<Path extends MethodPath> = Expand<
     (Parameters<Path> extends never ? EmptyObject : { params: Parameters<Path> }) &
     (Query<Path> extends never ? EmptyObject : { query: Query<Path> }) &
     (Body<Path, 'application/json'> extends never ? EmptyObject : { body: Body<Path, 'application/json'> })
@@ -91,69 +89,40 @@ type EmptyObject = { [K in never]: never };
 type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never;
 
 export type Fetch = typeof fetch;
+export type FetchResponse<Path extends MethodPath> = Response<Path, StatusCodeSuccess, 'application/json'>;
 
-export class Fetcher<BaseUrl extends string = string> {
-    private baseUrl: BaseUrl | undefined;
-    private maxCallAttempts: number;
-    private defaultFetch: Fetch = fetch;
+export class Fetcher {
+    private origin: string | undefined;
 
-    constructor({ maxCallAttempts = 3, baseUrl }: { maxCallAttempts?: number; baseUrl?: BaseUrl }) {
-        this.baseUrl = baseUrl;
-        this.maxCallAttempts = maxCallAttempts;
+    constructor({ origin }: { origin: string }) {
+        this.origin = origin;
     }
 
     async fetch<Path extends MethodPath>(
         path: Path,
 		options: FetchOptions<Path>,
-		fetch?: Fetch,
-		limit = this.maxCallAttempts
-	): Promise<Response<Path, StatusCodeSuccess, 'application/json'>> {
-		if (limit === 0) throw new Error('Max call limit reached');
-
+		fetch?: Fetch
+	): Promise<FetchResponse<Path>> {
         const params = 'params' in options ? options.params : {};
         const query = 'query' in options ? options.query : undefined;
         const body = 'body' in options ? JSON.stringify(options.body) : undefined;
         const [method, urlPath] = this.parse(path, params);
-        let url = new URL(urlPath, this.baseUrl).toString();
+        let url = new URL(urlPath, this.origin).toString();
         if (query) url += '?' + new URLSearchParams(Object.entries(query).map(([k, v]) => [k, typeof v === 'object' ? JSON.stringify(v) : String(v)]) );
 		const headers = {
             'Content-Type': 'application/json'
         };
-		const result = await (fetch ?? this.defaultFetch)(url, {
+		const result = await (fetch ?? globalThis.fetch)(url, {
             mode: 'cors',
 			credentials: 'include',
 			method,
 			headers,
 			body
 		});
-
-		if (result.status === StatusCode.Unauthorized && this.isLoggedIn()) {
-			console.log('Unauthorized, refreshing token');
-			await this.refresh();
-			return await this.fetch(path, options, fetch, limit - 1);
-		} else if (!result.ok) {
-			throw new HttpError(result.status, await result.text());
-		} else if (result.status === StatusCode.NoContent) {
-			return undefined as Response<Path, StatusCodeSuccess, 'application/json'>;
-		}
-
+		if (!result.ok) throw new HttpError(result.status, await result.text());
+        if (result.status === 204) return undefined as Response<Path, StatusCodeSuccess, 'application/json'>;
 		return await result.json()
 	}
-
-    private getCookie(name: string): string | null {
-		if (!browser) return null;
-		const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-		if (match) return match[2];
-		return null;
-	}
-
-	async refresh(fetch?: Fetch) {
-        return await this.fetch('GET /v1/auth/refresh', {}, fetch)
-    }
-
-	isLoggedIn() {
-        return this.getCookie('logged_in') === 'true'
-    }
 
     private parse<Path extends MethodPath>(path: Path, params: Record<string, unknown>) {
         const [method, urlPath] = path.split(' ', 2);
@@ -162,8 +131,17 @@ export class Fetcher<BaseUrl extends string = string> {
 
     private parsePath(path: string, params: Record<string, unknown>): string {
         return path.replace(/\{([^}]+)\}/g, (_, key) => {
-            if (key in params) return String(params[key]);
+            if (key in params) return encodeURIComponent(String(params[key]));
             throw new Error(`Missing parameter ${key} in path ${path}`);
         });
     }
+}
+
+export class HttpError extends Error {
+	code: number;
+
+	constructor(code: number, message?: string) {
+		super(message ?? `Received error code ${code}`);
+		this.code = code;
+	}
 }

@@ -1,7 +1,12 @@
 <script lang="ts">
 	import '../app.postcss';
+	import backend from '$lib/backend';
+	import { setUser } from './context';
 
 	const { children } = $props();
+
+	const user = $state(backend.getProfile());
+	setUser(user);
 </script>
 
 <svelte:head>

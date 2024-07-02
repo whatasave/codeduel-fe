@@ -9,7 +9,7 @@
 		wins: number;
 		lang: string;
 		since: string;
-		avatar: string;
+		avatar: string | null;
 	}
 
 	let { name, username, wins, lang, since, avatar }: $Props = $props();

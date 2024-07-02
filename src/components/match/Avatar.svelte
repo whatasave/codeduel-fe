@@ -18,7 +18,7 @@
 	});
 
 	interface $Props extends VariantProps<typeof classes> {
-		user: { avatar: string; username: string };
+		user: { avatar: string | null; username: string };
 		class?: string;
 		badge?: ComponentType<SvelteComponent>;
 		badgeClass?: string;
@@ -26,7 +26,7 @@
 	}
 
 	let { user, badge, badgeClass, variant, status, class: className }: $Props = $props();
-	let showImg = $state(true);
+	let showImg = $state(user.avatar !== null);
 </script>
 
 <div class={classes({ variant, status, className })}>
