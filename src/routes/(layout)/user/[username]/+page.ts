@@ -8,6 +8,6 @@ export async function load({ params, fetch }) {
 
 	return {
 		user,
-		matches: backend.getUserMatches(username, fetch)
+		matches: backend.getUserMatches(user.id, fetch)
 	};
 }
