@@ -2,14 +2,12 @@
 	import '../app.postcss';
 	import backend from '$lib/backend';
 	import { setUser } from './context';
-	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	const { children } = $props();
 
-	onMount(() => {
-		const user = $state(backend.getProfile());
-		setUser(user);
-	});
+	const user = $state(browser ? backend.getProfile() : new Promise<null>(() => {}));
+	setUser(user);
 </script>
 
 <svelte:head>

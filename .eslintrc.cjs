@@ -10,7 +10,7 @@ module.exports = {
 		["$$Generic"]: "readonly",
 	},
 	plugins: ['@typescript-eslint', '@typescript-eslint/eslint-plugin', 'unused-imports'],
-	ignorePatterns: ['*.cjs'],
+	ignorePatterns: ["/*", "!/src"],
 	overrides: [
 		{
 			files: ['*.svelte'],
