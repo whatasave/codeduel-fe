@@ -33,7 +33,6 @@ class Backend {
 			return await this.fetcher.fetch(path, options, fetch);
 		} catch (e) {
 			if (e instanceof HttpError && e.code === StatusCode.Unauthorized && this.isLoggedIn()) {
-				console.log('Unauthorized, refreshing token');
 				await this.refresh(fetch);
 				return await this.fetcher.fetch(path, options, fetch);
 			}
@@ -61,7 +60,7 @@ class Backend {
 
 	async getProfile(fetch?: Fetch) {
 		try {
-			return this.fetch('GET /v1/user/profile', {}, fetch);
+			return await this.fetch('GET /v1/user/profile', {}, fetch);
 		} catch (e) {
 			if (e instanceof HttpError && e.code === StatusCode.Unauthorized) return null;
 			throw e;

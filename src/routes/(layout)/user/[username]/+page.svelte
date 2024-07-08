@@ -60,26 +60,25 @@
 					<div class="h-16 w-full rounded bg-white/5"></div>
 					<div class="h-16 w-full rounded bg-white/5"></div>
 				{:then matches}
-					{#each matches as game}
-						{@const match = game.match}
+					{#each matches as match}
+						{@const game = match.game}
 						{@const challenge = game.challenge}
-						{@const player = game.player}
-
+						{@const player = match.userData}
 						<div class="flex w-full flex-col items-center justify-center gap-2 rounded bg-white/5 p-2">
 							<!-- MATCH -->
 							<a
 								class="flex w-full flex-col items-center justify-center rounded bg-white/5 p-2"
-								href={`/result/${match.uuid}`}
+								href={`/result/${game.uniqueId}`}
 							>
 								<div class="flex flex-col items-center pb-2">
 									<div class="text-xs text-[#8DD741]">match</div>
-									<div class="uppercase">{match.mode == '' ? 'unknown' : match.mode}</div>
-									<div class="text-xs">{match.created_at}</div>
+									<div class="uppercase">{game.mode.name}</div>
+									<div class="text-xs">{game.createdAt}</div>
 								</div>
 								<div class="flex gap-8">
-									<div class="text-xs">max duration: <br />{dayjs.duration(match.duration).format('HH:mm:ss')}</div>
-									<div class="text-xs">max players: <br />{match.max_players}</div>
-									<div class="text-xs">allowed languages: <br />{match.allowed_languages.join(' ')}</div>
+									<div class="text-xs">max duration: <br />{dayjs.duration(game.duration).format('HH:mm:ss')}</div>
+									<div class="text-xs">max players: <br />{game.maxPlayers}</div>
+									<div class="text-xs">allowed languages: <br />{game.allowedLanguages.join(' ')}</div>
 								</div>
 							</a>
 
@@ -96,14 +95,18 @@
 							<!-- CHALLENGE -->
 							<div class="flex w-full flex-col items-center justify-center rounded bg-white/5 p-2">
 								<div class="text-xs text-[#8DD741]">stats</div>
-								<div>{player.name}</div>
+								<div>{player.user.name}</div>
 								<div class="flex gap-8">
 									<div class="text-xs">language: <br />{player.language}</div>
-									<div class="text-xs">time: <br />{calcTime(match.created_at, player.submitted_at)}</div>
-									<div class="text-xs">tests: <br />{player.tests_passed} / 6</div>
+									<div class="text-xs">
+										time: <br />{player.submittedAt ? calcTime(game.createdAt, player.submittedAt) : 'N/A'}
+									</div>
+									<div class="text-xs">tests: <br />{player.testsPassed} / {game.challenge.testCases}</div>
 								</div>
-								{#if player.show_code}
-									<a class="text-[#8DD741] underline" href={`/result/${match.uuid}/player/${player.id}`}>show code</a>
+								{#if player.showCode}
+									<a class="text-[#8DD741] underline" href={`/result/${game.uniqueId}/player/${player.user.id}`}>
+										show code
+									</a>
 								{/if}
 							</div>
 						</div>

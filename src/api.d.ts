@@ -105,11 +105,13 @@ export interface paths {
         };
       };
       responses: {
-        /** @description Created */
-        201: {
-          content: {
-            "application/json": components["schemas"]["Game"];
-          };
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
         };
       };
     };
@@ -127,6 +129,10 @@ export interface paths {
           content: {
             "application/json": components["schemas"]["GameWithUsersData"];
           };
+        };
+        /** @description Not Found */
+        404: {
+          content: never;
         };
       };
     };
@@ -148,6 +154,10 @@ export interface paths {
         204: {
           content: never;
         };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
       };
     };
   };
@@ -161,6 +171,10 @@ export interface paths {
       responses: {
         /** @description No Content */
         204: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
           content: never;
         };
       };
@@ -179,6 +193,10 @@ export interface paths {
           content: {
             "application/json": components["schemas"]["GameWithUsersData"];
           };
+        };
+        /** @description Not Found */
+        404: {
+          content: never;
         };
       };
     };
@@ -264,6 +282,10 @@ export interface paths {
             "application/json": components["schemas"]["Challenge"];
           };
         };
+        /** @description Not Found */
+        404: {
+          content: never;
+        };
       };
     };
     put: {
@@ -278,11 +300,9 @@ export interface paths {
         };
       };
       responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["Challenge"];
-          };
+        /** @description No Content */
+        204: {
+          content: never;
         };
         /** @description Unauthorized */
         401: {
@@ -322,7 +342,7 @@ export interface paths {
         /** @description OK */
         200: {
           content: {
-            "application/json": components["schemas"]["Challenge"];
+            "application/json": components["schemas"]["ChallengeDetailed"];
           };
         };
       };
@@ -387,6 +407,20 @@ export interface components {
       title: string;
       description: string;
       content: string;
+      /** Format: int32 */
+      testCases: number;
+      /** Format: date-time */
+      createdAt: string;
+    };
+    ChallengeDetailed: {
+      /** Format: int32 */
+      id: number;
+      owner: components["schemas"]["UserListItem"];
+      title: string;
+      description: string;
+      content: string;
+      testCases: components["schemas"]["TestCase"][];
+      hiddenTestCases: components["schemas"]["TestCase"][];
       /** Format: date-time */
       createdAt: string;
     };
@@ -419,13 +453,14 @@ export interface components {
       /** Format: int32 */
       ownerId: number;
       ended: boolean;
-      /** Format: int32 */
-      modeId: number;
+      mode: components["schemas"]["Mode"];
       /** Format: int32 */
       maxPlayers: number;
       /** Format: int32 */
-      gameDuration: number;
+      duration: number;
       allowedLanguages: string[];
+      /** Format: date-time */
+      createdAt: string;
     };
     GameWithUserData: {
       game: components["schemas"]["Game"];
@@ -438,16 +473,26 @@ export interface components {
     HealthCheck: {
       status: string;
     };
+    Mode: {
+      /** Format: int32 */
+      id: number;
+      name: string;
+      description: string;
+    };
     ShareCodeRequest: {
       /** Format: int32 */
       lobbyId: number;
       showCode: boolean;
     };
+    TestCase: {
+      input: string;
+      output: string;
+    };
     UpdateSubmission: {
       /** Format: int32 */
       userId: number;
       /** Format: int32 */
-      lobbyId: number;
+      gameId: number;
       code: string;
       language: string;
       /** Format: int32 */
@@ -467,11 +512,7 @@ export interface components {
       biography: string | null;
     };
     UserData: {
-      /** Format: int32 */
-      userId: number;
-      username: string;
-      name: string;
-      avatar: string | null;
+      user: components["schemas"]["UserListItem"];
       code: string | null;
       language: string | null;
       /** Format: int32 */

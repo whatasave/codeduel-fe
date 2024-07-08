@@ -4,9 +4,10 @@
 	import Footer from '$components/footer/Footer.svelte';
 	import Navbar from '$components/navbar/Navbar.svelte';
 	import { get } from 'svelte/store';
-	import type { PageData } from './(layout)/$types';
+	import { browser } from '$app/environment';
+	import backend from '$lib/backend';
 
-	let { data }: { data: PageData } = $props();
+	const user = $state(browser ? backend.getProfile() : new Promise<null>(() => {}));
 
 	const statusToEmoji = (status: number) => {
 		if (status === 400) return '🤔';
@@ -23,7 +24,7 @@
 </script>
 
 <div class="flex h-full min-h-0 flex-col p-2">
-	<Navbar user={data.user} />
+	<Navbar {user} />
 
 	<div class="h-full w-full py-2">
 		<div class="flex h-full flex-col items-center justify-center gap-8 rounded bg-white/5 text-white">
