@@ -11,26 +11,21 @@
 	import dayjs from 'dayjs';
 	import duration from 'dayjs/plugin/duration';
 	import Checkbox from '$components/checkbox/Checkbox.svelte';
+	import { getUser } from '../../../context.js';
+	dayjs.extend(duration);
+
+	const user = getUser();
+	const isOwner = (userId: UserId) => lobby.owner.id == userId;
 
 	const { data } = $props();
-	dayjs.extend(duration);
 
 	let lobby = data.lobby.getLobby();
 	let users: User[] = $state(data.lobby.getUsersList());
-	const isOwner = (userId: UserId) => lobby.owner.id == userId;
-	const isSelf = (userId: UserId) => data.user?.id == userId;
 	let settings = $state({
 		allowedLanguages: lobby.settings.allowedLanguages,
 		maxPlayers: lobby.settings.maxPlayers,
 		gameDuration: data.lobby.getGameDurationInMinutes(),
 		mode: 0
-	});
-
-	$effect(() => {
-		settings = {
-			...settings
-		};
-		onSettingsChange();
 	});
 
 	const allowedLanguages = $derived(
@@ -45,10 +40,6 @@
 
 	function onLeave() {
 		// data.lobby.sendPacket({ type: 'leave', leave: true });
-	}
-
-	function onSettingsChange() {
-		console.log('settings changed');
 	}
 
 	function onReady() {
@@ -104,26 +95,28 @@
 
 		<!-- PLAYER LIST -->
 		<div class="flex h-full flex-col gap-1 overflow-y-auto rounded-b max-[680px]:h-full">
-			{#each users as user}
+			{#each users as lobbyUser}
 				<!-- PLAYER ITEM -->
 				<div class="flex items-center gap-4 bg-white/5 p-2 last:rounded-b">
 					<!-- PLAYER IMAGE -->
-					<Avatar class="size-12" {user} />
+					<Avatar class="size-12" user={lobbyUser} />
 
 					<!-- PLAYER INFO -->
 					<div class="flex w-full min-w-[130px] flex-1 flex-col">
-						<p class="w-full min-w-[120px] truncate text-nowrap text-xl font-semibold">{user.username}</p>
-						<p class="text-sm">{isOwner(user.id) ? 'Owner' : 'Guest'}</p>
+						<p class="w-full min-w-[120px] truncate text-nowrap text-xl font-semibold">{lobbyUser.username}</p>
+						<p class="text-sm">{isOwner(lobbyUser.id) ? 'Owner' : 'Guest'}</p>
 					</div>
 
 					<!-- PLAYER ACTIONS -->
 					<div class="flex gap-4 pr-2">
-						{#if isOwner(data.user!.id) && !isSelf(user.id)}
-							<ButtonIcon icon={{ icon: Broom }} onclick={() => onKick(user.id)} />
-						{/if}
-						{#if isSelf(user.id) && !isOwner(user.id)}
-							<ButtonIcon icon={{ icon: Play }} onclick={onReady} />
-						{/if}
+						{#await user then user}
+							{#if isOwner(user!.id) && lobbyUser.id !== user!.id}
+								<ButtonIcon icon={{ icon: Broom }} onclick={() => onKick(user!.id)} />
+							{/if}
+							{#if lobbyUser.id === user!.id && !isOwner(user!.id)}
+								<ButtonIcon icon={{ icon: Play }} onclick={onReady} />
+							{/if}
+						{/await}
 					</div>
 				</div>
 			{/each}
@@ -138,109 +131,113 @@
 		</div>
 
 		<!-- LOBBY ACTIONS -->
-		{#if isOwner(data.user!.id)}
-			<div class="flex flex-wrap justify-center gap-2 bg-white/5 p-2">
-				<Button text="Start" variant="accent" onclick={onStart} />
-				<Button text="Lock" variant="primary" onclick={async () => await onLock(true)} />
-				<Button text="Delete" variant="primary" onclick={onDelete} />
-			</div>
-		{:else}
-			<div class="flex flex-wrap justify-center gap-2 bg-white/5 p-2">
-				{#if users.length > 1}
-					<Button text="Ready" variant="accent" onclick={onReady} />
-				{/if}
+		{#await user then user}
+			{#if isOwner(user!.id)}
+				<div class="flex flex-wrap justify-center gap-2 bg-white/5 p-2">
+					<Button text="Start" variant="accent" onclick={onStart} />
+					<Button text="Lock" variant="primary" onclick={async () => await onLock(true)} />
+					<Button text="Delete" variant="primary" onclick={onDelete} />
+				</div>
+			{:else}
+				<div class="flex flex-wrap justify-center gap-2 bg-white/5 p-2">
+					{#if users.length > 1}
+						<Button text="Ready" variant="accent" onclick={onReady} />
+					{/if}
 
-				<Button text="Leave" variant="danger" onclick={onLeave} />
-			</div>
-		{/if}
+					<Button text="Leave" variant="danger" onclick={onLeave} />
+				</div>
+			{/if}
 
-		<!-- LOBBY SETTINGS -->
-		{#if isOwner(data.user!.id)}
-			<div class="flex flex-col gap-4 rounded-b bg-white/5 p-2">
-				<div class="flex flex-col gap-1">
-					<label class="text-nowrap font-semibold" for="lang">Allowed Languages</label>
-					<div class="flex flex-wrap justify-stretch gap-2">
-						{#each allowedLanguages as lang}
-							<Checkbox name={lang.name} value={true} onchange={() => onLangUpdate(lang)} />
-						{/each}
-					</div>
-				</div>
-				<div class="flex flex-wrap gap-4 gap-x-2">
-					<div class="flex flex-1 flex-col gap-1">
-						<label class="text-nowrap font-semibold" for="maxPlayers">Max Players</label>
-						<Input type="number" name="maxPlayers" id="maxPlayers" class="w-full" bind:value={settings.maxPlayers} />
-					</div>
-					<div class="flex flex-1 flex-col gap-1">
-						<label class="text-nowrap font-semibold" for="gameDuration">
-							Game Duration <span class="text-sm text-white/60">(in minutes)</span>
-						</label>
-						<Input
-							type="number"
-							name="gameDuration"
-							bind:value={settings.gameDuration}
-							id="gameDuration"
-							class="w-full"
-						/>
-					</div>
-				</div>
-				<div class="flex flex-col gap-1">
-					<label class="text-nowrap font-semibold" for="mode">Mode</label>
-					<Select
-						class="w-full"
-						bind:selectedIndex={settings.mode}
-						mapToString={(language) => language.name}
-						options={[
-							{ name: 'Random', value: 'normal' },
-							{ name: 'Shortest', value: 'shortest' },
-							{ name: 'Time', value: 'time' }
-						]}
-					/>
-				</div>
-			</div>
-			<!-- <div class="flex gap-2 rounded-b bg-white/5 p-2">
-				<Select
-					class="flex-1"
-					bind:selectedIndex={settings.mode}
-					mapToString={(language) => language.name}
-					options={[
-						{ name: 'Current', value: 'time' },
-						{ name: 'OOP Game', value: 'normal' },
-						{ name: 'Only for chads', value: 'shortest' }
-					]}
-				/>
-				<Button text="Save preset" variant="accent" />
-			</div> -->
-		{:else}
-			<div class="flex flex-col gap-4 rounded-b bg-white/5 p-2">
-				<div class="flex flex-col gap-1">
-					<div class="font-semibold">Allowed Languages</div>
-					<div class="flex flex-wrap gap-2">
-						{#each allowedLanguages as lang}
-							<Checkbox disabled name={lang.name} value={true} />
-						{/each}
-					</div>
-				</div>
-				<div class="flex flex-col gap-1">
-					<div class="font-semibold">Max Players</div>
-					<div class="flex gap-2">
-						<div class="text-sm">
-							{Object.keys(lobby.users).length} / {lobby.settings.maxPlayers}
-						</div>
-					</div>
-				</div>
-				<div class="flex flex-col gap-1">
-					<div class="font-semibold">Game Duration</div>
-					<div class="flex gap-2">
-						<div class="text-sm">{data.lobby.getGameDurationInMinutes()} minutes</div>
-					</div>
-				</div>
-				<div class="flex flex-col gap-1">
-					<div class="font-semibold">Mode</div>
-					<div class="flex gap-2">
-						<div class="text-sm">Random</div>
-					</div>
-				</div>
-			</div>
-		{/if}
+			<!-- LOBBY SETTINGS -->
+			{#if isOwner(user!.id)}
+				{@render ownerSettings()}
+			{:else}
+				{@render userSettings()}
+			{/if}
+		{/await}
 	</div>
 </div>
+
+{#snippet ownerSettings()}
+	<div class="flex flex-col gap-4 rounded-b bg-white/5 p-2">
+		<div class="flex flex-col gap-1">
+			<label class="text-nowrap font-semibold" for="lang">Allowed Languages</label>
+			<div class="flex flex-wrap justify-stretch gap-2">
+				{#each allowedLanguages as lang}
+					<Checkbox name={lang.name} value={true} onchange={() => onLangUpdate(lang)} />
+				{/each}
+			</div>
+		</div>
+		<div class="flex flex-wrap gap-4 gap-x-2">
+			<div class="flex flex-1 flex-col gap-1">
+				<label class="text-nowrap font-semibold" for="maxPlayers">Max Players</label>
+				<Input type="number" name="maxPlayers" id="maxPlayers" class="w-full" bind:value={settings.maxPlayers} />
+			</div>
+			<div class="flex flex-1 flex-col gap-1">
+				<label class="text-nowrap font-semibold" for="gameDuration">
+					Game Duration <span class="text-sm text-white/60">(in minutes)</span>
+				</label>
+				<Input type="number" name="gameDuration" bind:value={settings.gameDuration} id="gameDuration" class="w-full" />
+			</div>
+		</div>
+		<div class="flex flex-col gap-1">
+			<label class="text-nowrap font-semibold" for="mode">Mode</label>
+			<Select
+				class="w-full"
+				bind:selectedIndex={settings.mode}
+				mapToString={(language) => language.name}
+				options={[
+					{ name: 'Random', value: 'normal' },
+					{ name: 'Shortest', value: 'shortest' },
+					{ name: 'Time', value: 'time' }
+				]}
+			/>
+		</div>
+	</div>
+	<!-- <div class="flex gap-2 rounded-b bg-white/5 p-2">
+	<Select
+		class="flex-1"
+		bind:selectedIndex={settings.mode}
+		mapToString={(language) => language.name}
+		options={[
+			{ name: 'Current', value: 'time' },
+			{ name: 'OOP Game', value: 'normal' },
+			{ name: 'Only for chads', value: 'shortest' }
+		]}
+	/>
+	<Button text="Save preset" variant="accent" />
+</div> -->
+{/snippet}
+
+{#snippet userSettings()}
+	<div class="flex flex-col gap-4 rounded-b bg-white/5 p-2">
+		<div class="flex flex-col gap-1">
+			<div class="font-semibold">Allowed Languages</div>
+			<div class="flex flex-wrap gap-2">
+				{#each allowedLanguages as lang}
+					<Checkbox disabled name={lang.name} value={true} />
+				{/each}
+			</div>
+		</div>
+		<div class="flex flex-col gap-1">
+			<div class="font-semibold">Max Players</div>
+			<div class="flex gap-2">
+				<div class="text-sm">
+					{Object.keys(lobby.users).length} / {lobby.settings.maxPlayers}
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-col gap-1">
+			<div class="font-semibold">Game Duration</div>
+			<div class="flex gap-2">
+				<div class="text-sm">{data.lobby.getGameDurationInMinutes()} minutes</div>
+			</div>
+		</div>
+		<div class="flex flex-col gap-1">
+			<div class="font-semibold">Mode</div>
+			<div class="flex gap-2">
+				<div class="text-sm">Random</div>
+			</div>
+		</div>
+	</div>
+{/snippet}

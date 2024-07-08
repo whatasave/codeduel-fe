@@ -8,7 +8,9 @@
 	import Button from '$components/button/Button.svelte';
 	import { slide } from 'svelte/transition';
 	import { codeToHtml } from 'shiki';
+	import { getUser } from '../../../context';
 
+	const user = getUser();
 	const { data }: { data: PageData } = $props();
 
 	let showingCode: number[] = $state([]);
@@ -43,17 +45,6 @@
 		await new Promise((r) => setTimeout(r, 3000));
 		backend.shareCode(lobbyUniqueId);
 	};
-
-	const isOwner = (
-		data: PageData,
-		player: ReturnType<typeof backend.getResults> extends Promise<infer U>
-			? U extends { results: Array<infer R> }
-				? R
-				: never
-			: never
-	) => {
-		return data.user && data.user.id === player.user_id;
-	};
 </script>
 
 <div class="py-8">
@@ -76,32 +67,26 @@
 		</div>
 		<div class="h-16 w-full rounded bg-white/5"></div>
 		<div class="h-16 w-full rounded bg-white/5"></div>
-	{:then res}
-		{@const lobby = res.lobby}
-		{@const results = res.results}
+	{:then results}
+		{@const game = results.game}
+		{@const userData = results.userData}
 		<div class="flex flex-col gap-4">
-			{#each results as player (player.user_id)}
-				{@const disableShowCode2 = player.show_code || !data.user || data.user.id !== player.user_id}
+			{#each userData as userData (userData.user.id)}
+				{@const disableShowCode2 = userData.showCode || !userData.user || userData.user.id !== userData.user.id}
 				<div class="flex flex-col gap-1">
 					<!-- rounded-t bg-white/5 p-4 -->
 					<div class="flex w-full flex-wrap justify-between gap-2 rounded-t bg-white/5 p-4">
 						<div class="flex min-w-[14rem] items-center gap-2">
-							{#await backend.getUserById(player.user_id)}
-								<Avatar user={{ username: 'username', avatar: '/logo/codeduel_logo_1.png' }} class="size-10" />
-								<div class="font-bold">Loading...</div>
-							{:then users}
-								{@const user = users[0]}
-								<a class="contents" href={`/user/${user.username}`}>
-									<Avatar {user} class="size-10" />
-									<div class="line-clamp-1 font-bold" title={user.username}>{user.username}</div>
-								</a>
-							{/await}
+							<a class="contents" href={`/user/${userData.user.username}`}>
+								<Avatar user={userData.user} class="size-10" />
+								<div class="line-clamp-1 font-bold" title={userData.user.username}>{userData.user.username}</div>
+							</a>
 						</div>
 						<div class="flex flex-wrap items-center justify-center gap-2">
 							<div class="flex items-center justify-center gap-2">
-								{@render stats('Language', player.language)}
-								{@render stats('Tests', `${player.tests_passed} / 6`)}
-								{@render stats('Time', calcTime(lobby.created_at, player.submitted_at))}
+								{@render stats('Language', userData.language)}
+								{@render stats('Tests', `${userData.testsPassed} / ${game.challenge.testCases}`)}
+								{@render stats('Time', userData.submittedAt ? calcTime(game.createdAt, userData.submittedAt) : 'N/A')}
 							</div>
 
 							<Button
@@ -112,28 +97,41 @@
 								disabled={disableShowCode || disableShowCode2}
 								onclick={async () => {
 									disableShowCode = true;
-									await shareCode(lobby.uuid);
+									await shareCode(game.uniqueId);
 								}}
 							/>
 						</div>
 					</div>
 
-					{#if showingCode.includes(player.user_id)}
+					{#if showingCode.includes(userData.user.id)}
 						<div transition:slide class="code w-full select-text bg-white/5 px-4 py-2">
-							{#await parseCode(player.code, player.language)}
-								<pre class="shiki monokai">{player.code}</pre>
-							{:then html}
-								{@html html}
-							{/await}
+							{#if !userData.code || userData.code.trim().length === 0}
+								<p class="text-center">No code submitted</p>
+							{:else}
+								{#await parseCode(userData.code, userData.language ?? 'plaintext')}
+									<pre class="shiki monokai">{userData.code}</pre>
+								{:then html}
+									{@html html}
+								{/await}
+							{/if}
 						</div>
 					{/if}
 
-					<Button
-						text="Show Code"
-						class="flex w-full justify-center rounded-b bg-white/10 py-2"
-						disabled={!isOwner(data, player) && !player.show_code}
-						onclick={() => showCode(player.user_id)}
-					/>
+					{#await user}
+						<Button
+							text="Show Code"
+							class="flex w-full justify-center rounded-b bg-white/10 py-2"
+							disabled={!userData.showCode}
+							onclick={() => showCode(userData.user.id)}
+						/>
+					{:then user}
+						<Button
+							text="Show Code"
+							class="flex w-full justify-center rounded-b bg-white/10 py-2"
+							disabled={userData.user.id !== user?.id && !userData.showCode}
+							onclick={() => showCode(userData.user.id)}
+						/>
+					{/await}
 				</div>
 			{/each}
 		</div>

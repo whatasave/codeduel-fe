@@ -1,14 +1,15 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import Button from '$components/button/Button.svelte';
 	import ButtonLink from '$components/button/ButtonLink.svelte';
 	import Loading from '$components/icons/Loading.svelte';
 	import LobbyListItem from '$components/lobby/LobbyListItem.svelte';
 	import backend from '$lib/backend';
-	import type { PageData } from './$types';
+	import { getUser } from '../../context';
 
-	const { data }: { data: PageData } = $props();
+	const user = getUser();
 
-	let lobbyFetcher = $state(backend.getLobbies());
+	let lobbies = $state(browser ? backend.getLobbies() : new Promise<[]>(() => {}));
 </script>
 
 <div class="m-auto flex w-full min-w-[400px] max-w-[800px] flex-col gap-2 overflow-y-auto">
@@ -17,14 +18,16 @@
 
 		<!-- ACTIONS -->
 		<div class="flex gap-4">
-			<Button text="Refresh" variant="primary" onclick={() => (lobbyFetcher = backend.getLobbies())} />
-			{#if data.user}
-				<ButtonLink href="/lobby/create" data-sveltekit-preload-data="off" text="Create" variant="accent" />
-			{/if}
+			<Button text="Refresh" variant="primary" onclick={() => (lobbies = backend.getLobbies())} />
+			{#await user then user}
+				{#if user}
+					<ButtonLink href="/lobby/create" data-sveltekit-preload-data="off" text="Create" variant="accent" />
+				{/if}
+			{/await}
 		</div>
 	</div>
 
-	{#await lobbyFetcher}
+	{#await lobbies}
 		<Loading fill="#8dd741" class="m-2 mx-auto" />
 	{:then lobbies}
 		{#if lobbies.length === 0}
