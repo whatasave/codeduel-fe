@@ -3,16 +3,17 @@
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime.js';
 	import Loading from '$components/icons/Loading.svelte';
-	import type { PageData } from './$types';
+	import { browser } from '$app/environment';
+	import backend from '$lib/backend';
 	dayjs.extend(relativeTime);
 
-	const { data }: { data: PageData } = $props();
+	const users = browser ? backend.getUserList(fetch) : new Promise<[]>(() => {});
 </script>
 
 <div class="m-auto flex w-full max-w-[1200px] flex-col gap-2 overflow-y-auto">
 	<h1 class="text-center text-4xl font-bold">Users</h1>
 	<div class="grid grid-cols-[repeat(auto-fit,minmax(22rem,1fr))] gap-2">
-		{#await data.users}
+		{#await users}
 			<div class="mx-auto">
 				<Loading fill="#8dd741" />
 			</div>
