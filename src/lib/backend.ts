@@ -33,14 +33,14 @@ class Backend {
 			return await this.fetcher.fetch(path, options, fetch);
 		} catch (e) {
 			if (e instanceof HttpError && e.code === StatusCode.Unauthorized && this.isLoggedIn()) {
-				await this.refresh(fetch);
+				await this.refreshToken(fetch);
 				return await this.fetcher.fetch(path, options, fetch);
 			}
 			throw e;
 		}
 	}
 
-	private async refresh(fetch?: Fetch) {
+	async refreshToken(fetch?: Fetch) {
         return await this.fetcher.fetch('GET /v1/auth/refresh', {}, fetch)
     }
 

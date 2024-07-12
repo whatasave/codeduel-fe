@@ -34,11 +34,11 @@ export class LobbyService {
 		this.path = path;
 	}
 
-	async start() {
-		return new Promise<void>((resolve, reject) => {
-			this.connection = new WebSocket(`${PUBLIC_LOBBY_WS}/${this.path}`);
-			if (!this.connection) throw new Error('Failed to create WebSocket connection.');
+	private async setupConnection() {
+		this.connection = new WebSocket(`${PUBLIC_LOBBY_WS}/${this.path}`);
+		if (!this.connection) throw new Error('Failed to create WebSocket connection.');
 
+		return new Promise<void>((resolve, reject) => {
 			this.connection!.addEventListener('open', () => {
 				this.connection!.addEventListener('message', (event) => {
 					const packet = JSON.parse(event.data) as PacketIn;
@@ -55,16 +55,23 @@ export class LobbyService {
 					return reject(event);
 				});
 			});
-			this.connection!.addEventListener('close', async (event) => {
-				if (event.code === 4401) {
-					console.log('Reconnecting...');
-					await backend.auth.refresh();
-					if (backend.auth.isLoggedIn()) return resolve(await this.start());
-				}
 
-				return reject(event);
+			this.connection!.addEventListener('close', async (event) => {
+				reject(event);
 			});
 		});
+	}
+
+	async start() {
+		try {
+			return await this.setupConnection();
+		} catch (event) {
+			if (event instanceof CloseEvent && event.code === 4401 && backend.isLoggedIn()) {
+				await backend.refreshToken();
+				return await this.setupConnection();
+			}
+			throw event;
+		}
 	}
 
 	async close() {
