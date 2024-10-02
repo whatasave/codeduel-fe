@@ -18,7 +18,7 @@
 		}
 	);
 
-	interface $Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
+	interface $Props extends Omit<ComponentProps<typeof Clickable>, 'children'>, VariantProps<typeof styles> {
 		text: string;
 		loaderColor?: string;
 	}

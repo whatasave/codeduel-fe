@@ -9,14 +9,14 @@
 	import { slide } from 'svelte/transition';
 	import { codeToHtml } from 'shiki';
 	import { getUser } from '../../../context';
+	dayjs.extend(duration);
+	dayjs.extend(relativeTime);
 
 	const user = getUser();
 	const { data }: { data: PageData } = $props();
 
 	let showingCode: number[] = $state([]);
 	let disableShowCode = $state(false);
-	dayjs.extend(duration);
-	dayjs.extend(relativeTime);
 
 	const parseCode = async (code: string, lang: string) => {
 		return await codeToHtml(code, {
@@ -52,10 +52,10 @@
 	<h2 class="text-center font-mono text-sm">Lobby ID: {data.lobbyId}</h2>
 </div>
 
-{#snippet stats(title, value)}
+{#snippet stats(title: string, value: string | null)}
 	<div class="flex min-w-[6rem] flex-col items-center overflow-hidden">
 		<span class="font-bold">{title}</span>
-		<span class="text-sm">{value}</span>
+		<span class="text-sm">{value ?? 'N/A'}</span>
 	</div>
 {/snippet}
 

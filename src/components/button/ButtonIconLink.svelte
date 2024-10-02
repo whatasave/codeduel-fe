@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cva, type VariantProps } from 'class-variance-authority';
-	import type { ComponentType, SvelteComponent } from 'svelte';
+	import type { Component } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 
 	const styles = cva(
@@ -19,7 +19,7 @@
 
 	interface $Props extends HTMLAnchorAttributes, VariantProps<typeof styles> {
 		icon: {
-			icon: ComponentType<SvelteComponent>;
+			icon: Component<{ class?: string; fill?: string }>;
 			class?: string;
 			align?: 'left' | 'right';
 			fill?: string;
@@ -35,6 +35,6 @@
 		{#if text}
 			<span>{text}</span>
 		{/if}
-		<svelte:component this={icon.icon} class={icon.class} fill={icon.fill} />
+		<icon.icon class={icon.class} fill={icon.fill} />
 	</div>
 </a>

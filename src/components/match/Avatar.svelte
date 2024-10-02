@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cva, type VariantProps } from 'class-variance-authority';
 	import clsx from 'clsx';
-	import type { ComponentType, SvelteComponent } from 'svelte';
+	import type { Component } from 'svelte';
 
 	const classes = cva('relative rounded-full min-w-max', {
 		variants: {
@@ -20,12 +20,12 @@
 	interface $Props extends VariantProps<typeof classes> {
 		user: { avatar: string | null; username: string };
 		class?: string;
-		badge?: ComponentType<SvelteComponent>;
+		badge?: Component;
 		badgeClass?: string;
 		badgeBackground?: string;
 	}
 
-	let { user, badge, badgeClass, variant, status, class: className }: $Props = $props();
+	let { user, badge: Badge, badgeClass, variant, status, class: className }: $Props = $props();
 	let showImg = $state(user.avatar !== null);
 </script>
 
@@ -43,9 +43,9 @@
 			/>
 		{/if}
 	</div>
-	{#if badge}
+	{#if Badge}
 		<div class={clsx(`absolute bottom-0 right-0 flex items-center justify-center rounded-full p-1`, badgeClass)}>
-			<svelte:component this={badge} />
+			<Badge />
 		</div>
 	{/if}
 </div>

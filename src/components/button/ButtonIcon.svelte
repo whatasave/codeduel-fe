@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ComponentProps, ComponentType, SvelteComponent } from 'svelte';
+	import type { Component, ComponentProps, ComponentType, SvelteComponent } from 'svelte';
 	import Clickable from './Clickable.svelte';
 	import { Loading } from '$components/icons';
 	import { cva, type VariantProps } from 'class-variance-authority';
@@ -19,12 +19,12 @@
 	);
 
 	type IconComp = {
-		icon: ComponentType<SvelteComponent>;
+		icon: Component<{ class?: string; fill?: string }>;
 		class?: string;
 		align?: 'left' | 'right';
 		fill?: string;
 	};
-	interface $Props extends Omit<ComponentProps<Clickable>, 'children'>, VariantProps<typeof styles> {
+	interface $Props extends Omit<ComponentProps<typeof Clickable>, 'children'>, VariantProps<typeof styles> {
 		icon: IconComp;
 		text?: string;
 	}
@@ -37,7 +37,7 @@
 		{#if text}
 			<span>{text}</span>
 		{/if}
-		<svelte:component this={icon.icon} class={icon.class} fill={icon.fill} />
+		<icon.icon class={icon.class} fill={icon.fill} />
 	</div>
 	{#snippet loading()}
 		<Loading fill="#ffffff" />
