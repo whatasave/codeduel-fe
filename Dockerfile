@@ -11,9 +11,10 @@ ENV PORT="80"
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable 
 
 WORKDIR /app
+
+RUN npm install -g pnpm
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./

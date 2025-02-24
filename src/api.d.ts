@@ -3,543 +3,1080 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/v1/health": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["HealthCheck"];
-          };
+    "/v1/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["HealthCheck"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/user/{id}": {
-    get: {
-      parameters: {
-        path: {
-          id: number;
+    "/v1/user/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["User"];
-          };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["User"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /** @description Not Found */
-        404: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/user": {
-    get: {
-      parameters: {
-        query: {
-          username: string;
+    "/v1/user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["User"];
-          };
+        get: {
+            parameters: {
+                query: {
+                    username: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["User"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /** @description Not Found */
-        404: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/user/profile": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["User"];
-          };
+    "/v1/user/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        /** @description Unauthorized */
-        401: {
-          content: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["User"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/user/list": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["UserListItem"][];
-          };
+    "/v1/user/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["UserListItem"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/game": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["GameWithUsersData"][];
-          };
+    "/v1/game": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GameWithUsersData"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateGame"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    post: {
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["CreateGame"];
+    "/v1/game/{uniqueId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    uniqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GameWithUsersData"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/game/{uniqueId}": {
-    get: {
-      parameters: {
-        path: {
-          uniqueId: string;
+    "/v1/game/{uniqueId}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["GameWithUsersData"];
-          };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    uniqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateSubmission"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /** @description Not Found */
-        404: {
-          content: never;
-        };
-      };
+        trace?: never;
     };
-  };
-  "/v1/game/{uniqueId}/submit": {
-    patch: {
-      parameters: {
-        path: {
-          uniqueId: string;
+    "/v1/game/{uniqueId}/endgame": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["UpdateSubmission"];
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    uniqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-      };
-      responses: {
-        /** @description No Content */
-        204: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
+        trace?: never;
     };
-  };
-  "/v1/game/{uniqueId}/endgame": {
-    patch: {
-      parameters: {
-        path: {
-          uniqueId: string;
+    "/v1/game/{uniqueId}/results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description No Content */
-        204: {
-          content: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    uniqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GameWithUsersData"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/game/{uniqueId}/results": {
-    get: {
-      parameters: {
-        path: {
-          uniqueId: string;
+    "/v1/game/user/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["GameWithUsersData"];
-          };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GameWithUserData"][];
+                    };
+                };
+            };
         };
-        /** @description Not Found */
-        404: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/game/user/{userId}": {
-    get: {
-      parameters: {
-        path: {
-          userId: number;
+    "/v1/game/sharecode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["GameWithUserData"][];
-          };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ShareCodeRequest"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-      };
+        trace?: never;
     };
-  };
-  "/v1/game/sharecode": {
-    patch: {
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["ShareCodeRequest"];
+    "/v1/challenge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description No Content */
-        204: {
-          content: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Challenge"][];
+                    };
+                };
+            };
         };
-        /** @description Unauthorized */
-        401: {
-          content: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateChallenge"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Challenge"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/challenge": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["Challenge"][];
-          };
+    "/v1/challenge/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Challenge"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateChallenge"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    post: {
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["CreateChallenge"];
+    "/v1/challenge/random": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["Challenge"];
-          };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ChallengeDetailed"];
+                    };
+                };
+            };
         };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/challenge/{id}": {
-    get: {
-      parameters: {
-        path: {
-          id: number;
+    "/v1/auth/github": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["Challenge"];
-          };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /** @description Not Found */
-        404: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    put: {
-      parameters: {
-        path: {
-          id: number;
+    "/v1/auth/github/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["CreateChallenge"];
+        get: {
+            parameters: {
+                query: {
+                    code: string;
+                    state: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-      };
-      responses: {
-        /** @description No Content */
-        204: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-        /** @description Not Found */
-        404: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    delete: {
-      parameters: {
-        path: {
-          id: number;
+    "/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-      responses: {
-        /** @description No Content */
-        204: {
-          content: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-        /** @description Not Found */
-        404: {
-          content: never;
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/challenge/random": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: {
-            "application/json": components["schemas"]["ChallengeDetailed"];
-          };
+    "/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/auth/github": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: never;
+    "/v1/auth/validate_token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["VerifyTokenPayload"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LobbyUser"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-  };
-  "/v1/auth/github/callback": {
-    get: {
-      parameters: {
-        query: {
-          code: string;
-          state: string;
-        };
-      };
-      responses: {
-        /** @description OK */
-        200: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/v1/auth/refresh": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/v1/auth/logout": {
-    get: {
-      responses: {
-        /** @description OK */
-        200: {
-          content: never;
-        };
-      };
-    };
-  };
 }
-
 export type webhooks = Record<string, never>;
-
 export interface components {
-  schemas: {
-    Challenge: {
-      /** Format: int32 */
-      id: number;
-      owner: components["schemas"]["UserListItem"];
-      title: string;
-      description: string;
-      content: string;
-      /** Format: int32 */
-      testCases: number;
-      /** Format: date-time */
-      createdAt: string;
+    schemas: {
+        Challenge: {
+            /** Format: int32 */
+            id: number;
+            owner: components["schemas"]["UserListItem"];
+            title: string;
+            description: string;
+            content: string;
+            /** Format: int32 */
+            testCases: number;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        ChallengeDetailed: {
+            /** Format: int32 */
+            id: number;
+            owner: components["schemas"]["UserListItem"];
+            title: string;
+            description: string;
+            content: string;
+            testCases: components["schemas"]["TestCase"][];
+            hiddenTestCases: components["schemas"]["TestCase"][];
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CreateChallenge: {
+            title: string;
+            description: string;
+            content: string;
+        };
+        CreateGame: {
+            uniqueId: string;
+            /** Format: int32 */
+            challengeId: number;
+            /** Format: int32 */
+            ownerId: number;
+            ended: boolean;
+            /** Format: int32 */
+            modeId: number;
+            /** Format: int32 */
+            maxPlayers: number;
+            /** Format: int32 */
+            gameDuration: number;
+            allowedLanguages: string[];
+            users: number[];
+        };
+        Game: {
+            /** Format: int32 */
+            id: number;
+            uniqueId: string;
+            challenge: components["schemas"]["Challenge"];
+            /** Format: int32 */
+            ownerId: number;
+            ended: boolean;
+            mode: components["schemas"]["Mode"];
+            /** Format: int32 */
+            maxPlayers: number;
+            /** Format: int32 */
+            duration: number;
+            allowedLanguages: string[];
+            /** Format: date-time */
+            createdAt: string;
+        };
+        GameWithUserData: {
+            game: components["schemas"]["Game"];
+            userData: components["schemas"]["UserData"];
+        };
+        GameWithUsersData: {
+            game: components["schemas"]["Game"];
+            userData: components["schemas"]["UserData"][];
+        };
+        HealthCheck: {
+            status: string;
+        };
+        LobbyUser: {
+            /** Format: int32 */
+            id: number;
+            username: string;
+            name: string;
+            avatar: string | null;
+            backgroundImage: string | null;
+        };
+        Mode: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+            description: string;
+        };
+        ShareCodeRequest: {
+            /** Format: int32 */
+            lobbyId: number;
+            showCode: boolean;
+        };
+        TestCase: {
+            input: string;
+            output: string;
+        };
+        UpdateSubmission: {
+            /** Format: int32 */
+            userId: number;
+            /** Format: int32 */
+            gameId: number;
+            code: string;
+            language: string;
+            /** Format: int32 */
+            testsPassed: number;
+            /** Format: date-time */
+            submittedAt: string;
+        };
+        User: {
+            /** Format: int32 */
+            id: number;
+            username: string;
+            name: string;
+            /** Format: date-time */
+            createdAt: string;
+            avatar: string | null;
+            backgroundImage: string | null;
+            biography: string | null;
+        };
+        UserData: {
+            user: components["schemas"]["UserListItem"];
+            code: string | null;
+            language: string | null;
+            /** Format: int32 */
+            testsPassed: number;
+            /** Format: date-time */
+            submittedAt?: string | null;
+            showCode: boolean;
+        };
+        UserListItem: {
+            /** Format: int32 */
+            id: number;
+            username: string;
+            name: string;
+            /** Format: date-time */
+            createdAt: string;
+            avatar: string | null;
+        };
+        VerifyTokenPayload: {
+            token: string;
+        };
     };
-    ChallengeDetailed: {
-      /** Format: int32 */
-      id: number;
-      owner: components["schemas"]["UserListItem"];
-      title: string;
-      description: string;
-      content: string;
-      testCases: components["schemas"]["TestCase"][];
-      hiddenTestCases: components["schemas"]["TestCase"][];
-      /** Format: date-time */
-      createdAt: string;
-    };
-    CreateChallenge: {
-      title: string;
-      description: string;
-      content: string;
-    };
-    CreateGame: {
-      uniqueId: string;
-      /** Format: int32 */
-      challengeId: number;
-      /** Format: int32 */
-      ownerId: number;
-      ended: boolean;
-      /** Format: int32 */
-      modeId: number;
-      /** Format: int32 */
-      maxPlayers: number;
-      /** Format: int32 */
-      gameDuration: number;
-      allowedLanguages: string[];
-      users: number[];
-    };
-    Game: {
-      /** Format: int32 */
-      id: number;
-      uniqueId: string;
-      challenge: components["schemas"]["Challenge"];
-      /** Format: int32 */
-      ownerId: number;
-      ended: boolean;
-      mode: components["schemas"]["Mode"];
-      /** Format: int32 */
-      maxPlayers: number;
-      /** Format: int32 */
-      duration: number;
-      allowedLanguages: string[];
-      /** Format: date-time */
-      createdAt: string;
-    };
-    GameWithUserData: {
-      game: components["schemas"]["Game"];
-      userData: components["schemas"]["UserData"];
-    };
-    GameWithUsersData: {
-      game: components["schemas"]["Game"];
-      userData: components["schemas"]["UserData"][];
-    };
-    HealthCheck: {
-      status: string;
-    };
-    Mode: {
-      /** Format: int32 */
-      id: number;
-      name: string;
-      description: string;
-    };
-    ShareCodeRequest: {
-      /** Format: int32 */
-      lobbyId: number;
-      showCode: boolean;
-    };
-    TestCase: {
-      input: string;
-      output: string;
-    };
-    UpdateSubmission: {
-      /** Format: int32 */
-      userId: number;
-      /** Format: int32 */
-      gameId: number;
-      code: string;
-      language: string;
-      /** Format: int32 */
-      testsPassed: number;
-      /** Format: date-time */
-      submittedAt: string;
-    };
-    User: {
-      /** Format: int32 */
-      id: number;
-      username: string;
-      name: string;
-      /** Format: date-time */
-      createdAt: string;
-      avatar: string | null;
-      backgroundImage: string | null;
-      biography: string | null;
-    };
-    UserData: {
-      user: components["schemas"]["UserListItem"];
-      code: string | null;
-      language: string | null;
-      /** Format: int32 */
-      testsPassed: number;
-      /** Format: date-time */
-      submittedAt?: string | null;
-      showCode: boolean;
-    };
-    UserListItem: {
-      /** Format: int32 */
-      id: number;
-      username: string;
-      name: string;
-      /** Format: date-time */
-      createdAt: string;
-      avatar: string | null;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
-
 export type $defs = Record<string, never>;
-
-export type external = Record<string, never>;
-
 export type operations = Record<string, never>;

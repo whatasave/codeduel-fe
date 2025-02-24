@@ -60,7 +60,6 @@
 
 	async function onStart() {
 		await data.lobby.sendPacket({ type: 'start', start: true });
-		await goto('/match/' + lobby.id);
 	}
 
 	$effect(() => {
